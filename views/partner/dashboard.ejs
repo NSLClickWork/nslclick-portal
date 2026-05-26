@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSL Partner Portal</title>
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="stylesheet" href="/css/nsl-design-system.css">
+    <style>
+        .nav-brand-logo { height: 100px; margin-top: -5px; margin-bottom: 20px;}
+        .lang-switch a { color: #fff; text-decoration: none; margin-left: 10px; font-weight: 600; opacity: 0.7; }
+        .lang-switch a.active { color: #fff; opacity: 1; text-decoration: underline; }
+        
+        .container { padding: 40px; max-width: 1200px; margin: 0 auto; margin-top: -20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+        
+        .card-header { padding: 20px; display: flex; align-items: center; border-bottom: 2px solid var(--text-main); background: var(--bg-gray); }
+        .avatar { width: 60px; height: 60px; border-radius: 0; object-fit: cover; margin-right: 15px; border: 2px solid var(--text-main); }
+        .name { font-size: 18px; font-weight: 800; margin-bottom: 4px; color: var(--text-main); text-transform: uppercase; }
+        .profession { font-size: 14px; color: var(--nsl-red); font-weight: 700; text-transform: uppercase; }
+        
+        .card-body { padding: 20px; font-size: 14px; background: #fff; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 5px; }
+        .info-label { color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 12px; }
+        .info-value { font-weight: 800; color: var(--text-main); }
+        
+        .card-actions { padding: 20px; background: #fff; display: flex; flex-direction: column; gap: 10px; border-top: 2px solid var(--text-main); }
+        
+        .btn-nsl-brutal {
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            border: 2px solid var(--text-main);
+            color: var(--text-main);
+            background: transparent;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-nsl-brutal.primary { background: var(--text-main); color: #fff; }
+        .btn-nsl-brutal:hover {
+            box-shadow: 4px 4px 0px var(--nsl-red);
+            transform: translate(-2px, -2px);
+        }
+    </style>
+</head>
+<body class="bg-pattern">
+    <% 
+    function stringToColor(str) {
+        if (!str) return 'var(--nsl-red)';
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        let color = '#';
+        for (let i = 0; i < 3; i++) {
+            let value = (hash >> (i * 8)) & 0xFF;
+            value = Math.max(0, Math.min(200, value));
+            color += ('00' + value.toString(16)).slice(-2);
+        }
+        return color;
+    }
+    function getCenterColor(center) {
+        if (!center) return 'var(--nsl-red)';
+        const c = center.toUpperCase();
+        if (c.startsWith('ANG')) return '#EA4335';  /* Red */
+        if (c.startsWith('HDEU')) return '#4285F4'; /* Blue */
+        if (c.startsWith('DIE')) return '#8D6E63';  /* Brown */
+        if (c.startsWith('LA')) return '#FBBC04';   /* Yellow */
+        if (c.startsWith('NW')) return '#34A853';   /* Green */
+        return stringToColor(c);
+    }
+    %>
+    <div class="wavy-header">
+        <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
+            <div class="lang-switch">
+                <a href="?lang=de" class="<%= lang === 'de' ? 'active' : '' %>">DE</a> |
+                <a href="?lang=en" class="<%= lang === 'en' ? 'active' : '' %>">EN</a> |
+                <a href="?lang=vi" class="<%= lang === 'vi' ? 'active' : '' %>">VI</a>
+            </div>
+            <a href="/partner/logout" class="header-link"><%= __('logout') %></a>
+        </div>
+        <svg viewBox="0 0 1000 140" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+            <path d="M0,0 L1000,0 L1000,80 Q500,140 0,140 Z" fill="#f2a900" />
+            <path d="M0,0 L1000,0 L1000,140 Q600,140 200,0 Z" fill="#cc1f1f" />
+        </svg>
+    </div>
+
+    <div class="container">
+        <img src="/logo.png" alt="NSL" class="nav-brand-logo">
+        <h2 style="margin-bottom: 30px; color: var(--text-main); font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--nsl-red); padding-left: 15px;">Candidates Database</h2>
+        
+        <div class="grid">
+            <% if (students && students.length > 0) { %>
+                <% students.forEach(student => { %>
+                    <div class="nsl-grid-card" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>;">
+                        <div class="card-header">
+                            <img src="/proxy/students/<%= student.StudentID %>/photo" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(student.FullName) %>&background=random'" alt="Photo" class="avatar">
+                            <div>
+                                <div class="name"><%= student.FullName %></div>
+                                <div class="profession"><%= student.ProfessionCode || '' %></div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-row">
+                                <span class="info-label"><%= __('date_of_birth') || 'Ngày sinh' %></span>
+                                <span class="info-value"><%= student.DOB || '—' %></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><%= __('profession') || 'Nghề' %></span>
+                                <span class="info-value"><%= student.ProfessionCode || 'Điều dưỡng' %></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><%= __('level') %></span>
+                                <span class="info-value"><%= student.DeutschLevel || '—' %></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><%= __('available') %></span>
+                                <span class="info-value"><%= student.AvailableFrom || '—' %></span>
+                            </div>
+                            <% if (student.NSLScore || student.AssessmentScore) { %>
+                            <div class="info-row" style="background: #fdfdfd;">
+                                <span class="info-label">NSL Score</span>
+                                <span class="info-value" style="color: var(--nsl-gold);"><%= student.NSLScore || student.AssessmentScore %>/100</span>
+                            </div>
+                            <% } %>
+                            <% if (student.Strength1 || student.Strength2 || student.Strength3) { %>
+                            <div style="margin-top: 15px; border-top: 2px solid var(--border-color); padding-top: 10px;">
+                                <span class="info-label" style="display:block; margin-bottom:8px;">Strengths (Stärken)</span>
+                                <ul style="list-style-type: square; margin-left: 20px; font-weight: 600; color: var(--text-main); font-size: 13px;">
+                                    <% if (student.Strength1) { %><li><%= student.Strength1 %></li><% } %>
+                                    <% if (student.Strength2) { %><li><%= student.Strength2 %></li><% } %>
+                                    <% if (student.Strength3) { %><li><%= student.Strength3 %></li><% } %>
+                                </ul>
+                            </div>
+                            <% } %>
+                        </div>
+                        <div class="card-actions">
+                            <% if (student.SetcardLink) { %>
+                                <a href="<%= student.SetcardLink %>" target="_blank" class="btn-nsl-brutal primary" style="display: block; width: 100%;"><%= __('download_pdf') %></a>
+                            <% } %>
+                            <% if (student.YouTubeLink || student.DriveVideoLink) { %>
+                                <a href="<%= student.YouTubeLink || student.DriveVideoLink %>" target="_blank" class="btn-nsl-brutal" style="display: block; width: 100%;"><%= __('view_video') %></a>
+                            <% } %>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>No candidates available for your selected criteria.</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>

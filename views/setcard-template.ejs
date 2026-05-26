@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Setcard - <%= student.FullName %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nsl-red: #cc1f1f;
+            --nsl-gold: #f2a900;
+            --nsl-navy: #1a3c6e;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            width: 794px; /* A4 Width at 96 DPI */
+            height: 1123px; /* A4 Height */
+            background: #ffffff;
+            color: #1a1a1a;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* WAVY HEADER */
+        .wavy-header {
+            position: relative;
+            width: 100%;
+            height: 110px;
+        }
+        .wavy-header svg { display: block; width: 100%; height: 100%; }
+
+        /* WAVY FOOTER */
+        .wavy-footer {
+            width: 100%;
+            height: 100px;
+            margin-top: auto;
+        }
+        .wavy-footer svg { display: block; width: 100%; height: 100%; }
+
+        .card-inner {
+            flex: 1;
+            padding: 0 40px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card-logo-box { margin-top: -20px; margin-bottom: 20px; }
+        .card-logo-box img { height: 100px; }
+
+        .profile-flex {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-template-rows: auto 1fr;
+            column-gap: 40px;
+            row-gap: 0;
+            align-items: start;
+        }
+
+        .photo-container {
+            grid-row: 1 / span 2;
+            width: 280px;
+            height: 400px;
+            border: 6px solid var(--nsl-gold);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            background: #fff;
+        }
+        .photo-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        .content-area { 
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .student-name {
+            font-size: 38px;
+            font-weight: 900;
+            color: var(--nsl-gold);
+            text-transform: capitalize;
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: auto auto 1fr;
+            column-gap: 20px;
+            row-gap: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+        .info-label { font-weight: 800; color: #333; }
+        .info-sep { font-weight: 400; color: #555; }
+        .info-value { font-weight: 600; color: #444; }
+
+        .sp-section { 
+            grid-column: 2;
+            grid-row: 2;
+            margin-top: 20px;
+        }
+        .sp-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--nsl-gold);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .sp-yellow-card {
+            background: #ffca28;
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: #000;
+            font-weight: 700;
+            font-size: 15px;
+            line-height: 1.4;
+            box-shadow: 0 10px 25px rgba(251, 192, 45, 0.12);
+        }
+
+        .scores-section {
+            margin-top: 40px;
+        }
+
+        .score-bar-wrapper {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .score-label {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .score-bar-bg {
+            background: #eee;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .score-bar-fill {
+            background: var(--nsl-red);
+            height: 100%;
+        }
+
+        .bottom-note {
+            font-size: 12px;
+            color: #555;
+            text-align: center;
+            margin-top: 40px;
+            line-height: 1.5;
+            padding: 0 40px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="wavy-header">
+        <svg viewBox="0 0 1000 110" preserveAspectRatio="none">
+            <path d="M0,0 L1000,0 L1000,90 Q500,110 0,90 Z" fill="#f2a900" />
+            <path d="M0,0 L1000,0 L1000,60 Q500,90 0,60 Z" fill="#cc1f1f" />
+        </svg>
+    </div>
+
+    <div class="card-inner">
+        <div class="card-logo-box">
+            <% if (logoBase64) { %>
+                <img src="<%= logoBase64 %>" alt="NSL Logo">
+            <% } else { %>
+                <div style="font-size: 32px; font-weight: 900; color: #111;">NSL</div>
+            <% } %>
+        </div>
+
+        <div class="profile-flex">
+            <div class="photo-container">
+                <% if (photoBase64) { %>
+                    <img src="<%= photoBase64 %>" alt="Photo">
+                <% } else { %>
+                    <div style="width: 100%; height: 100%; background: #ddd; display: flex; align-items: center; justify-content: center; color: #999;">No Photo</div>
+                <% } %>
+            </div>
+
+            <div class="content-area">
+                <h1 class="student-name"><%= student.FullName %></h1>
+                <div class="info-grid">
+                    <div class="info-label">Student ID</div><div class="info-sep">:</div><div class="info-value"><%= student.StudentID %></div>
+                    <div class="info-label">Profession</div><div class="info-sep">:</div><div class="info-value"><%= student.ProfessionCode || '—' %></div>
+                    <div class="info-label">Deutsch Level</div><div class="info-sep">:</div><div class="info-value"><%= student.DeutschLevel || '—' %></div>
+                    <div class="info-label">Assessment Score</div><div class="info-sep">:</div><div class="info-value"><%= student.AssessmentScore || '—' %></div>
+                    <div class="info-label">Video Score</div><div class="info-sep">:</div><div class="info-value"><%= student.VideoScore || '—' %></div>
+                    <div class="info-label">Availability</div><div class="info-sep">:</div><div class="info-value"><%= student.AvailableFrom || '—' %></div>
+                    <div class="info-label">Center</div><div class="info-sep">:</div><div class="info-value"><%= student.CenterCode || '—' %></div>
+                </div>
+            </div>
+
+            <div class="sp-section">
+                <h3 class="sp-title">SUPERPOWERS</h3>
+                <div class="sp-yellow-card">
+                    <p>1. <%= student.Strength1 || 'Responsible Worker' %></p>
+                    <p>2. <%= student.Strength2 || 'Friendly Customer Advisor' %></p>
+                    <p>3. <%= student.Strength3 || 'Flexible Supporter' %></p>
+                </div>
+                
+                <div class="scores-section">
+                    <% 
+                        const nslScore = parseFloat(student.NSLScore) || 0;
+                        const percent = Math.min(Math.max(nslScore, 0), 100);
+                    %>
+                    <div class="score-bar-wrapper">
+                        <div class="score-label">
+                            <span>NSL Score</span>
+                            <span><%= nslScore.toFixed(0) %> / 100</span>
+                        </div>
+                        <div class="score-bar-bg">
+                            <div class="score-bar-fill" style="width: <%= percent %>%;"></div>
+                        </div>
+                    </div>
+                    <div class="score-bar-wrapper" style="margin-top: 10px;">
+                        <div class="score-label" style="justify-content: flex-start; gap: 10px;">
+                            <span>Rank:</span>
+                            <span style="color: var(--nsl-red);"><%= student.Rank || '—' %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="bottom-note">
+            The NSL-Score is based on a series of comprehensive assessments to evaluate IQ, decision-making, and various other skills. Generated on <%= new Date().toLocaleDateString('de-DE') %>.
+        </p>
+    </div>
+
+    <div class="wavy-footer">
+        <svg viewBox="0 0 1000 100" preserveAspectRatio="none">
+            <path d="M0,20 Q500,60 1000,20 L1000,100 L0,100 Z" fill="#000000" />
+        </svg>
+    </div>
+</body>
+</html>

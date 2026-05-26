@@ -3,388 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <title>NSL Admin - Dashboard</title>
     <link rel="icon" type="image/png" href="/logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/nsl-design-system.css">
     <style>
-        :root {
-            --nsl-red: #cc1f1f;
-            --nsl-gold: #f2a900;
-            --nsl-gold-light: #ffca28;
-            --nsl-navy: #1a3c6e;
-            --nsl-green: #27ae60;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        .table-container { overflow-x: auto; margin-top: 20px; }
+        .edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; padding: 20px; background: var(--bg-gray); border-radius: var(--radius-sm); margin-top: 10px;}
         
-        body { 
-            font-family: 'Montserrat', sans-serif; 
-            background-color: #ffffff;
-            /* Modern Bauhaus-inspired background */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(204, 31, 31, 0.05) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(242, 169, 0, 0.05) 0px, transparent 50%),
-                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            background-attachment: fixed;
-            color: #1a1a1a;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+        .status-done { background: #e8f5e9; color: #2e7d32; }
+        .status-failed { background: #ffebee; color: #c62828; }
+        .status-pending { background: #fff3e0; color: #ef6c00; }
 
-        .wavy-header {
-            width: 100%;
-            height: 110px;
-            position: relative;
-        }
-
-        .header-controls {
-            position: absolute;
-            top: 15px;
-            right: 40px;
-            z-index: 1000;
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .trash-btn {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 2px solid white;
-            border-radius: 8px;
-            width: 36px;
-            height: 36px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-        }
-        .trash-btn:hover { background: white; color: var(--nsl-red); }
-
-        .logout-link { 
-            padding: 6px 16px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 2px solid white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-            text-transform: uppercase;
-        }
-        .logout-link:hover { background: white; color: var(--nsl-red); }
-
-        /* Trash Styles */
-        .trash-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(8px);
-        }
-        .trash-container {
-            background: white;
-            width: 90%;
-            max-width: 1100px;
-            max-height: 85vh;
-            border-radius: 24px;
-            padding: 40px;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        }
-        .close-trash { position: absolute; top: 20px; right: 20px; font-size: 24px; cursor: pointer; color: #999; }
-        
-        .btn-delete-soft { color: #cc1f1f; border: 1px solid #ffcccc; margin-left: 8px; cursor: pointer; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; background: none; }
-        .btn-delete-soft:hover { background: #fee; border-color: #cc1f1f; }
-        .btn-restore { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .btn-perm { background: #cc1f1f; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-left: 5px; }
-
-        .container { 
-            flex: 1;
-            width: 100%;
-            max-width: 1300px; 
-            margin: 0 auto; 
-            padding: 0px 40px 60px; 
-            position: relative;
-            z-index: 10;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        /* Inline Edit Row */
-        .edit-row { background-color: #f9f9f9 !important; }
-        .edit-form-container { padding: 20px; }
-        .edit-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .edit-group label { display: block; font-size: 11px; font-weight: 700; color: #888; margin-bottom: 5px; text-transform: uppercase; }
-        .edit-input { width: 100%; padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; font-family: inherit; }
-        .edit-actions { margin-top: 15px; display: flex; gap: 10px; }
-
-        .nav-brand-logo { height: 100px; margin-top: -5px; }
-
-        /* Content Layout */
-        .section-card {
-            background: transparent;
-            padding: 0;
-            margin-bottom: 50px;
-        }
-        .section-title { 
-            font-size: 28px; 
-            font-weight: 900; 
-            margin-bottom: 30px; 
-            color: var(--nsl-gold); 
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-        }
-
-        /* Search Bar */
-        .search-input {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: inherit;
-            outline: none;
-            transition: 0.2s;
-            font-weight: 600;
-        }
-        .search-input:focus { border-color: var(--nsl-gold); }
-
-        /* Table Style */
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th { text-align: left; padding: 12px 16px; font-size: 13px; color: #888; border-bottom: 2px solid #f0f0f0; }
-        td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
-        tr:nth-child(even) { background-color: #fafafa; }
-        
-        .date-header {
-            background-color: #f0f4ff;
-            color: var(--nsl-navy);
-            font-weight: 600;
-            padding: 8px 16px;
-            text-align: left;
-        }
-        
-        .score-val { font-weight: 700; color: var(--nsl-navy); }
-        .score-total { font-weight: 700; color: var(--nsl-green); }
-        .score-empty { color: #bbb; font-style: italic; font-weight: 400; }
-
-        .btn-edit {
-            background: none;
-            border: 1px solid #ddd;
-            color: #666;
-            padding: 4px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .btn-edit:hover { background: #f0f0f0; }
-
-        /* Action Bar */
-        .action-bar { display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap; }
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-primary { background-color: var(--nsl-navy); color: white; border: none; }
-        .btn-outline { background: transparent; border: 1px solid var(--nsl-navy); color: var(--nsl-navy); }
-        .btn-outline:hover { background: var(--nsl-navy); color: white; }
-
-        /* Form Grid */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #555; }
-        .input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; outline: none; }
-        .form-actions { margin-top: 24px; display: flex; gap: 12px; }
-
-        #importInput { display: none; }
-        .hidden { display: none; }
-
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-        }
-        .wavy-footer {
-            height: 100px;
-            margin-top: auto;
-            width: 100%;
-            background: transparent;
-            display: flex; /* Remove whitespace below SVG */
-        }
-        .wavy-footer svg {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-        /* Custom Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 3000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-        .modal-content {
-            background: white;
-            padding: 35px;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            animation: slideUp 0.3s ease;
-        }
-        .modal-title { font-size: 20px; font-weight: 800; color: var(--nsl-navy); margin-bottom: 12px; text-transform: uppercase; }
-        .modal-text { font-size: 15px; color: #666; margin-bottom: 30px; line-height: 1.5; }
-        .modal-actions { display: flex; gap: 12px; justify-content: center; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* Toast Styles */
-        .toast-container {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 4000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast {
-            background: #333;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
-        }
-        .toast.success { background: var(--nsl-green); }
-        .toast.error { background: var(--nsl-red); }
-        @keyframes toastIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes toastOut { from { transform: translateY(0); opacity: 1; } to { transform: translateY(20px); opacity: 0; } }
+        .job-panel { background: var(--bg-gray); padding: 15px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-top: 20px; display: none; }
     </style>
 </head>
-<body>
-    <!-- Custom Modal -->
-    <div id="customModal" class="modal-overlay">
-        <div class="modal-content">
-            <div id="modalTitle" class="modal-title">Confirm Action</div>
-            <div id="modalText" class="modal-text">Are you sure you want to proceed?</div>
-            <div class="modal-actions">
-                <button id="modalCancel" class="btn btn-outline" style="min-width: 100px;">Cancel</button>
-                <button id="modalConfirm" class="btn btn-primary" style="min-width: 100px;">Confirm</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
+<body class="bg-pattern">
     <div id="toastContainer" class="toast-container"></div>
-    <datalist id="availabilityOptions"></datalist>
+    
     <div class="wavy-header">
         <div class="header-controls">
-            <div class="trash-btn" title="Recycle Bin" onclick="openTrash()">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-            </div>
-            <a href="/admin/logout" class="logout-link">Logout</a>
+            <button class="header-link" onclick="toggleArchiveView()" id="toggleViewBtn">View Archived</button>
+            <a href="/admin/logout" class="header-link">Logout</a>
         </div>
-        <svg viewBox="0 0 1000 110" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-            <path d="M0,0 L1000,0 L1000,90 Q500,110 0,90 Z" fill="#f2a900" />
-            <path d="M0,0 L1000,0 L1000,60 Q500,90 0,60 Z" fill="#cc1f1f" />
+        <svg viewBox="0 0 1000 140" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+            <path d="M0,0 L1000,0 L1000,80 Q500,140 0,140 Z" fill="#f2a900" />
+            <path d="M0,0 L1000,0 L1000,140 Q600,140 200,0 Z" fill="#cc1f1f" />
         </svg>
     </div>
 
     <div class="container">
-        <div class="header-row">
-            <img src="/logo.png" alt="NSL" class="nav-brand-logo">
-        </div>
-
-        <div class="section-card">
-            <div class="section-title">Student Results Board</div>
+        <img src="/logo.png" alt="NSL" class="nav-brand-logo">
+        
+        <div class="section-card" style="border: 4px solid var(--text-main); border-radius: 0; box-shadow: 8px 8px 0px var(--text-main);">
+            <div class="section-title" id="pageTitle" style="color: var(--text-main); border-left: 8px solid var(--nsl-gold); padding-left: 15px;">Active Students</div>
             
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-                <button class="btn btn-primary" onclick="showAddRow()">+ Add New Student</button>
-                <div style="flex: 1;"></div>
-                <button class="btn btn-outline" onclick="triggerImport()">Import CSV</button>
-                <input type="file" id="importInput" accept=".csv" onchange="handleImport(event)" style="display:none;">
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;" id="actionButtons">
+                <button class="btn btn-nsl-brutal" onclick="showAddRow()" style="background: var(--text-main); color: #fff;">+ Add Student</button>
+                <button class="btn btn-nsl-brutal" onclick="batchGenerate('pdfs')" style="border-color: var(--nsl-red); color: var(--nsl-red);">Generate PDF for Selected</button>
+                <button class="btn btn-nsl-brutal" onclick="batchGenerate('videos')" style="border-color: var(--nsl-gold); color: var(--nsl-gold);">Generate Video for Selected</button>
             </div>
 
-            <div class="search-row">
-                <input type="text" id="searchInput" class="search-input" placeholder="Search by name or phone number...">
+            <div class="job-panel" id="jobPanel">
+                <h4 style="margin-bottom: 10px;">Active Jobs</h4>
+                <ul id="jobList" style="font-size: 13px; list-style: none;"></ul>
             </div>
-            
-            <div class="table-container">
-                <table id="studentTable">
+
+            <div class="table-container" style="max-height: 600px; overflow-y: auto; border: 2px solid var(--text-main);">
+                <table class="nsl-table nsl-sticky-table" style="margin: 0; width: 100%;">
                     <thead>
                         <tr>
-                            <th width="50">#</th>
+                            <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th>
+                            <th>Student ID</th>
                             <th>Full Name</th>
-                            <th>Phone Number</th>
-                            <th>Date Added</th>
-                            <th>Test (1/2)</th>
-                            <th>Interview (2/2)</th>
-                            <th>Total Score</th>
+                            <th>Profession</th>
+                            <th>Center</th>
+                            <th>PDF Status</th>
+                            <th>Video Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
-                        <!-- Content -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Trash Overlay -->
-    <div id="trashOverlay" class="trash-overlay">
-        <div class="trash-container">
-            <span class="close-trash" onclick="closeTrash()">&times;</span>
-            <div class="section-title">Recycle Bin</div>
-            <p style="font-size: 13px; color: #666; margin-bottom: 20px;">Deleted students can be restored or permanently removed here.</p>
-            <div class="table-container">
-                <table style="min-width: 100%;">
-                    <thead>
-                        <tr>
-                            <th>Student Name</th>
-                            <th>Phone</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="trashTableBody">
-                        <!-- Trash items -->
-                    </tbody>
+                    <tbody id="tableBody"></tbody>
                 </table>
             </div>
         </div>
@@ -392,364 +73,239 @@
 
     <script>
         let allStudents = [];
-        let editingId = null;
+        let showingArchived = false;
+        let activeJobs = [];
+
+        // Wrapper for fetch to include CSRF automatically
+        async function apiFetch(url, options = {}) {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            options.headers = options.headers || {};
+            options.headers['CSRF-Token'] = csrfToken; // Fallback via Header (tiny-csrf might need body but usually checks headers too)
+            
+            if (options.body && typeof options.body !== 'string' && !(options.body instanceof FormData)) {
+                // If body is JSON object, inject _csrf
+                options.body._csrf = csrfToken;
+                options.body = JSON.stringify(options.body);
+                options.headers['Content-Type'] = 'application/json';
+            }
+            
+            return fetch(url, options);
+        }
+
+        function notify(msg, type='success') {
+            const c = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.innerText = msg;
+            c.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
 
         async function fetchStudents() {
             const res = await fetch('/admin/students');
             allStudents = await res.json();
-            updateAvailabilityDatalist();
-            renderTable(allStudents);
+            renderTable();
         }
 
-        function updateAvailabilityDatalist() {
-            const datalist = document.getElementById('availabilityOptions');
-            const values = [...new Set(allStudents.map(s => s.Verfugbarkeit).filter(v => v))];
-            
-            // Add default suggestions if list is thin
-            const defaults = ['Immediate', 'September 2026', 'October 2026', 'March 2027'];
-            const combined = [...new Set([...defaults, ...values])];
-            
-            datalist.innerHTML = combined.map(v => `<option value="${v}">`).join('');
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return String(unsafe)
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
         }
 
-        function renderTable(students) {
+        function toggleArchiveView() {
+            showingArchived = !showingArchived;
+            document.getElementById('toggleViewBtn').innerText = showingArchived ? 'View Active' : 'View Archived';
+            document.getElementById('pageTitle').innerText = showingArchived ? 'Archived Students' : 'Active Students';
+            document.getElementById('actionButtons').style.display = showingArchived ? 'none' : 'flex';
+            renderTable();
+        }
+
+        function getStatusBadge(status) {
+            if (!status) return '<span class="status-badge">N/A</span>';
+            const s = status.toUpperCase();
+            if (s.includes('DONE')) return `<span class="status-badge status-done">${s}</span>`;
+            if (s.includes('FAIL')) return `<span class="status-badge status-failed">${s}</span>`;
+            return `<span class="status-badge status-pending">${s}</span>`;
+        }
+
+        function renderTable() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             
-            students.forEach((s, index) => {
+            const filtered = allStudents.filter(s => showingArchived ? s.Status === 'ARCHIVED' : s.Status !== 'ARCHIVED');
+            
+            filtered.forEach(s => {
                 const tr = document.createElement('tr');
-                tr.id = `row-${s.id}`;
+                tr.id = `row-${escapeHtml(s.StudentID)}`;
                 tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><strong>${s.HoTen || '---'}</strong></td>
-                    <td>${s.SoDienThoai || '---'}</td>
-                    <td>${s.NgayNhap || '---'}</td>
-                    <td>${s.Diem1 || '0'}</td>
-                    <td>${s.Diem2 || '0'}</td>
-                    <td class="score-total">${s.Total || '0'}</td>
+                    <td><input type="checkbox" class="student-cb" value="${escapeHtml(s.StudentID)}"></td>
+                    <td><strong>${escapeHtml(s.StudentID)}</strong></td>
+                    <td>${escapeHtml(s.FullName)}</td>
+                    <td>${escapeHtml(s.ProfessionCode || '')}</td>
+                    <td>${escapeHtml(s.CenterCode || '')}</td>
+                    <td>${getStatusBadge(escapeHtml(s.SetcardLink ? 'DONE' : s.SetcardStatus || 'PENDING'))}</td>
+                    <td>${getStatusBadge(escapeHtml(s.YouTubeLink ? 'DONE' : s.VideoStatus || 'PENDING'))}</td>
                     <td>
-                        <button class="btn-edit" onclick="toggleEdit('${s.id}')">Edit</button>
-                        <button class="btn-edit btn-delete-soft" onclick="softDelete('${s.id}')">Delete</button>
+                        ${showingArchived 
+                            ? `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px;" onclick="restoreStudent('${escapeHtml(s.StudentID)}')">Restore</button>`
+                            : `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; margin-right: 4px;" onclick="toggleEdit('${escapeHtml(s.StudentID)}')">Edit</button>
+                               <button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; color:#fff; background:var(--nsl-red); border-color:var(--nsl-red);" onclick="archiveStudent('${escapeHtml(s.StudentID)}')">Archive</button>`
+                        }
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function toggleEdit(id) {
-            const existingEdit = document.querySelector('.edit-row');
-            if (existingEdit) {
-                if (editingId === id) {
-                    existingEdit.remove();
-                    editingId = null;
-                    return;
+        function toggleSelectAll() {
+            const checked = document.getElementById('selectAll').checked;
+            document.querySelectorAll('.student-cb').forEach(cb => cb.checked = checked);
+        }
+
+        async function batchGenerate(type) {
+            const ids = Array.from(document.querySelectorAll('.student-cb:checked')).map(cb => cb.value);
+            if (ids.length === 0) return notify('No students selected', 'error');
+
+            try {
+                const res = await apiFetch(`/admin/batch/${type}`, {
+                    method: 'POST',
+                    body: { studentIds: ids }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    notify(`Queued ${ids.length} ${type} jobs`);
+                    data.jobs.forEach(j => activeJobs.push(j.jobId));
+                    pollJobs();
+                } else {
+                    notify(data.error || 'Failed to queue', 'error');
                 }
-                existingEdit.remove();
+            } catch (err) {
+                notify('Network error', 'error');
             }
+        }
 
-            editingId = id;
-            const s = allStudents.find(x => x.id === id) || {};
-            const row = document.getElementById(`row-${id}`);
+        function toggleEdit(id) {
+            const existing = document.querySelector('.edit-row');
+            if (existing) existing.remove();
             
-            const editTr = document.createElement('tr');
-            editTr.className = 'edit-row';
-            editTr.innerHTML = `
-                <td colspan="8">
-                    <div class="edit-form-container">
+            const s = id ? allStudents.find(x => x.StudentID === id) : {};
+            const html = `
+                <tr class="edit-row">
+                    <td colspan="8">
                         <div class="edit-grid">
-                            <div class="edit-group">
-                                <label>Full Name</label>
-                                <input type="text" id="e-HoTen" class="edit-input" value="${s.HoTen || ''}">
-                            </div>
-                            <div class="edit-group">
-                                <label>Phone Number</label>
-                                <input type="text" id="e-SoDienThoai" class="edit-input" value="${s.SoDienThoai || ''}">
-                            </div>
-                            <div class="edit-group">
-                                <label>Date Added</label>
-                                <input type="text" id="e-NgayNhap" class="edit-input" value="${s.NgayNhap || ''}">
-                            </div>
-                            <div class="edit-group">
-                                <label>Deutsch Level</label>
-                                <select id="e-Deutsch" class="edit-input">
-                                    <option value="">Select Level</option>
-                                    <option value="A1" ${s.Deutsch === 'A1' ? 'selected' : ''}>A1</option>
-                                    <option value="A2" ${s.Deutsch === 'A2' ? 'selected' : ''}>A2</option>
-                                    <option value="B1" ${s.Deutsch === 'B1' ? 'selected' : ''}>B1</option>
-                                    <option value="B2" ${s.Deutsch === 'B2' ? 'selected' : ''}>B2</option>
-                                    <option value="C1" ${s.Deutsch === 'C1' ? 'selected' : ''}>C1</option>
-                                    <option value="C2" ${s.Deutsch === 'C2' ? 'selected' : ''}>C2</option>
-                                </select>
-                            </div>
-                            <div class="edit-group">
-                                <label>Birth Year</label>
-                                <input type="text" id="e-Geburtsjahr" class="edit-input" value="${s.Geburtsjahr || ''}">
-                            </div>
-                            <div class="edit-group">
-                                <label>Availability</label>
-                                <input type="text" id="e-Verfugbarkeit" class="edit-input" value="${s.Verfugbarkeit || ''}" list="availabilityOptions" placeholder="Type or select...">
-                            </div>
-                            <div class="edit-group">
-                                <label>Test Score</label>
-                                <input type="number" step="0.1" id="e-Diem1" class="edit-input" value="${s.Diem1 || ''}" oninput="updateTotal()">
-                            </div>
-                            <div class="edit-group">
-                                <label>Interview Score</label>
-                                <input type="number" step="0.1" id="e-Diem2" class="edit-input" value="${s.Diem2 || ''}" oninput="updateTotal()">
-                            </div>
-                            <div class="edit-group">
-                                <label>Total</label>
-                                <input type="number" step="0.1" id="e-Total" class="edit-input" value="${s.Total || ''}">
-                            </div>
-                            <div class="edit-group" style="grid-column: span 2;">
-                                <label>Superpowers (Bullet points, separate with | )</label>
-                                <input type="text" id="e-Superpowers" class="edit-input" value="${s.Superpowers || ''}" placeholder="Punctual | Hardworking | Fast Learner">
-                            </div>
-                            <div class="edit-group">
-                                <label>Photo</label>
-                                <input type="file" id="e-PhotoFile" class="edit-input">
-                            </div>
-                            <div class="edit-group">
-                                <label>CV PDF</label>
-                                <input type="file" id="e-CVFile" class="edit-input">
-                            </div>
-                            <div class="edit-group">
-                                <label>Video</label>
-                                <input type="file" id="e-VideoFile" class="edit-input">
-                            </div>
+                            <div class="edit-group"><label>Full Name</label><input id="e-FullName" class="edit-input" value="${escapeHtml(s.FullName)}"></div>
+                            <div class="edit-group"><label>Phone</label><input id="e-Phone" class="edit-input" value="${escapeHtml(s.Phone)}"></div>
+                            <div class="edit-group"><label>CCCD</label><input id="e-CCCD" class="edit-input" value="${escapeHtml(s.CCCD)}"></div>
+                            <div class="edit-group"><label>VoucherCode</label><input id="e-VoucherCode" class="edit-input" value="${escapeHtml(s.VoucherCode)}"></div>
+                            <div class="edit-group"><label>ProfessionCode</label><input id="e-ProfessionCode" class="edit-input" value="${escapeHtml(s.ProfessionCode)}"></div>
+                            <div class="edit-group"><label>CenterCode</label><input id="e-CenterCode" class="edit-input" value="${escapeHtml(s.CenterCode)}"></div>
+                            <div class="edit-group"><label>DeutschLevel</label><input id="e-DeutschLevel" class="edit-input" value="${escapeHtml(s.DeutschLevel)}"></div>
+                            <div class="edit-group"><label>AvailableFrom</label><input id="e-AvailableFrom" class="edit-input" value="${escapeHtml(s.AvailableFrom)}"></div>
+                            <div class="edit-group"><label>AssessmentScore</label><input id="e-AssessmentScore" class="edit-input" value="${escapeHtml(s.AssessmentScore)}"></div>
+                            <div class="edit-group"><label>VideoScore</label><input id="e-VideoScore" class="edit-input" value="${escapeHtml(s.VideoScore)}"></div>
+                            <div class="edit-group"><label>Strength1</label><input id="e-Strength1" class="edit-input" value="${escapeHtml(s.Strength1)}"></div>
+                            <div class="edit-group"><label>Strength2</label><input id="e-Strength2" class="edit-input" value="${escapeHtml(s.Strength2)}"></div>
+                            <div class="edit-group"><label>Strength3</label><input id="e-Strength3" class="edit-input" value="${escapeHtml(s.Strength3)}"></div>
+                            <div class="edit-group"><label>PhotoLink (Drive URL)</label><input id="e-PhotoLink" class="edit-input" value="${escapeHtml(s.PhotoLink)}"></div>
+                            <div class="edit-group"><label>RawVideoLink (Drive URL)</label><input id="e-RawVideoLink" class="edit-input" value="${escapeHtml(s.RawVideoLink)}"></div>
                         </div>
-                        <div class="edit-actions">
-                            <button class="btn btn-primary" onclick="saveEdit('${id}')">Save Changes</button>
-                            <button class="btn btn-outline" onclick="toggleEdit('${id}')">Cancel</button>
+                        <div style="padding: 10px 20px;">
+                            <button class="btn btn-nsl-brutal" style="background:var(--text-main); color:#fff;" onclick="saveEdit('${escapeHtml(id)}')">Save</button>
+                            <button class="btn btn-nsl-brutal" onclick="this.closest('tr').remove()">Cancel</button>
                         </div>
-                    </div>
-                </td>
+                    </td>
+                </tr>
             `;
-            row.after(editTr);
+
+            if (id) {
+                document.getElementById(`row-${id}`).insertAdjacentHTML('afterend', html);
+            } else {
+                document.getElementById('tableBody').insertAdjacentHTML('afterbegin', html);
+            }
         }
 
-        function showAddRow() {
-            const existingEdit = document.querySelector('.edit-row');
-            if (existingEdit) existingEdit.remove();
-            
-            const tbody = document.getElementById('tableBody');
-            const editTr = document.createElement('tr');
-            editTr.className = 'edit-row';
-            editTr.innerHTML = `
-                <td colspan="8">
-                    <div class="edit-form-container">
-                        <div class="section-title" style="font-size: 16px;">Add New Student Entry</div>
-                        <div class="edit-grid">
-                            <div class="edit-group"><label>Full Name</label><input type="text" id="e-HoTen" class="edit-input"></div>
-                            <div class="edit-group"><label>Phone Number</label><input type="text" id="e-SoDienThoai" class="edit-input"></div>
-                            <div class="edit-group"><label>Date Added</label><input type="text" id="e-NgayNhap" class="edit-input" value="${new Date().toLocaleDateString('vi-VN')}"></div>
-                            <div class="edit-group">
-                                <label>Deutsch Level</label>
-                                <select id="e-Deutsch" class="edit-input">
-                                    <option value="">Select Level</option>
-                                    <option value="A1">A1</option>
-                                    <option value="A2">A2</option>
-                                    <option value="B1" selected>B1</option>
-                                    <option value="B2">B2</option>
-                                    <option value="C1">C1</option>
-                                    <option value="C2">C2</option>
-                                </select>
-                            </div>
-                            <div class="edit-group">
-                                <label>Availability</label>
-                                <input type="text" id="e-Verfugbarkeit" class="edit-input" list="availabilityOptions" placeholder="Type or select...">
-                            </div>
-                            <div class="edit-group"><label>Test Score</label><input type="number" step="0.1" id="e-Diem1" class="edit-input" oninput="updateTotal()"></div>
-                            <div class="edit-group"><label>Interview Score</label><input type="number" step="0.1" id="e-Diem2" class="edit-input" oninput="updateTotal()"></div>
-                            <div class="edit-group"><label>Total</label><input type="number" step="0.1" id="e-Total" class="edit-input"></div>
-                        </div>
-                        <div class="edit-actions">
-                            <button class="btn btn-primary" onclick="saveEdit(null)">Create Student</button>
-                            <button class="btn btn-outline" onclick="this.closest('.edit-row').remove()">Cancel</button>
-                        </div>
-                    </div>
-                </td>
-            `;
-            tbody.prepend(editTr);
-        }
-
-        function updateTotal() {
-            const d1 = parseFloat(document.getElementById('e-Diem1').value) || 0;
-            const d2 = parseFloat(document.getElementById('e-Diem2').value) || 0;
-            document.getElementById('e-Total').value = (d1 + d2).toFixed(1);
-        }
-
-        /* Notification Utilities */
-        function notify(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `
-                ${type === 'success' ? '✓' : '✕'} ${message}
-            `;
-            container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function showConfirm(title, message) {
-            return new Promise((resolve) => {
-                const modal = document.getElementById('customModal');
-                const titleEl = document.getElementById('modalTitle');
-                const textEl = document.getElementById('modalText');
-                const confirmBtn = document.getElementById('modalConfirm');
-                const cancelBtn = document.getElementById('modalCancel');
-
-                titleEl.textContent = title;
-                textEl.textContent = message;
-                modal.style.display = 'flex';
-
-                const close = (result) => {
-                    modal.style.display = 'none';
-                    confirmBtn.onclick = null;
-                    cancelBtn.onclick = null;
-                    resolve(result);
-                };
-
-                confirmBtn.onclick = () => close(true);
-                cancelBtn.onclick = () => close(false);
-                modal.onclick = (e) => { if(e.target === modal) close(false); };
-            });
-        }
+        function showAddRow() { toggleEdit(null); }
 
         async function saveEdit(id) {
-            const formData = new FormData();
-            formData.append('HoTen', document.getElementById('e-HoTen').value);
-            formData.append('SoDienThoai', document.getElementById('e-SoDienThoai').value);
-            formData.append('NgayNhap', document.getElementById('e-NgayNhap').value);
-            
-            if (document.getElementById('e-Deutsch')) formData.append('Deutsch', document.getElementById('e-Deutsch').value);
-            if (document.getElementById('e-Geburtsjahr')) formData.append('Geburtsjahr', document.getElementById('e-Geburtsjahr').value);
-            if (document.getElementById('e-Verfugbarkeit')) formData.append('Verfugbarkeit', document.getElementById('e-Verfugbarkeit').value);
-            if (document.getElementById('e-Superpowers')) formData.append('Superpowers', document.getElementById('e-Superpowers').value);
-            
-            formData.append('Diem1', document.getElementById('e-Diem1').value);
-            formData.append('Diem2', document.getElementById('e-Diem2').value);
-            formData.append('Total', document.getElementById('e-Total').value);
-
-            const photo = document.getElementById('e-PhotoFile')?.files[0];
-            const cv = document.getElementById('e-CVFile')?.files[0];
-            const video = document.getElementById('e-VideoFile')?.files[0];
-
-            if (photo) formData.append('photoFile', photo);
-            if (cv) formData.append('cvFile', cv);
-            if (video) formData.append('videoFile', video);
+            const body = {
+                FullName: document.getElementById('e-FullName').value,
+                Phone: document.getElementById('e-Phone').value,
+                CCCD: document.getElementById('e-CCCD').value,
+                VoucherCode: document.getElementById('e-VoucherCode').value,
+                ProfessionCode: document.getElementById('e-ProfessionCode').value,
+                CenterCode: document.getElementById('e-CenterCode').value,
+                DeutschLevel: document.getElementById('e-DeutschLevel').value,
+                AvailableFrom: document.getElementById('e-AvailableFrom').value,
+                AssessmentScore: document.getElementById('e-AssessmentScore').value,
+                VideoScore: document.getElementById('e-VideoScore').value,
+                Strength1: document.getElementById('e-Strength1').value,
+                Strength2: document.getElementById('e-Strength2').value,
+                Strength3: document.getElementById('e-Strength3').value,
+                PhotoLink: document.getElementById('e-PhotoLink').value,
+                RawVideoLink: document.getElementById('e-RawVideoLink').value
+            };
 
             const url = id ? `/admin/students/${id}` : '/admin/students';
             const method = id ? 'PUT' : 'POST';
 
             try {
-                const res = await fetch(url, { method, body: formData });
+                const res = await apiFetch(url, { method, body });
                 if (res.ok) {
-                    notify(id ? 'Student updated successfully!' : 'Student created successfully!');
+                    notify('Saved successfully');
                     fetchStudents();
                 } else {
-                    notify('Failed to save student.', 'error');
+                    notify('Failed to save', 'error');
                 }
             } catch (err) {
-                notify('An error occurred during save.', 'error');
+                notify('Error saving', 'error');
             }
         }
 
-        document.getElementById('searchInput').oninput = (e) => {
-            const q = e.target.value.toLowerCase();
-            const filtered = allStudents.filter(s => 
-                (s.HoTen && s.HoTen.toLowerCase().includes(q)) || 
-                (s.SoDienThoai && s.SoDienThoai.includes(q))
-            );
-            renderTable(filtered);
-        };
-
-        function triggerImport() { document.getElementById('importInput').click(); }
-        async function handleImport(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const formData = new FormData();
-            formData.append('csvFile', file);
-            
-            try {
-                const res = await fetch('/admin/import', { method: 'POST', body: formData });
-                if (res.ok) {
-                    notify('Data imported successfully!');
-                    fetchStudents();
-                    event.target.value = '';
-                } else {
-                    notify('Error importing data', 'error');
-                }
-            } catch (err) {
-                notify('Import failed', 'error');
-            }
+        async function archiveStudent(id) {
+            if (!confirm('Archive this student?')) return;
+            const res = await apiFetch(`/admin/students/${id}/archive`, { method: 'PUT', body: {} });
+            if (res.ok) { notify('Archived'); fetchStudents(); }
         }
-
-        async function softDelete(id) {
-            const confirmed = await showConfirm('Move to Bin', 'Are you sure you want to move this student to the bin?');
-            if (!confirmed) return;
-            
-            const res = await fetch(`/admin/students/${id}/delete`, { method: 'PUT' });
-            if (res.ok) {
-                notify('Moved to recycle bin');
-                fetchStudents();
-            }
-        }
-
-        async function openTrash() {
-            document.getElementById('trashOverlay').style.display = 'flex';
-            const res = await fetch('/admin/trash');
-            const data = await res.json();
-            const tbody = document.getElementById('trashTableBody');
-            tbody.innerHTML = '';
-            if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 40px; color: #999;">Bin is empty</td></tr>';
-                return;
-            }
-            data.forEach(s => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${s.HoTen}</strong></td>
-                    <td>${s.SoDienThoai}</td>
-                    <td>
-                        <button class="btn-restore" onclick="restoreStudent('${s.id}')">Restore</button>
-                        <button class="btn-perm" onclick="permanentDelete('${s.id}')">Remove</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function closeTrash() { document.getElementById('trashOverlay').style.display = 'none'; }
 
         async function restoreStudent(id) {
-            const res = await fetch(`/admin/students/${id}/restore`, { method: 'PUT' });
-            if (res.ok) {
-                notify('Student restored');
-                fetchStudents();
-                openTrash();
-            }
+            const res = await apiFetch(`/admin/students/${id}/restore`, { method: 'PUT', body: {} });
+            if (res.ok) { notify('Restored'); fetchStudents(); }
         }
 
-        async function permanentDelete(id) {
-            const confirmed = await showConfirm('Permanent Delete', 'This action cannot be undone. Are you sure?');
-            if (!confirmed) return;
+        async function pollJobs() {
+            if (activeJobs.length === 0) {
+                document.getElementById('jobPanel').style.display = 'none';
+                return;
+            }
+            document.getElementById('jobPanel').style.display = 'block';
             
-            const res = await fetch(`/admin/students/${id}/permanent`, { method: 'DELETE' });
-            if (res.ok) {
-                notify('Student permanently removed', 'error');
-                openTrash();
+            let allDone = true;
+            let html = '';
+
+            for (const jid of activeJobs) {
+                const res = await fetch(`/admin/jobs/${jid}`);
+                const job = await res.json();
+                html += `<li><strong>Job ${escapeHtml(jid)} (${escapeHtml(job.type)})</strong>: ${escapeHtml(job.status)} ${job.error ? `<span style="color:red">(${escapeHtml(job.error)})</span>` : ''}</li>`;
+                if (job.status !== 'done' && job.status !== 'failed') allDone = false;
+            }
+
+            document.getElementById('jobList').innerHTML = html;
+
+            if (!allDone) {
+                setTimeout(pollJobs, 3000);
+            } else {
+                notify('All jobs finished processing');
+                activeJobs = [];
+                fetchStudents(); // Refresh statuses
             }
         }
 
         fetchStudents();
     </script>
-
-    <!-- Black Wave Footer (Exact Mirror of Profile) -->
-    <div class="wavy-footer">
-        <svg viewBox="0 0 1000 100" preserveAspectRatio="none" style="width:100%; height:100%;">
-            <path d="M0,20 Q500,60 1000,20 L1000,100 L0,100 Z" fill="#000000" />
-        </svg>
-    </div>
 </body>
 </html>

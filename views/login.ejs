@@ -5,39 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NSL Portal – Sign In</title>
     <link rel="icon" type="image/png" href="/logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/nsl-design-system.css">
     <style>
-        :root {
-            --nsl-red: #cc1f1f;
-            --nsl-gold: #f2a900;
-            --nsl-light-gold: #ffcc22;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #fff;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* No scroll */
-            /* Subtle diagonal pattern */
-            background-image: repeating-linear-gradient(45deg, #f9f9f9 0, #f9f9f9 1px, transparent 0, transparent 50%);
-            background-size: 30px 30px;
-        }
-
         .login-page-container {
             width: 100%;
             flex: 1;
             display: flex;
             flex-direction: column;
-        }
-
-        .wavy-header {
-            width: 100vw;
-            height: 120px; /* Shallower */
-            position: relative;
         }
 
         .login-content {
@@ -58,105 +32,87 @@
         }
 
         .logo-box {
-            margin-bottom: 20px; /* Reduced */
+            margin-bottom: 20px;
         }
-        .logo-box img { height: 180px; }
+        .logo-box img { height: 160px; }
 
         h1 {
-            font-size: 42px;
+            font-size: 36px;
             font-weight: 900;
-            color: var(--nsl-gold);
-            margin-bottom: 10px; /* Reduced */
+            color: var(--text-main);
+            margin-bottom: 10px;
             text-transform: uppercase;
             letter-spacing: 2px;
         }
         .subtitle {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 30px; /* Reduced */
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
             font-weight: 500;
         }
-
-        /* FORM */
-        .form-group {
-            text-align: left;
-            margin-bottom: 24px;
-        }
-        .form-group label {
-            display: block;
-            text-align: left;
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            color: #999; /* Dimm label */
-            letter-spacing: 0.5px;
-        }
-        .input-control {
-            width: 100%;
-            padding: 16px 20px;
-            border: 2px solid #eee;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        .input-control:focus { border-color: var(--nsl-gold); }
-
-        .btn-submit {
-            width: 100%;
-            background: var(--nsl-red);
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 800;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(204, 31, 31, 0.3);
-            transition: all 0.25s;
-            margin-top: 10px;
-        }
-        .btn-submit:hover { background: #b01a1a; transform: translateY(-2px); }
 
         .error-msg {
             background: #fff5f5;
             color: var(--nsl-red);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             font-size: 14px;
             font-weight: 600;
             margin-bottom: 24px;
-            border: 1px solid #fed7d7;
+            border: 2px solid var(--nsl-red); /* Brutalist touch */
         }
 
         .footer-text-bottom {
-            margin-top: 30px; /* Reduced from 50px */
+            margin-top: 30px;
             font-size: 12px;
             color: #bbb;
             font-weight: 600;
         }
 
+        .btn-submit-brutal {
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: 800;
+            border: 2px solid var(--text-main);
+            color: #fff;
+            background: var(--text-main);
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+        .btn-submit-brutal:hover {
+            box-shadow: 4px 4px 0px var(--nsl-red);
+            transform: translate(-2px, -2px);
+        }
+
+        /* Specific buttons */
+        #btn-student { background: var(--text-main); }
+        #btn-partner { background: var(--nsl-red); border-color: var(--nsl-red); }
+        #btn-admin { background: var(--nsl-gold); border-color: var(--nsl-gold); color: var(--text-main); }
+
+        #btn-partner:hover { box-shadow: 4px 4px 0px var(--text-main); }
+        #btn-admin:hover { box-shadow: 4px 4px 0px var(--text-main); }
+
         @media (max-width: 600px) {
             .login-content { padding: 20px 30px; }
             .logo-box { margin-bottom: 25px; }
-            .logo-box img { height: 140px; }
-            h1 { font-size: 32px; }
-            .subtitle { font-size: 15px; margin-bottom: 30px; }
-            .wavy-header { height: 75px; }
-            .footer-text-bottom { margin-top: 20px; }
+            .logo-box img { height: 120px; }
+            h1 { font-size: 28px; }
+            .subtitle { font-size: 14px; margin-bottom: 20px; }
+            .nsl-tab-btn { padding: 10px 15px; font-size: 14px; }
         }
     </style>
 </head>
-<body>
-
+<body class="bg-pattern">
     <div class="login-page-container">
-        <!-- Wavy Header Full Width -->
+        <!-- WAVY HEADER: NSL Brand (German Flag) -->
         <div class="wavy-header">
-            <svg viewBox="0 0 1000 150" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                <path d="M0,0 L1000,0 L1000,100 Q500,130 0,100 Z" fill="#f2a900" />
-                <path d="M0,0 L1000,0 L1000,70 Q500,100 0,70 Z" fill="#cc1f1f" />
+            <svg viewBox="0 0 1000 140" preserveAspectRatio="none" style="width:100%; height:100%;">
+                <path d="M0,0 L1000,0 L1000,80 Q500,140 0,140 Z" fill="#f2a900" />
+                <path d="M0,0 L1000,0 L1000,140 Q600,140 200,0 Z" fill="#cc1f1f" />
             </svg>
         </div>
 
@@ -165,36 +121,90 @@
                 <div class="logo-box">
                     <img src="/logo.png" alt="NSL">
                 </div>
-
-                <h1>NSL Portal</h1>
-                <p class="subtitle">Access your test and interview results</p>
+                
+                <h1>Portal Access</h1>
+                <p class="subtitle">Select your role to sign in</p>
 
                 <% if (typeof error !== 'undefined' && error) { %>
                     <div class="error-msg"><%= error %></div>
                 <% } %>
 
-                <form action="/login" method="POST">
-                    <div class="form-group">
-                        <label>Login Credentials</label>
-                        <input type="text" name="input" class="input-control" placeholder="Phone Number or Password" required>
-                    </div>
+                <div class="nsl-tabs">
+                    <button class="nsl-tab-btn" onclick="switchTab('student')">Student</button>
+                    <button class="nsl-tab-btn" onclick="switchTab('partner')">Partner</button>
+                    <button class="nsl-tab-btn" onclick="switchTab('admin')">Admin</button>
+                </div>
 
-                    <button type="submit" class="btn-submit">Sign In</button>
-                </form>
+                <!-- STUDENT FORM -->
+                <div id="tab-student" class="tab-content">
+                    <form action="/login" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <div class="form-group text-left">
+                            <label class="form-label">Student ID</label>
+                            <input type="text" name="studentId" class="form-control" placeholder="e.g. HDEU_Tam_HUYNH_06.01.2004" required>
+                        </div>
+                        <button type="submit" id="btn-student" class="btn-submit-brutal">Student Login</button>
+                    </form>
+                </div>
 
-                <p class="footer-text-bottom">
-                    NSL – Study & Work in Germany
-                </p>
+                <!-- PARTNER FORM -->
+                <div id="tab-partner" class="tab-content">
+                    <form action="/partner/login" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <div class="form-group text-left">
+                            <label class="form-label">Access Code</label>
+                            <input type="password" name="accessCode" class="form-control" placeholder="Enter your partner code" required>
+                        </div>
+                        <button type="submit" id="btn-partner" class="btn-submit-brutal">Partner Login</button>
+                    </form>
+                </div>
+
+                <!-- ADMIN FORM -->
+                <div id="tab-admin" class="tab-content">
+                    <form action="/admin/login" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                        <div class="form-group text-left">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Enter admin password" required>
+                        </div>
+                        <button type="submit" id="btn-admin" class="btn-submit-brutal">Admin Login</button>
+                    </form>
+                </div>
+
+                <div class="footer-text-bottom">
+                    &copy; <%= new Date().getFullYear() %> NSL. All rights reserved.
+                </div>
             </div>
-        </div>
-
-        <!-- Black Wave Footer (Bottom) - Increased Height -->
-        <div style="height: 100px; margin-top: auto;">
-            <svg viewBox="0 0 1000 100" preserveAspectRatio="none" style="width: 100%; height: 100%;">
-                <path d="M0,20 Q500,60 1000,20 L1000,100 L0,100 Z" fill="#000000" />
-            </svg>
         </div>
     </div>
 
+    <script>
+        function switchTab(tabId) {
+            // Remove active classes
+            document.querySelectorAll('.nsl-tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Add active class to corresponding tab and button
+            document.getElementById('tab-' + tabId).classList.add('active');
+            
+            // Map tabId to button index
+            const index = ['student', 'partner', 'admin'].indexOf(tabId);
+            if (index !== -1) {
+                document.querySelectorAll('.nsl-tab-btn')[index].classList.add('active');
+            }
+
+            // Update URL to reflect current tab (optional, for refresh persistence)
+            const url = new URL(window.location);
+            url.searchParams.set('tab', tabId);
+            window.history.replaceState({}, '', url);
+        }
+
+        // Initialize active tab from server or URL
+        const serverTab = "<%= typeof tab !== 'undefined' ? tab : '' %>";
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = serverTab || urlParams.get('tab') || 'student';
+        
+        switchTab(activeTab);
+    </script>
 </body>
 </html>

@@ -1,7 +1,13 @@
 node_modules
 .env
+credentials.json
+token.json
 uploads
 public/uploads
 *.log
 .DS_Store
 claude.md
+
+# Ignored skill directories
+awesome-claude-skills/
+ui-ux-pro-max-skill/
