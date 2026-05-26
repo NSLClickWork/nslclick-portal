@@ -18,6 +18,29 @@
         .status-pending { background: #fff3e0; color: #ef6c00; }
 
         .job-panel { background: var(--bg-gray); padding: 15px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-top: 20px; display: none; }
+
+        /* Partner Modal Styling */
+        .modal-content {
+            box-shadow: 8px 8px 0px var(--text-main);
+        }
+        .prof-tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+        .prof-tag-list label {
+            display: inline-block;
+            padding: 6px 12px;
+            border: 2px solid var(--text-main);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            background: #fff;
+            transition: all 0.2s ease;
+        }
+        .prof-tag-list label:has(input:checked) {
+            background: var(--nsl-red);
+            color: white;
+            border-color: var(--nsl-red);
+        }
+        .prof-tag-list input { display: none; }
     </style>
 </head>
 <body class="bg-pattern">
@@ -38,43 +61,144 @@
         <img src="/logo.png" alt="NSL" class="nav-brand-logo">
         
         <div class="section-card" style="border: 4px solid var(--text-main); border-radius: 0; box-shadow: 8px 8px 0px var(--text-main);">
+            <div class="tabs" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button class="btn btn-nsl-brutal" id="tabStudents" style="background: var(--text-main); color: #fff;" onclick="switchTab('students')">Students</button>
+                <button class="btn btn-nsl-brutal" id="tabPartners" onclick="switchTab('partners')">Partners</button>
+            </div>
+
             <div class="section-title" id="pageTitle" style="color: var(--text-main); border-left: 8px solid var(--nsl-gold); padding-left: 15px;">Active Students</div>
             
-            <div style="display: flex; gap: 10px; margin-bottom: 20px;" id="actionButtons">
-                <button class="btn btn-nsl-brutal" onclick="showAddRow()" style="background: var(--text-main); color: #fff;">+ Add Student</button>
-                <button class="btn btn-nsl-brutal" onclick="batchGenerate('pdfs')" style="border-color: var(--nsl-red); color: var(--nsl-red);">Generate PDF for Selected</button>
-                <button class="btn btn-nsl-brutal" onclick="batchGenerate('videos')" style="border-color: var(--nsl-gold); color: var(--nsl-gold);">Generate Video for Selected</button>
-            </div>
+            <div id="studentsView">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;" id="actionButtons">
+                    <button class="btn btn-nsl-brutal" onclick="showAddRow()" style="background: var(--text-main); color: #fff;">+ Add Student</button>
+                    <button class="btn btn-nsl-brutal" onclick="batchGenerate('pdfs')" style="border-color: var(--nsl-red); color: var(--nsl-red);">Generate PDF for Selected</button>
+                    <button class="btn btn-nsl-brutal" onclick="batchGenerate('videos')" style="border-color: var(--nsl-gold); color: var(--nsl-gold);">Generate Video for Selected</button>
+                    <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                        <span id="adminStudentCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;">0</span>
+                        <input type="text" id="adminStudentSearch" class="form-control" placeholder="Search students..." style="width: 250px; padding: 8px 15px;" oninput="renderTable()">
+                    </div>
+                </div>
 
             <div class="job-panel" id="jobPanel">
                 <h4 style="margin-bottom: 10px;">Active Jobs</h4>
                 <ul id="jobList" style="font-size: 13px; list-style: none;"></ul>
             </div>
 
-            <div class="table-container" style="max-height: 600px; overflow-y: auto; border: 2px solid var(--text-main);">
-                <table class="nsl-table nsl-sticky-table" style="margin: 0; width: 100%;">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th>
-                            <th>Student ID</th>
-                            <th>Full Name</th>
-                            <th>Profession</th>
-                            <th>Center</th>
-                            <th>PDF Status</th>
-                            <th>Video Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
+                <div class="table-container" style="max-height: 600px; overflow-y: auto; border: 2px solid var(--text-main);">
+                    <table class="nsl-table nsl-sticky-table" style="margin: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th>
+                                <th>Student ID</th>
+                                <th>Full Name</th>
+                                <th>Profession</th>
+                                <th>Center</th>
+                                <th>PDF Status</th>
+                                <th>Video Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PARTNERS VIEW -->
+            <div id="partnersView" style="display: none;">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+                    <button class="btn btn-nsl-brutal" onclick="showCreatePartnerModal()" style="background: var(--text-main); color: #fff;">+ Generate Partner Code</button>
+                    <div style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+                        <span id="adminPartnerCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;">0</span>
+                        <input type="text" id="adminPartnerSearch" class="form-control" placeholder="Search partners..." style="width: 250px; padding: 8px 15px;" oninput="renderPartnerTable()">
+                    </div>
+                </div>
+                <div class="table-container" style="max-height: 600px; overflow-y: auto; border: 2px solid var(--text-main);">
+                    <table class="nsl-table nsl-sticky-table" style="margin: 0; width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Partner Name</th>
+                                <th>Allowed Professions</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partnerTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PARTNER CREATION MODAL -->
+    <div id="partnerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: white; padding: 20px; border-radius: var(--radius-sm); border: 4px solid var(--text-main); max-width: 500px; width: 100%;">
+            <h3>Generate Partner Code</h3>
+            <div id="p-Form">
+                <div class="edit-group" style="margin-top: 15px;">
+                    <label>Partner Name (Company)</label>
+                    <input id="p-Name" class="edit-input" placeholder="e.g. REWE" oninput="updateAutoCode()">
+                </div>
+                <div class="edit-group" style="margin-top: 15px;">
+                    <label>Allowed Professions</label>
+                    <div class="prof-tag-list">
+                        <label><input type="checkbox" name="prof" value="ALL" onchange="updateAutoCode()"> Tất cả (*)</label>
+                        <label><input type="checkbox" name="prof" value="Koch" onchange="updateAutoCode()"> Koch</label>
+                        <label><input type="checkbox" name="prof" value="Pflege" onchange="updateAutoCode()"> Pflege</label>
+                        <label><input type="checkbox" name="prof" value="ZfA" onchange="updateAutoCode()"> ZfA</label>
+                        <label><input type="checkbox" name="prof" value="Mechatroniker" onchange="updateAutoCode()"> Mechatroniker</label>
+                        <label><input type="checkbox" name="prof" value="Restaurantfachmann" onchange="updateAutoCode()"> Restaurantfachmann</label>
+                        <label><input type="checkbox" name="prof" value="HDEU" onchange="updateAutoCode()"> HDEU</label>
+                    </div>
+                    <small style="color: #666; font-size: 11px; display: block; margin-top: 8px;">
+                        * Hệ thống tự động tìm chuỗi: Nếu chọn <b>Pflege</b>, doanh nghiệp sẽ thấy được cả <b>Pflegefachkraft</b> hay bất kỳ nghề nào có chứa chữ Pflege.
+                    </small>
+                </div>
+                <div class="edit-group" style="margin-top: 15px;">
+                    <label>Raw Access Code (You can edit manually)</label>
+                    <input id="p-Code" class="edit-input" placeholder="Auto-generated...">
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="btn btn-nsl-brutal" style="background:var(--nsl-red); color:#fff;" onclick="submitPartner()">Generate & Save</button>
+                    <button class="btn btn-nsl-brutal" onclick="document.getElementById('partnerModal').style.display='none'">Cancel</button>
+                </div>
+            </div>
+            <div id="p-Result" style="margin-top: 15px; display: none; padding: 15px; background: #e8f5e9; border: 2px solid #2e7d32; border-radius: 4px;">
+                <strong style="color: #2e7d32; font-size: 16px;">Code Generated Successfully!</strong><br><br>
+                Please copy this code and send it to the partner. <b style="color: var(--nsl-red);">You won't be able to see it again.</b><br><br>
+                <code id="p-ResultCode" style="font-size: 18px; font-weight: bold; background: #fff; border: 2px solid #ccc; padding: 10px; display: block; text-align: center;"></code>
+                <button class="btn btn-nsl-brutal" style="margin-top: 15px; width: 100%;" onclick="copyAndClose()">Copy & Close</button>
             </div>
         </div>
     </div>
 
     <script>
         let allStudents = [];
+        let allPartners = [];
         let showingArchived = false;
         let activeJobs = [];
+        
+        function switchTab(tab) {
+            if (tab === 'students') {
+                document.getElementById('studentsView').style.display = 'block';
+                document.getElementById('partnersView').style.display = 'none';
+                document.getElementById('tabStudents').style.background = 'var(--text-main)';
+                document.getElementById('tabStudents').style.color = '#fff';
+                document.getElementById('tabPartners').style.background = 'transparent';
+                document.getElementById('tabPartners').style.color = 'var(--text-main)';
+                document.getElementById('pageTitle').innerText = showingArchived ? 'Archived Students' : 'Active Students';
+                document.getElementById('toggleViewBtn').style.display = 'inline-block';
+            } else {
+                document.getElementById('studentsView').style.display = 'none';
+                document.getElementById('partnersView').style.display = 'block';
+                document.getElementById('tabPartners').style.background = 'var(--text-main)';
+                document.getElementById('tabPartners').style.color = '#fff';
+                document.getElementById('tabStudents').style.background = 'transparent';
+                document.getElementById('tabStudents').style.color = 'var(--text-main)';
+                document.getElementById('pageTitle').innerText = 'Partner Management';
+                document.getElementById('toggleViewBtn').style.display = 'none';
+                fetchPartners();
+            }
+        }
 
         // Wrapper for fetch to include CSRF automatically
         async function apiFetch(url, options = {}) {
@@ -137,7 +261,14 @@
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             
-            const filtered = allStudents.filter(s => showingArchived ? s.Status === 'ARCHIVED' : s.Status !== 'ARCHIVED');
+            const q = (document.getElementById('adminStudentSearch')?.value || '').toLowerCase();
+            const filtered = allStudents.filter(s => {
+                if (showingArchived ? s.Status !== 'ARCHIVED' : s.Status === 'ARCHIVED') return false;
+                if (!q) return true;
+                return [s.StudentID, s.FullName, s.ProfessionCode, s.CenterCode].join(' ').toLowerCase().includes(q);
+            });
+            
+            document.getElementById('adminStudentCount').innerText = filtered.length;
             
             filtered.forEach(s => {
                 const tr = document.createElement('tr');
@@ -302,6 +433,129 @@
                 notify('All jobs finished processing');
                 activeJobs = [];
                 fetchStudents(); // Refresh statuses
+            }
+        }
+
+        // PARTNER FUNCTIONS
+        async function fetchPartners() {
+            const res = await fetch('/admin/partners');
+            allPartners = await res.json();
+            renderPartnerTable();
+        }
+
+        function renderPartnerTable() {
+            const tbody = document.getElementById('partnerTableBody');
+            tbody.innerHTML = '';
+            
+            const q = (document.getElementById('adminPartnerSearch')?.value || '').toLowerCase();
+            const filtered = allPartners.filter(p => {
+                if (!q) return true;
+                return [p.PartnerName, p.AllowedProfessions, p.Status].join(' ').toLowerCase().includes(q);
+            });
+            
+            document.getElementById('adminPartnerCount').innerText = filtered.length;
+            
+            filtered.forEach(p => {
+                const tr = document.createElement('tr');
+                const isRevoked = p.revoked === 'TRUE';
+                const statusBadge = isRevoked 
+                    ? `<span class="status-badge status-failed">REVOKED</span>` 
+                    : `<span class="status-badge status-done">ACTIVE</span>`;
+                
+                tr.innerHTML = `
+                    <td><strong>${escapeHtml(p.partnerName)}</strong></td>
+                    <td>${escapeHtml(p.allowedProfessions)}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        ${isRevoked 
+                            ? `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px;" onclick="togglePartnerStatus('${escapeHtml(p.rowIndex)}', false)">Restore</button>`
+                            : `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; color:#fff; background:var(--nsl-red); border-color:var(--nsl-red);" onclick="togglePartnerStatus('${escapeHtml(p.rowIndex)}', true)">Revoke</button>`
+                        }
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function togglePartnerStatus(rowIndex, revokeStatus) {
+            if (revokeStatus && !confirm('Revoke access for this partner?')) return;
+            const res = await apiFetch(`/admin/partners/${rowIndex}/revoke`, {
+                method: 'PUT',
+                body: { revoked: revokeStatus }
+            });
+            if (res.ok) {
+                notify(revokeStatus ? 'Access Revoked' : 'Access Restored');
+                fetchPartners();
+            } else {
+                notify('Error updating status', 'error');
+            }
+        }
+
+        function showCreatePartnerModal() {
+            document.getElementById('p-Form').style.display = 'block';
+            document.getElementById('p-Result').style.display = 'none';
+            document.getElementById('p-Name').value = '';
+            document.querySelectorAll('input[name="prof"]').forEach(cb => cb.checked = false);
+            document.getElementById('p-Code').value = '';
+            document.getElementById('partnerModal').style.display = 'flex';
+        }
+
+        function copyAndClose() {
+            const codeText = document.getElementById('p-ResultCode').innerText;
+            navigator.clipboard.writeText(codeText).then(() => {
+                notify('Copied to clipboard!', 'success');
+                document.getElementById('partnerModal').style.display = 'none';
+                fetchPartners();
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+                document.getElementById('partnerModal').style.display = 'none';
+                fetchPartners();
+            });
+        }
+
+        function updateAutoCode() {
+            const name = document.getElementById('p-Name').value.trim().toUpperCase().replace(/\s+/g, '_');
+            const checkboxes = Array.from(document.querySelectorAll('input[name="prof"]:checked'));
+            const profsRaw = checkboxes.map(cb => cb.value);
+            const year = new Date().getFullYear();
+            
+            let profs = profsRaw.join('_');
+            if (profsRaw.length === 0 || profsRaw.includes('ALL')) {
+                profs = 'ALL';
+            }
+            
+            let autoCode = `Projekt_${name ? name + '_' : ''}${profs}_${year}`;
+            document.getElementById('p-Code').value = autoCode;
+        }
+
+        async function submitPartner() {
+            const partnerName = document.getElementById('p-Name').value.trim();
+            const rawCode = document.getElementById('p-Code').value.trim();
+            
+            const checkboxes = Array.from(document.querySelectorAll('input[name="prof"]:checked'));
+            let allowedProfessions = checkboxes.map(cb => cb.value).join(', ');
+            if (checkboxes.length === 0 || allowedProfessions.includes('ALL')) {
+                allowedProfessions = '*';
+            }
+            
+            if (!partnerName || !rawCode) {
+                return notify('Partner Name and Code are required', 'error');
+            }
+            
+            try {
+                const res = await apiFetch('/admin/partners', {
+                    method: 'POST',
+                    body: { partnerName, allowedProfessions, rawCode }
+                });
+                if (res.ok) {
+                    document.getElementById('p-Form').style.display = 'none';
+                    document.getElementById('p-ResultCode').innerText = rawCode;
+                    document.getElementById('p-Result').style.display = 'block';
+                } else {
+                    notify('Failed to create partner', 'error');
+                }
+            } catch (err) {
+                notify('Network error', 'error');
             }
         }
 

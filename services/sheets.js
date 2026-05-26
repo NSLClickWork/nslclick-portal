@@ -4,7 +4,8 @@ const { serviceAccountClient } = require('./googleAuth');
 // Default Database Config
 const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID || '1mMfpTipZ8w9LpnebDlc1qC7pkNoX3NafhGXdUeJjyH4'; // Fallback to their exact ID
 const MASTER_SHEET = 'CHECKLIST'; // Tên tab thực tế trong Google Sheets
-const PARTNER_SHEET = 'PARTNER';  // Tên tab thực tế trong Google Sheets
+const ASSESS_SHEET = 'NSL-ASSESS';
+const PARTNER_SHEET = 'PARTNER_ACCESS';  // Tên tab chứa danh sách mã đăng nhập của doanh nghiệp
 
 async function getSheetsInstance() {
     if (!serviceAccountClient) {
@@ -58,6 +59,7 @@ async function getAllStudents() {
             if (key.toLowerCase() === 'superpower 2' || key.toLowerCase() === 'strength 2') return 'Strength2';
             if (key.toLowerCase() === 'superpower 3' || key.toLowerCase() === 'strength 3') return 'Strength3';
             if (key.toLowerCase() === 'candidate cards' || key.toLowerCase() === 'setcard') return 'SetcardLink';
+            if (key.toLowerCase() === 'skill centre - video recording' || key.toLowerCase() === 'raw video link' || key.toLowerCase() === 'rawvideolink') return 'RawVideoLink';
             return key;
         });
 
@@ -174,8 +176,8 @@ async function getPartnerAccessConfigs() {
         if (!rows || rows.length === 0) return [];
 
         const headers = rows[0];
-        return rows.slice(1).map((row) => {
-            const config = {};
+        return rows.slice(1).map((row, index) => {
+            const config = { rowIndex: index + 2 };
             headers.forEach((header, i) => {
                 config[header.trim()] = row[i] || '';
             });
@@ -241,9 +243,31 @@ async function updateStudentFields(studentId, updates) {
     });
     const headers = headerResponse.data.values[0];
 
+    const reverseMap = {
+        FullName: ['Student Name', 'FullName'],
+        StudentID: ['Student ID', 'StudentID'],
+        PhotoLink: ['Photo', 'Photo Link'],
+        ActivityPhotoLink: ['Activity Photo', 'Activity Photo Link'],
+        YouTubeLink: ['Introduction Video', 'YouTube Link'],
+        AvailableFrom: ['Availability', 'Available From'],
+        CenterCode: ['Language School', 'Center Code'],
+        Strength1: ['Superpower 1', 'Strength 1'],
+        Strength2: ['Superpower 2', 'Strength 2'],
+        Strength3: ['Superpower 3', 'Strength 3'],
+        SetcardLink: ['Candidate Cards', 'Setcard', 'SetcardLink'],
+        RawVideoLink: ['Skill Centre - Video Recording', 'Raw Video Link', 'RawVideoLink']
+    };
+
     const data = [];
     for (const [key, value] of Object.entries(updates)) {
-        const colIndex = headers.indexOf(key);
+        let colIndex = headers.indexOf(key);
+        if (colIndex === -1) {
+            colIndex = headers.findIndex(h => {
+                const hLower = h.trim().toLowerCase();
+                return (reverseMap[key] && reverseMap[key].some(m => m.toLowerCase() === hLower));
+            });
+        }
+        
         if (colIndex !== -1) {
             const colLetter = colIndexToA1(colIndex);
             data.push({
@@ -296,7 +320,79 @@ async function addStudent(studentData) {
             values: [rowData]
         }
     });
-    return studentData;
+    return true;
+}
+
+/**
+ * Thêm đối tác mới
+ */
+async function addPartnerAccess(partnerConfig) {
+    const sheets = await getSheetsInstance();
+    const headerResponse = await sheets.spreadsheets.values.get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: `${PARTNER_SHEET}!1:1`,
+    });
+    
+    let headers = headerResponse.data.values ? headerResponse.data.values[0] : [];
+    if (headers.length === 0) {
+        // If sheet is empty, create headers
+        headers = ['partnerName', 'codeHash', 'allowedProfessions', 'allowedCenters', 'expiresAt', 'revoked'];
+        await sheets.spreadsheets.values.update({
+            spreadsheetId: SPREADSHEET_ID,
+            range: `${PARTNER_SHEET}!A1:Z1`,
+            valueInputOption: 'USER_ENTERED',
+            requestBody: { values: [headers] }
+        });
+    }
+
+    const rowData = headers.map(header => partnerConfig[header] || '');
+
+    await sheets.spreadsheets.values.append({
+        spreadsheetId: SPREADSHEET_ID,
+        range: `${PARTNER_SHEET}!A:A`,
+        valueInputOption: 'USER_ENTERED',
+        insertDataOption: 'INSERT_ROWS',
+        requestBody: {
+            values: [rowData]
+        }
+    });
+    return true;
+}
+
+/**
+ * Cập nhật thông tin đối tác
+ */
+async function updatePartnerAccess(rowIndex, updates) {
+    const sheets = await getSheetsInstance();
+    const headerResponse = await sheets.spreadsheets.values.get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: `${PARTNER_SHEET}!1:1`,
+    });
+    const headers = headerResponse.data.values[0];
+
+    const data = [];
+    for (const [key, value] of Object.entries(updates)) {
+        const colIndex = headers.indexOf(key);
+        if (colIndex !== -1) {
+            const colLetter = colIndexToA1(colIndex);
+            data.push({
+                range: `${PARTNER_SHEET}!${colLetter}${rowIndex}`,
+                values: [[value]]
+            });
+        }
+    }
+
+    if (data.length > 0) {
+        await sheets.spreadsheets.values.batchUpdate({
+            spreadsheetId: SPREADSHEET_ID,
+            requestBody: {
+                valueInputOption: 'USER_ENTERED',
+                data: data
+            }
+        });
+        return true;
+    }
+    return false;
 }
 
 module.exports = {
@@ -304,5 +400,7 @@ module.exports = {
     getStudentById,
     updateStudentFields,
     addStudent,
+    addPartnerAccess,
+    updatePartnerAccess,
     getPartnerAccessConfigs
 };

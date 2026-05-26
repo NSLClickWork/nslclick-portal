@@ -11,3 +11,8 @@ claude.md
 # Ignored skill directories
 awesome-claude-skills/
 ui-ux-pro-max-skill/
+
+# Candidate local image folders & models
+NSL_Candidate_Setcards/
+public/photos/
+haarcascade_frontalface_default.xml

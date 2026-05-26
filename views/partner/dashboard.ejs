@@ -90,14 +90,20 @@
 
     <div class="container">
         <img src="/logo.png" alt="NSL" class="nav-brand-logo">
-        <h2 style="margin-bottom: 30px; color: var(--text-main); font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--nsl-red); padding-left: 15px;">Candidates Database</h2>
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px;">
+            <h2 style="color: var(--text-main); font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--nsl-red); padding-left: 15px; margin: 0;">Candidates Database</h2>
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <span id="studentCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;"><%= students ? students.length : 0 %> Candidates</span>
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by name, profession..." style="max-width: 300px; padding: 8px 15px; font-size: 14px;" onkeyup="filterStudents()">
+            </div>
+        </div>
         
-        <div class="grid">
+        <div class="grid" id="studentsGrid">
             <% if (students && students.length > 0) { %>
                 <% students.forEach(student => { %>
                     <div class="nsl-grid-card" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>;">
                         <div class="card-header">
-                            <img src="/proxy/students/<%= student.StudentID %>/photo" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(student.FullName) %>&background=random'" alt="Photo" class="avatar">
+                            <img src="/photos/<%= encodeURIComponent(student.FullName) %>.jpg" onerror="this.onerror=null; this.src='/proxy/students/<%= student.StudentID %>/photo'; this.addEventListener('error', function(){this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(student.FullName) %>&background=random'});" alt="Photo" class="avatar">
                             <div>
                                 <div class="name"><%= student.FullName %></div>
                                 <div class="profession"><%= student.ProfessionCode || '' %></div>
@@ -106,26 +112,28 @@
                         <div class="card-body">
                             <div class="info-row">
                                 <span class="info-label"><%= __('date_of_birth') || 'Ngày sinh' %></span>
-                                <span class="info-value"><%= student.DOB || '—' %></span>
+                                <span class="info-value"><%= student.DOB || 'PENDING' %></span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label"><%= __('profession') || 'Nghề' %></span>
-                                <span class="info-value"><%= student.ProfessionCode || 'Điều dưỡng' %></span>
+                                <span class="info-value"><%= student.ProfessionCode || 'PENDING' %></span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label"><%= __('level') %></span>
-                                <span class="info-value"><%= student.DeutschLevel || '—' %></span>
+                                <span class="info-value"><%= student.DeutschLevel || 'PENDING' %></span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label"><%= __('available') %></span>
-                                <span class="info-value"><%= student.AvailableFrom || '—' %></span>
+                                <span class="info-value"><%= student.AvailableFrom || 'PENDING' %></span>
                             </div>
-                            <% if (student.NSLScore || student.AssessmentScore) { %>
                             <div class="info-row" style="background: #fdfdfd;">
                                 <span class="info-label">NSL Score</span>
-                                <span class="info-value" style="color: var(--nsl-gold);"><%= student.NSLScore || student.AssessmentScore %>/100</span>
+                                <% 
+                                    let score = student.NSLScore || student.AssessmentScore;
+                                    let displayScore = (score && score !== '0' && score !== 0) ? `${score}/100` : 'PENDING';
+                                %>
+                                <span class="info-value" style="color: var(--nsl-gold);"><%= displayScore %></span>
                             </div>
-                            <% } %>
                             <% if (student.Strength1 || student.Strength2 || student.Strength3) { %>
                             <div style="margin-top: 15px; border-top: 2px solid var(--border-color); padding-top: 10px;">
                                 <span class="info-label" style="display:block; margin-bottom:8px;">Strengths (Stärken)</span>
@@ -152,5 +160,30 @@
             <% } %>
         </div>
     </div>
+    <script>
+        function filterStudents() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const grid = document.getElementById('studentsGrid');
+            if (!grid) return;
+            const cards = grid.getElementsByClassName('nsl-grid-card');
+            let count = 0;
+            
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = '';
+                    count++;
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+            
+            const countBadge = document.getElementById('studentCount');
+            if (countBadge) {
+                countBadge.innerText = count + ' Candidates';
+            }
+        }
+    </script>
 </body>
 </html>

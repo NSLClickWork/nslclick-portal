@@ -1,9 +1,9 @@
-# 🌟 NSL Click - Student Result & Management Portal
+# 🌟 NSL Click - Student Result & Management Porta
 
 [![Language](https://img.shields.io/badge/Language-Node.js-green.svg)](https://nodejs.org)
 [![Framework](https://img.shields.io/badge/Framework-Express-lightgrey.svg)](https://expressjs.com)
 [![License](https://img.shields.io/badge/License-ISC-blue.svg)](LICENSE)
-[![Deployment](https://img.shields.io/badge/Deployment-Vercel-black.svg)](https://vercel.com)
+[![Deploy ment](https://img.shields.io/badge/Deployment-Vercel-black.svg)](https://vercel.com)
 
 A premium, enterprise-grade management system designed for **NSL (Study & Work in Germany)**. This portal provides two core experiences: a sleek, Bauhaus-inspired student result viewer and a powerful administrative dashboard for full student lifecycle management.
 

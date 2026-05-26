@@ -467,6 +467,57 @@ app.put('/admin/students/:id/restore', isAdmin, async (req, res) => {
     }
 });
 
+// Admin Partner Routes
+app.get('/admin/partners', isAdmin, async (req, res) => {
+    try {
+        const partners = await sheetsService.getPartnerAccessConfigs();
+        // Do not send password hashes to frontend
+        const safePartners = partners.map(p => {
+            const { codeHash, ...safePartner } = p;
+            return safePartner;
+        });
+        res.json(safePartners);
+    } catch (err) {
+        console.error('Error fetching partners:', err);
+        res.status(500).json({ error: 'Failed to fetch partners.' });
+    }
+});
+
+app.post('/admin/partners', isAdmin, async (req, res) => {
+    try {
+        const { partnerName, allowedProfessions, allowedCenters, rawCode, expiresAt } = req.body;
+        if (!partnerName || !rawCode) {
+            return res.status(400).json({ error: 'Partner Name and Code are required.' });
+        }
+        
+        const codeHash = await bcrypt.hash(rawCode, 10);
+        
+        const partnerConfig = {
+            partnerName,
+            codeHash,
+            allowedProfessions: allowedProfessions || '*',
+            allowedCenters: allowedCenters || '*',
+            expiresAt: expiresAt || '',
+            revoked: 'FALSE'
+        };
+        
+        await sheetsService.addPartnerAccess(partnerConfig);
+        res.json({ success: true, message: 'Partner created successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.put('/admin/partners/:rowIndex/revoke', isAdmin, async (req, res) => {
+    try {
+        const { revoked } = req.body;
+        await sheetsService.updatePartnerAccess(req.params.rowIndex, { revoked: revoked ? 'TRUE' : 'FALSE' });
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Import services for jobs
 const pdfService = require('./services/pdf');
 const videoService = require('./services/video');
