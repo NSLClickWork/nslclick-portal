@@ -49,8 +49,8 @@ A premium, enterprise-grade management system designed for **NSL (Study & Work i
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/tommm1207/NSLClick-Huber.git
-   cd NSLClick-Huber
+   git clone https://github.com/NSLClickWork/nslclick-huber.git
+   cd nslclick-huber
    ```
 
 2. **Install dependencies**
@@ -61,11 +61,10 @@ A premium, enterprise-grade management system designed for **NSL (Study & Work i
 3. **Configure Environment**
    Create a `.env` file based on `.env.example`. 
    ```env
-   USE_MOCK_DATA=true # Keeps it running on local JSON without needing Google API
-   # Admin fallback password is 'admin123' if no hash is provided
-   # Partner fallback code is 'partner123'
+   USE_MOCK_DATA=false
+   GOOGLE_SPREADSHEET_ID=1mMfpTipZ8w9LpnebDlc1qC7pkNoX3NafhGXdUeJjyH4
+   # You must also place credentials.json and token.json in the root directory.
    ```
-   *Note: For production, you will need `credentials.json` (Google Service Account) and `token.json` (Google OAuth2).*
 
 4. **Launch**
    ```bash
@@ -74,12 +73,19 @@ A premium, enterprise-grade management system designed for **NSL (Study & Work i
 
 ---
 
-## 🧪 Demo Login Credentials
-When `USE_MOCK_DATA=true` or when Google API is not connected, you can test the 3 portals using these credentials:
+## 🤝 Collaboration Workflow (Tom & Duy)
+This repository uses a Feature Branch workflow augmented by AI code reviews:
 
-- **🎓 Student Portal**: Login via Student ID `NSL-DEMO-01` or `NSL-DEMO-02`.
-- **🏢 Partner Portal**: Navigate to the Partner tab and use Access Code `partner123`.
-- **🛠 Admin Portal**: Navigate to the Admin tab and use Password `admin123`.
+1. **Branches**: 
+   - `main`: Production branch (connected to Vercel/Server).
+   - `tom-dev`: Tom's working branch.
+   - `duy-dev`: Duy's working branch.
+2. **Rules**: 
+   - **DO NOT** push directly to `main`. 
+   - Push your changes to your respective branch (`tom-dev` or `duy-dev`).
+   - When ready to merge, use the AI (Antigravity) to review changes, resolve conflicts, and sync code between the two dev branches before doing a final Pull Request to `main`.
+3. **Secrets**:
+   - The `.env`, `credentials.json`, and `token.json` files contain sensitive credentials and must **never** be committed to GitHub. Share them securely via internal channels.
 
 ---
 
