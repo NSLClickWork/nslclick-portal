@@ -115,11 +115,11 @@
                 </select>
                 <select id="professionFilter" class="form-control" style="max-width: 170px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
                     <option value="ALL">All Professions</option>
-                    <option value="HDEU"><%= __('professions')['pflege'] %></option>
-                    <option value="MEC"><%= __('professions')['mechaniker'] %></option>
-                    <option value="KOC"><%= __('professions')['koch'] %></option>
-                    <option value="HOT"><%= __('professions')['hotel'] %></option>
-                    <option value="EINZ"><%= __('professions')['einzelhandel'] %></option>
+                    <option value="PFLEGE,NURSE,ĐIỀU DƯỠNG,HDEU"><%= __('professions')['pflege'] %></option>
+                    <option value="MEC,MECHATRONIKER,MECHANIKER,IT,CƠ KHÍ"><%= __('professions')['mechaniker'] %></option>
+                    <option value="KOC,KOCH,ĐẦU BẾP"><%= __('professions')['koch'] %></option>
+                    <option value="HOT,HOTEL,RESTAURANT,GASTRONOMIE"><%= __('professions')['hotel'] %></option>
+                    <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH"><%= __('professions')['einzelhandel'] %></option>
                 </select>
                 <input type="text" id="searchInput" class="form-control" placeholder="<%= __('search') %>..." style="flex-grow: 1; max-width: 300px; padding: 8px 15px; font-size: 14px;" onkeyup="currentPage=1; filterStudents()">
             </div>
@@ -259,7 +259,11 @@
                 
                 const matchesSearch = text.includes(query);
                 const matchesRank = currentRankFilter === 'ALL' || cardRank === currentRankFilter;
-                const matchesProf = profFilter === 'ALL' || cardProf.includes(profFilter);
+                let matchesProf = profFilter === 'ALL';
+                if (!matchesProf) {
+                    const keywords = profFilter.split(',');
+                    matchesProf = keywords.some(kw => cardProf.includes(kw.trim()));
+                }
                 const matchesVideo = sortFilter !== 'HAS_VIDEO' || cardHasVideo === 'true';
 
                 if (matchesSearch && matchesRank && matchesProf && matchesVideo) {

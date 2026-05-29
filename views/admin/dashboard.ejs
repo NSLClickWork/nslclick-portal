@@ -102,11 +102,11 @@
                     </select>
                     <select id="adminProfessionFilter" class="form-control" style="max-width: 150px; padding: 8px 15px; font-size: 14px;" onchange="renderTable()">
                         <option value="ALL">All Professions</option>
-                        <option value="HDEU">Pflegefachkraft</option>
-                        <option value="MEC">Mechaniker/in</option>
-                        <option value="KOC">Koch/Köchin</option>
-                        <option value="HOT">Hotelfachmann</option>
-                        <option value="EINZ">Einzelhandel</option>
+                        <option value="PFLEGE,NURSE,ĐIỀU DƯỠNG,HDEU">Pflegefachkraft</option>
+                        <option value="MEC,MECHATRONIKER,MECHANIKER,IT,CƠ KHÍ">Mechaniker/in</option>
+                        <option value="KOC,KOCH,ĐẦU BẾP">Koch/Köchin</option>
+                        <option value="HOT,HOTEL,RESTAURANT,GASTRONOMIE">Hotelfachmann</option>
+                        <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH">Einzelhandel</option>
                     </select>
                     <input type="text" id="adminStudentSearch" class="form-control" placeholder="Search students..." style="flex-grow: 1; max-width: 300px; padding: 8px 15px;" oninput="renderTable()">
                 </div>
@@ -332,7 +332,11 @@
                 const rank = s.NSLGrade ? s.NSLGrade.toUpperCase() : 'UNKNOWN';
                 if (adminCurrentRank !== 'ALL' && rank !== adminCurrentRank) return false;
                 
-                if (prof !== 'ALL' && (!s.ProfessionCode || !s.ProfessionCode.toUpperCase().includes(prof))) return false;
+                if (prof !== 'ALL') {
+                    const keywords = prof.split(',');
+                    const sProf = (s.ProfessionCode || '').toUpperCase();
+                    if (!keywords.some(kw => sProf.includes(kw.trim()))) return false;
+                }
                 
                 let rawVideo = s['Introduction Video'] || s.YouTubeLink || s.DriveVideoLink || '';
                 let hasVideo = rawVideo && rawVideo.trim().length > 5 && rawVideo.toUpperCase() !== 'FALSE';
