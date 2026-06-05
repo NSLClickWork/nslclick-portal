@@ -32,7 +32,7 @@ async function verifyTurnstile(token, ip) {
 
 // ==================== Student Auth ====================
 router.get('/', (req, res) => res.redirect('/partner'));
-router.get('/student', (req, res) => res.render('login', { error: null, tab: 'student' }));
+router.get('/student', (req, res) => res.render('login', { error: null, tab: 'student', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' }));
 router.get('/login', (req, res) => res.redirect('/student'));
 
 // Student Login: Requires StudentID
@@ -40,13 +40,13 @@ router.post('/login', loginLimiter, async (req, res) => {
     const turnstileToken = req.body['cf-turnstile-response'];
     const isBot = !(await verifyTurnstile(turnstileToken, req.ip));
     if (isBot) {
-        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'student' });
+        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'student', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 
     const { studentId } = req.body;
     
     if (!studentId) {
-        return res.render('login', { error: 'Please enter Student ID.', tab: 'student' });
+        return res.render('login', { error: 'Please enter Student ID.', tab: 'student', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 
     const student = await sheetsService.getStudentById(studentId);
@@ -55,7 +55,7 @@ router.post('/login', loginLimiter, async (req, res) => {
         req.session.studentId = student.StudentID;
         return res.redirect('/profile');
     } else {
-        return res.render('login', { error: 'Invalid Student ID.', tab: 'student' });
+        return res.render('login', { error: 'Invalid Student ID.', tab: 'student', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 });
 
@@ -65,19 +65,19 @@ router.get('/logout', (req, res) => {
 });
 
 // ==================== Partner Auth ====================
-router.get('/partner', (req, res) => res.render('login', { error: null, tab: 'partner' }));
+router.get('/partner', (req, res) => res.render('login', { error: null, tab: 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' }));
 router.get('/partner/login', (req, res) => res.redirect('/partner'));
 
 router.post('/partner/login', loginLimiter, async (req, res) => {
     const turnstileToken = req.body['cf-turnstile-response'];
     const isBot = !(await verifyTurnstile(turnstileToken, req.ip));
     if (isBot) {
-        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'partner' });
+        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 
     const { accessCode } = req.body;
     if (!accessCode) {
-        return res.render('login', { error: 'Please enter Access Code.', tab: 'partner' });
+        return res.render('login', { error: 'Please enter Access Code.', tab: 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 
     const configs = await sheetsService.getPartnerAccessConfigs();
@@ -110,7 +110,7 @@ router.post('/partner/login', loginLimiter, async (req, res) => {
         return res.redirect('/partner/dashboard');
     }
 
-    res.render('login', { error: 'Invalid Access Code.', tab: 'partner' });
+    res.render('login', { error: 'Invalid Access Code.', tab: 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
 });
 
 router.get('/partner/logout', (req, res) => {
@@ -119,19 +119,19 @@ router.get('/partner/logout', (req, res) => {
 });
 
 // ==================== Admin Auth ====================
-router.get('/admin', (req, res) => res.render('login', { error: null, tab: 'admin' }));
+router.get('/admin', (req, res) => res.render('login', { error: null, tab: 'admin', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' }));
 router.get('/admin/login', (req, res) => res.redirect('/admin'));
 
 router.post('/admin/login', loginLimiter, async (req, res) => {
     const turnstileToken = req.body['cf-turnstile-response'];
     const isBot = !(await verifyTurnstile(turnstileToken, req.ip));
     if (isBot) {
-        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'admin' });
+        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'admin', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 
     const { password } = req.body;
     if (!password) {
-        return res.render('login', { error: 'Please enter password.', tab: 'admin' });
+        return res.render('login', { error: 'Please enter password.', tab: 'admin', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
     
     const adminHash = process.env.ADMIN_PASSWORD_HASH;
@@ -148,7 +148,7 @@ router.post('/admin/login', loginLimiter, async (req, res) => {
         }
     }
 
-    res.render('login', { error: 'Invalid password.', tab: 'admin' });
+    res.render('login', { error: 'Invalid password.', tab: 'admin', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
 });
 
 router.get('/admin/logout', (req, res) => {
