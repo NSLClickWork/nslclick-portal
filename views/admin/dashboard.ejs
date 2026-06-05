@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+    <base href="<%= appBaseUrl %>">
     <title>NSL Admin - Dashboard</title>
-    <link rel="icon" type="image/png" href="/logo-shadow.png">
+    <link rel="icon" type="image/png" href="logo-shadow.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/nsl-design-system.css?v=4">
+    <link rel="stylesheet" href="css/nsl-design-system.css?v=4">
     <style>
         .table-container { overflow-x: auto; margin-top: 20px; }
         .edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; padding: 20px; background: var(--bg-gray); border-radius: var(--radius-sm); margin-top: 10px;}
@@ -53,7 +54,7 @@
                 <a href="?lang=en" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
                 <a href="?lang=vi" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
-            <a href="/admin/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;">Logout</a>
+            <a href="admin/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;">Logout</a>
         </div>
         <svg viewBox="0 0 1000 140" preserveAspectRatio="none" style="width: 100%; height: 100%;">
             <path d="M0,0 L1000,0 L1000,80 Q500,140 0,140 Z" fill="#f2a900" />
@@ -62,7 +63,7 @@
     </div>
 
     <div class="container">
-        <img src="/logo-shadow.png" alt="NSL" class="nav-brand-logo">
+        <img src="logo-shadow.png" alt="NSL" class="nav-brand-logo">
         
         <div class="section-card" style="border: 4px solid var(--text-main); border-radius: 0; box-shadow: 8px 8px 0px var(--text-main);">
             <div class="tabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">

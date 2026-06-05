@@ -31,8 +31,9 @@ async function verifyTurnstile(token, ip) {
 }
 
 // ==================== Student Auth ====================
-router.get('/', (req, res) => res.render('login', { error: null, tab: req.query.tab || 'student' }));
-router.get('/login', (req, res) => res.redirect('/'));
+router.get('/', (req, res) => res.redirect('/partner'));
+router.get('/student', (req, res) => res.render('login', { error: null, tab: 'student' }));
+router.get('/login', (req, res) => res.redirect('/student'));
 
 // Student Login: Requires StudentID
 router.post('/login', loginLimiter, async (req, res) => {
@@ -64,7 +65,8 @@ router.get('/logout', (req, res) => {
 });
 
 // ==================== Partner Auth ====================
-router.get('/partner/login', (req, res) => res.redirect('/?tab=partner'));
+router.get('/partner', (req, res) => res.render('login', { error: null, tab: 'partner' }));
+router.get('/partner/login', (req, res) => res.redirect('/partner'));
 
 router.post('/partner/login', loginLimiter, async (req, res) => {
     const turnstileToken = req.body['cf-turnstile-response'];
@@ -117,7 +119,8 @@ router.get('/partner/logout', (req, res) => {
 });
 
 // ==================== Admin Auth ====================
-router.get('/admin/login', (req, res) => res.redirect('/?tab=admin'));
+router.get('/admin', (req, res) => res.render('login', { error: null, tab: 'admin' }));
+router.get('/admin/login', (req, res) => res.redirect('/admin'));
 
 router.post('/admin/login', loginLimiter, async (req, res) => {
     const turnstileToken = req.body['cf-turnstile-response'];
