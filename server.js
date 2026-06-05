@@ -107,6 +107,29 @@ app.use((req, res, next) => {
     next();
 });
 
+// Base URL Middleware for Subpath Support (e.g. /portal)
+app.use((req, res, next) => {
+    try {
+        const url = new URL(process.env.BASE_URL || 'http://localhost:3000');
+        let path = url.pathname;
+        if (!path.endsWith('/')) path += '/';
+        res.locals.appBaseUrl = path;
+    } catch (e) {
+        res.locals.appBaseUrl = '/';
+    }
+
+    // Override res.redirect to prepend the base path if redirecting to an absolute path
+    const originalRedirect = res.redirect;
+    res.redirect = function (url) {
+        if (url.startsWith('/')) {
+            const basePath = res.locals.appBaseUrl.replace(/\/$/, '');
+            return originalRedirect.call(this, basePath + url);
+        }
+        return originalRedirect.call(this, url);
+    };
+    next();
+});
+
 // ==================== Routes ====================
 app.use('/api/webhook', require('./routes/webhook'));
 app.use('/api/chat', require('./routes/chat'));

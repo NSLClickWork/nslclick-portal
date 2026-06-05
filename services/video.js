@@ -220,7 +220,7 @@ async function processVideoJob(task) {
             generationError = `YouTube Error: ${ytErr.message}`;
             uploadType = 'Local';
             const fileName = `${studentId}-video.mp4`;
-            const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+            const baseUrl = process.env.BASE_URL || 'https://new-solution.eu/portal';
             finalLink = `${baseUrl}/uploads/${fileName}`;
         }
 
