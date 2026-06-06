@@ -98,7 +98,16 @@
                 const resultText = document.getElementById('aiChatResultTextAdmin');
                 
                 resultBox.style.display = 'block';
-                resultText.innerHTML = '<span style="color: #666; font-style: italic; font-weight: 600;">Sharkie is analyzing system data...</span>';
+                resultText.innerHTML = `
+                    <style>
+                        @keyframes nsl-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                        .nsl-spinner { width: 20px; height: 20px; border: 3px solid #eee; border-top: 3px solid var(--nsl-red); border-radius: 50%; animation: nsl-spin 1s linear infinite; }
+                    </style>
+                    <div style="display: flex; align-items: center; gap: 10px; color: var(--nsl-red); font-weight: 700; font-style: italic;">
+                        <div class="nsl-spinner"></div>
+                        <span>Sharkie is analyzing system data...</span>
+                    </div>
+                `;
                 
                 try {
                     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
