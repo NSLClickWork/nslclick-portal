@@ -65,6 +65,68 @@
     <div class="container">
         <img src="logo-shadow.png" alt="NSL" class="nav-brand-logo">
         
+        <!-- AI Hero Section -->
+        <div class="ai-hero-section" style="background: linear-gradient(135deg, #cc1f1f 0%, #f2a900 100%); padding: 40px; border-radius: var(--radius-sm); margin-bottom: 30px; text-align: center; box-shadow: 0 10px 30px rgba(204, 31, 31, 0.2); position: relative; overflow: hidden; border: 4px solid var(--text-main);">
+            <div style="position: relative; z-index: 2;">
+                <h2 style="color: white; font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 0px var(--text-main);">🦈 SHARKIE ADMIN ASSISTANT</h2>
+                <p style="color: white; font-weight: 600; margin-bottom: 25px; font-size: 16px;">Ask Sharkie to search or extract data across the entire system...</p>
+                
+                <div style="display: flex; max-width: 700px; margin: 0 auto; background: white; border-radius: 50px; padding: 5px; border: 3px solid var(--text-main); box-shadow: 6px 6px 0px var(--text-main); transition: transform 0.2s;">
+                    <input type="text" id="aiSearchInputAdmin" placeholder="e.g. Show me the list of partners in mechanics..." style="flex: 1; border: none; padding: 15px 25px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 600; outline: none; border-radius: 40px; color: var(--text-main);">
+                    <button onclick="triggerAIChat('aiSearchInputAdmin')" style="background: var(--text-main); color: white; border: none; padding: 0 30px; border-radius: 40px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: background 0.2s;">Ask Sharkie</button>
+                </div>
+            </div>
+            <!-- Decorative background elements -->
+            <div style="position: absolute; top: -20px; right: -20px; font-size: 100px; opacity: 0.1; transform: rotate(15deg);">✨</div>
+            <div style="position: absolute; bottom: -20px; left: -20px; font-size: 100px; opacity: 0.1; transform: rotate(-15deg);">🧠</div>
+        </div>
+
+        <div id="aiChatResultBoxAdmin" style="display: none; background: white; border: 3px solid var(--text-main); border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; text-align: left; box-shadow: 6px 6px 0px var(--text-main);">
+            <div style="font-weight: 900; color: var(--nsl-red); margin-bottom: 10px; text-transform: uppercase;">🦈 Sharkie AI:</div>
+            <div id="aiChatResultTextAdmin" style="font-size: 15px; line-height: 1.6; color: var(--nsl-dark); margin-bottom: 15px;"></div>
+            <div style="font-size: 13px; color: #666; border-top: 1px dashed #ccc; padding-top: 10px; font-weight: 600;">
+                Still need help? Contact our human team at <a href="mailto:newsolution.eu@gmail.com" style="color: var(--nsl-red); text-decoration: none;">newsolution.eu@gmail.com</a>
+            </div>
+        </div>
+
+        <script>
+            async function triggerAIChat(inputId) {
+                const input = document.getElementById(inputId).value;
+                if (!input.trim()) return;
+                
+                const resultBox = document.getElementById('aiChatResultBoxAdmin');
+                const resultText = document.getElementById('aiChatResultTextAdmin');
+                
+                resultBox.style.display = 'block';
+                resultText.innerHTML = '<span style="color: #666; font-style: italic; font-weight: 600;">Sharkie is analyzing system data...</span>';
+                
+                try {
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+                    const response = await fetch('api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-csrf-token': csrfToken
+                        },
+                        body: JSON.stringify({ prompt: input, role: 'admin', _csrf: csrfToken })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.response) {
+                        let htmlText = data.response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                        htmlText = htmlText.replace(/\n/g, '<br>');
+                        resultText.innerHTML = htmlText;
+                    } else if (data.error) {
+                        resultText.innerHTML = '<span style="color: red; font-weight: bold;">Error: ' + data.error + '</span>';
+                    }
+                } catch (error) {
+                    console.error("AI Error:", error);
+                    resultText.innerHTML = '<span style="color: red; font-weight: bold;">Connection error. Please try again.</span>';
+                }
+            }
+        </script>
+
         <div class="section-card" style="border: 4px solid var(--text-main); border-radius: 0; box-shadow: 8px 8px 0px var(--text-main);">
             <div class="tabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
                 <button class="btn btn-nsl-brutal" id="tabStudents" style="background: var(--text-main); color: #fff;" onclick="switchTab('students')">Students</button>
