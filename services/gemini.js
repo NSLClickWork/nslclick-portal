@@ -33,6 +33,9 @@ async function chatWithGemini(prompt, userRole = 'partner') {
             const partnersContext = partners.map(p => `- Name: ${p.partnerName} | Status: ${p.revoked === 'TRUE' ? 'Revoked' : 'Active'} | Professions: ${p.allowedProfessions}`).join('\n');
             systemInstruction += `The user is an ADMIN. You have full access to all data.\n\n=== PARTNERS LIST ===\n${partnersContext}\n\n=== CANDIDATES LIST ===\n${studentsContext}`;
         } else {
+            systemInstruction += `The user is a PARTNER (RECRUITER). Be professional and help them find candidates.\n\n=== CANDIDATES LIST ===\n${studentsContext}`;
+        }
+
         let response;
         const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
         let lastError;
