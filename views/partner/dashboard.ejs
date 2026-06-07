@@ -46,6 +46,29 @@
             box-shadow: 4px 4px 0px var(--nsl-red);
             transform: translate(-2px, -2px);
         }
+
+        /* Mobile Adjustments for AI Search */
+        @media (max-width: 768px) {
+            .search-bar-wrapper {
+                flex-direction: column !important;
+                border-radius: 20px !important;
+                padding: 10px !important;
+                gap: 10px;
+            }
+            .search-bar-wrapper input {
+                border-radius: 15px !important;
+                text-align: center;
+                padding: 10px !important;
+            }
+            .search-bar-wrapper button {
+                border-radius: 15px !important;
+                padding: 12px !important;
+                width: 100%;
+            }
+            .ai-hero-section {
+                padding: 20px !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-pattern">
@@ -99,8 +122,8 @@
                 <h2 style="color: white; font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 0px var(--text-main);">🦈 SHARKIE AI SEARCH</h2>
                 <p style="color: white; font-weight: 600; margin-bottom: 25px; font-size: 16px;">Describe the candidate you are looking for, Sharkie will help you filter...</p>
                 
-                <div style="display: flex; max-width: 700px; margin: 0 auto; background: white; border-radius: 50px; padding: 5px; border: 3px solid var(--text-main); box-shadow: 6px 6px 0px var(--text-main); transition: transform 0.2s;">
-                    <input type="text" id="aiSearchInputPartner" placeholder="e.g. Find me a nursing candidate with B1 German..." style="flex: 1; border: none; padding: 15px 25px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 600; outline: none; border-radius: 40px; color: var(--text-main);">
+                <div class="search-bar-wrapper" style="display: flex; max-width: 700px; margin: 0 auto; background: white; border-radius: 50px; padding: 5px; border: 3px solid var(--text-main); box-shadow: 6px 6px 0px var(--text-main); transition: transform 0.2s;">
+                    <input type="text" id="aiSearchInputPartner" placeholder="e.g. Find me a nursing candidate with B1 German..." style="flex: 1; border: none; padding: 15px 25px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 600; outline: none; border-radius: 40px; color: var(--text-main); min-width: 0;">
                     <button onclick="triggerAIChat('aiSearchInputPartner')" style="background: var(--text-main); color: white; border: none; padding: 0 30px; border-radius: 40px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: background 0.2s;">Ask Sharkie</button>
                 </div>
             </div>
