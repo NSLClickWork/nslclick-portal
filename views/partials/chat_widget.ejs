@@ -1,0 +1,170 @@
+<style>
+    #chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        font-family: 'Montserrat', sans-serif;
+    }
+    #chat-bubble {
+        width: 60px;
+        height: 60px;
+        background: var(--nsl-red, #cc1f1f);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        transition: transform 0.2s;
+        border: 2px solid #fff;
+    }
+    #chat-bubble:hover {
+        transform: scale(1.1);
+    }
+    #chat-window {
+        display: none;
+        width: 350px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 2px solid var(--text-main, #333);
+        border-radius: 10px;
+        box-shadow: 8px 8px 0px var(--text-main, #333);
+        flex-direction: column;
+        overflow: hidden;
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+    }
+    #chat-header {
+        background: var(--text-main, #333);
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    #chat-close {
+        cursor: pointer;
+        font-size: 20px;
+    }
+    #chat-body {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-size: 14px;
+    }
+    .msg { padding: 10px; border-radius: 8px; max-width: 85%; word-wrap: break-word; }
+    .msg.bot { background: #f1f1f1; align-self: flex-start; border-bottom-left-radius: 0; color: #333; }
+    .msg.user { background: var(--nsl-gold, #f2a900); color: #fff; align-self: flex-end; border-bottom-right-radius: 0; }
+    #chat-footer {
+        padding: 10px;
+        border-top: 2px solid var(--text-main, #333);
+        display: flex;
+        gap: 5px;
+        background: white;
+    }
+    #chat-input {
+        flex: 1;
+        padding: 8px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+        font-family: inherit;
+    }
+    #chat-input:focus {
+        border-color: var(--nsl-red, #cc1f1f);
+    }
+    #chat-send {
+        background: var(--nsl-red, #cc1f1f);
+        color: white;
+        border: 2px solid var(--nsl-red, #cc1f1f);
+        padding: 8px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        font-family: inherit;
+    }
+    #chat-send:hover {
+        background: white;
+        color: var(--nsl-red, #cc1f1f);
+    }
+</style>
+
+<div id="chat-widget">
+    <div id="chat-window">
+        <div id="chat-header">
+            <span>🦈 Sharkie (AI Recruiter)</span>
+            <span id="chat-close" onclick="toggleChat()">×</span>
+        </div>
+        <div id="chat-body">
+            <div class="msg bot">Hello! I am <b>Sharkie</b>, the AI recruiting assistant for the NSL system. Do you need to screen CVs or search for candidates today? (I speak English & German)</div>
+        </div>
+        <div id="chat-footer">
+            <input type="text" id="chat-input" placeholder="Type your message..." onkeypress="if(event.key === 'Enter') sendMsg()">
+            <button id="chat-send" onclick="sendMsg()">Send</button>
+        </div>
+    </div>
+    <div id="chat-bubble" onclick="toggleChat()">💬</div>
+</div>
+
+<script>
+    function toggleChat() {
+        const win = document.getElementById('chat-window');
+        win.style.display = win.style.display === 'flex' ? 'none' : 'flex';
+        if (win.style.display === 'flex') {
+            document.getElementById('chat-input').focus();
+        }
+    }
+
+    async function sendMsg() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        if (!text) return;
+
+        const body = document.getElementById('chat-body');
+        
+        // Add User Message
+        body.innerHTML += `<div class="msg user">${escapeHtmlChat(text)}</div>`;
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+
+        // Fetch AI Response
+        try {
+            const csrfToken = '<%= typeof csrfToken !== "undefined" ? csrfToken : "" %>';
+            const res = await fetch('/api/chat/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-csrf-token': csrfToken
+                },
+                body: JSON.stringify({ message: text, _csrf: csrfToken })
+            });
+            const data = await res.json();
+            
+            // Add Bot Message
+            body.innerHTML += `<div class="msg bot">${data.reply || '...'}</div>`;
+            body.scrollTop = body.scrollHeight;
+        } catch (e) {
+            body.innerHTML += `<div class="msg bot" style="color:red;">Lỗi kết nối.</div>`;
+            body.scrollTop = body.scrollHeight;
+        }
+    }
+    
+    function escapeHtmlChat(unsafe) {
+        if (!unsafe) return '';
+        return String(unsafe)
+             .replace(/&/g, "&amp;")
+             .replace(/</g, "&lt;")
+             .replace(/>/g, "&gt;")
+             .replace(/"/g, "&quot;")
+             .replace(/'/g, "&#039;");
+    }
+</script>

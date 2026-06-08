@@ -108,6 +108,8 @@ app.use((req, res, next) => {
 });
 
 // ==================== Routes ====================
+app.use('/api/webhook', require('./routes/webhook'));
+app.use('/api/chat', require('./routes/chat'));
 app.use('/', require('./routes/auth'));
 app.use('/', require('./routes/student'));
 app.use('/', require('./routes/partner'));
