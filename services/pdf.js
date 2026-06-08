@@ -75,7 +75,7 @@ async function processPdfJob(task) {
         // 5. Save locally instead of Drive
         jobsService.updateJobStatus(jobId, 'uploading');
         const fileName = `${studentId}-setcard.pdf`;
-        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+        const baseUrl = process.env.BASE_URL || 'https://new-solution.eu/portal';
         const driveLink = `${baseUrl}/uploads/${fileName}`;
 
         // 6. Write status back to Google Sheets

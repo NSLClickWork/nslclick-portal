@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="<%= appBaseUrl %>">
     <title>NSL Portal – Sign In</title>
-    <link rel="icon" type="image/png" href="/logo-shadow.png">
-    <link rel="stylesheet" href="/css/nsl-design-system.css?v=4">
+    <link rel="icon" type="image/png" href="logo-shadow.png">
+    <link rel="stylesheet" href="css/nsl-design-system.css?v=4">
     <!-- Cloudflare Turnstile Script -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
@@ -164,7 +165,7 @@
         <div class="login-content">
             <div class="login-form-box">
                 <div class="logo-box">
-                    <img src="/logo-shadow.png" alt="NSL">
+                    <img src="logo-shadow.png" alt="NSL">
                 </div>
 
                 <h1>Portal Access</h1>
@@ -184,7 +185,7 @@
 
                         <!-- STUDENT FORM -->
                         <div id="tab-student" class="tab-content">
-                            <form action="/login" method="POST">
+                            <form action="login" method="POST">
                                 <input type="hidden" name="_csrf"
                                     value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <div class="form-group text-left">
@@ -192,14 +193,14 @@
                                     <input type="text" name="studentId" class="form-control"
                                         placeholder="e.g. HDEU_Tam_HUYNH_06.01.2004" required>
                                 </div>
-                                <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" style="margin-top: 10px;"></div>
+                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-top: 10px;"></div>
                                 <button type="submit" id="btn-student" class="btn-submit-brutal">Student Login</button>
                             </form>
                         </div>
 
                         <!-- PARTNER FORM -->
                         <div id="tab-partner" class="tab-content">
-                            <form action="/partner/login" method="POST">
+                            <form action="partner/login" method="POST">
                                 <input type="hidden" name="_csrf"
                                     value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <div class="form-group text-left">
@@ -207,14 +208,14 @@
                                     <input type="password" name="accessCode" class="form-control"
                                         placeholder="Enter your partner code" required>
                                 </div>
-                                <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" style="margin-top: 10px;"></div>
+                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-top: 10px;"></div>
                                 <button type="submit" id="btn-partner" class="btn-submit-brutal">Partner Login</button>
                             </form>
                         </div>
 
                         <!-- ADMIN FORM -->
                         <div id="tab-admin" class="tab-content">
-                            <form action="/admin/login" method="POST">
+                            <form action="admin/login" method="POST">
                                 <input type="hidden" name="_csrf"
                                     value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <div class="form-group text-left">
@@ -222,7 +223,7 @@
                                     <input type="password" name="password" class="form-control"
                                         placeholder="Enter admin password" required>
                                 </div>
-                                <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" style="margin-top: 10px;"></div>
+                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-top: 10px;"></div>
                                 <button type="submit" id="btn-admin" class="btn-submit-brutal">Admin Login</button>
                         <div class="footer-text-bottom">
                             &copy; <%= new Date().getFullYear() %> NSL. All rights reserved.
@@ -246,16 +247,15 @@
                 document.querySelectorAll('.nsl-tab-btn')[index].classList.add('active');
             }
 
-            // Update URL to reflect current tab (optional, for refresh persistence)
-            const url = new URL(window.location);
-            url.searchParams.set('tab', tabId);
-            window.history.replaceState({}, '', url);
+            // Update URL to reflect current tab (clean URL)
+            const basePath = "<%= typeof appBaseUrl !== 'undefined' ? (appBaseUrl.endsWith('/') ? appBaseUrl.slice(0, -1) : appBaseUrl) : '' %>";
+            const newPath = basePath + '/' + tabId;
+            window.history.replaceState({}, '', newPath);
         }
 
-        // Initialize active tab from server or URL
+        // Initialize active tab from server or fallback
         const serverTab = "<%= typeof tab !== 'undefined' ? tab : '' %>";
-        const urlParams = new URLSearchParams(window.location.search);
-        const activeTab = serverTab || urlParams.get('tab') || 'student';
+        const activeTab = serverTab || 'partner';
 
         switchTab(activeTab);
     </script>
