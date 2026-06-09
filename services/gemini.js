@@ -22,7 +22,7 @@ try {
         console.warn("OpenAI fallback not configured.");
     }
 
-    async function chatWithGemini(prompt, userRole = 'partner') {
+    async function chatWithGemini(prompt, userRole = 'partner', userLang = 'de') {
         if (!ai || !process.env.GEMINI_API_KEY) {
             return "Lỗi: Chưa cấu hình GEMINI_API_KEY. Bạn vui lòng thêm biến môi trường này vào server để AI hoạt động nhé!";
         }
@@ -46,6 +46,10 @@ try {
             } else {
                 systemInstruction += `The user is a PARTNER (RECRUITER). Be professional and help them find candidates.\n\n=== CANDIDATES LIST ===\n${studentsContext}`;
             }
+
+            const langMap = { 'vi': 'Vietnamese', 'en': 'English', 'de': 'German' };
+            const replyLang = langMap[userLang] || 'German';
+            systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST reply in ${replyLang}. All descriptions, suggestions, and conversation text must be in ${replyLang}.`;
 
             let responseText;
             const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];

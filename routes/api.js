@@ -15,7 +15,8 @@ router.post('/chat', async (req, res) => {
             userRole = 'admin';
         }
 
-        const responseText = await geminiService.chatWithGemini(prompt, userRole);
+        const userLang = req.session.lang || 'de';
+        const responseText = await geminiService.chatWithGemini(prompt, userRole, userLang);
         res.json({ response: responseText });
     } catch (error) {
         console.error("Chat API Error:", error);
