@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= typeof lang !== 'undefined' ? lang : 'de' %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -50,9 +50,9 @@
     <div class="wavy-header">
         <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
             <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px;">
-                <a href="?lang=de&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=en&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=vi&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=de&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=en&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=vi&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
             <a href="admin/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;">Logout</a>
         </div>

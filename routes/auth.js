@@ -11,24 +11,7 @@ const loginLimiter = rateLimit({
     message: 'Too many login attempts from this IP, please try again after 15 minutes.'
 });
 
-// Turnstile Validation Helper
-async function verifyTurnstile(token, ip) {
-    if (!token) return false;
-    const secret = process.env.TURNSTILE_SECRET || '1x0000000000000000000000000000000AA';
-    
-    try {
-        const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ secret, response: token, remoteip: ip })
-        });
-        const data = await response.json();
-        return data.success;
-    } catch (e) {
-        console.error('Turnstile verification error:', e);
-        return false;
-    }
-}
+
 
 // ==================== Student Auth ====================
 router.get('/', (req, res) => res.render('login', { error: null, tab: req.query.tab || 'student' }));
@@ -36,11 +19,7 @@ router.get('/login', (req, res) => res.redirect('/'));
 
 // Student Login: Requires StudentID
 router.post('/login', loginLimiter, async (req, res) => {
-    const turnstileToken = req.body['cf-turnstile-response'];
-    const isBot = !(await verifyTurnstile(turnstileToken, req.ip));
-    if (isBot) {
-        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'student' });
-    }
+
 
     const { studentId } = req.body;
     
@@ -67,11 +46,7 @@ router.get('/logout', (req, res) => {
 router.get('/partner/login', (req, res) => res.redirect('/?tab=partner'));
 
 router.post('/partner/login', loginLimiter, async (req, res) => {
-    const turnstileToken = req.body['cf-turnstile-response'];
-    const isBot = !(await verifyTurnstile(turnstileToken, req.ip));
-    if (isBot) {
-        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'partner' });
-    }
+
 
     const { accessCode } = req.body;
     if (!accessCode) {
@@ -120,11 +95,7 @@ router.get('/partner/logout', (req, res) => {
 router.get('/admin/login', (req, res) => res.redirect('/?tab=admin'));
 
 router.post('/admin/login', loginLimiter, async (req, res) => {
-    const turnstileToken = req.body['cf-turnstile-response'];
-    const isBot = !(await verifyTurnstile(turnstileToken, req.ip));
-    if (isBot) {
-        return res.render('login', { error: 'CAPTCHA validation failed. Please try again.', tab: 'admin' });
-    }
+
 
     const { password } = req.body;
     if (!password) {
