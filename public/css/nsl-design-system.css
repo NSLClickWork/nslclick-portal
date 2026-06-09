@@ -3,7 +3,7 @@
    ========================================================================== */
 
 /* --- 1. Variables & Fonts --- */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root {
     /* Brand Colors */
@@ -37,7 +37,7 @@
 }
 
 body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     color: var(--text-main);
     background-color: var(--bg-light);
     line-height: 1.5;
@@ -141,7 +141,7 @@ body {
     padding: 10px 20px;
     border-radius: var(--radius-sm);
     font-weight: 700;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     cursor: pointer;
     text-align: center;
@@ -337,7 +337,7 @@ body {
     border: none;
     font-size: 16px;
     font-weight: 800;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Inter', sans-serif;
     color: var(--text-muted);
     padding: 12px 24px;
     cursor: pointer;

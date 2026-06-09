@@ -14,7 +14,7 @@ const loginLimiter = rateLimit({
 
 
 // ==================== Student Auth ====================
-router.get('/', (req, res) => res.render('login', { error: null, tab: req.query.tab || 'student' }));
+router.get('/', (req, res) => res.render('login', { error: null, tab: req.query.tab || 'partner' }));
 router.get('/login', (req, res) => res.redirect('/'));
 
 // Student Login: Requires StudentID
