@@ -100,9 +100,11 @@
     %>
     <div class="wavy-header">
         <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
-            <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px;">
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=de&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=en&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
+            <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px; display: flex; align-items: center; gap: 10px;">
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=de&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a>
+                <span style="color:#fff;opacity:0.5">|</span>
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=en&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a>
+                <span style="color:#fff;opacity:0.5">|</span>
                 <a href="javascript:void(0)" onclick="window.location.search='?lang=vi&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
             <a href="partner/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;"><%= __('logout') %></a>
@@ -220,6 +222,7 @@
                     <option value="NAME_DESC"><%= __('sort_name_desc') %></option>
                     <option value="HAS_VIDEO"><%= __('sort_has_video') %></option>
                 </select>
+                <% if (partner && partner.allowedProfessions === 'ALL') { %>
                 <select id="professionFilter" class="form-control" style="max-width: 250px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
                     <option value="ALL"><%= __('all_professions') %></option>
                     <option value="PFLEGE,NURSE,ĐIỀU DƯỠNG,HDEU"><%= __('pflege', 'professions') %></option>
@@ -228,6 +231,9 @@
                     <option value="HOT,HOTEL,RESTAURANT,GASTRONOMIE"><%= __('hotel', 'professions') %></option>
                     <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH"><%= __('einzelhandel', 'professions') %></option>
                 </select>
+                <% } else { %>
+                <input type="hidden" id="professionFilter" value="ALL">
+                <% } %>
                 <input type="text" id="searchInput" class="form-control" placeholder="<%= __('search') %>..." style="flex-grow: 1; max-width: 300px; padding: 8px 15px; font-size: 14px;" onkeyup="currentPage=1; filterStudents()">
             </div>
         </div>

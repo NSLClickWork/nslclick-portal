@@ -47,9 +47,7 @@ try {
                 systemInstruction += `The user is a PARTNER (RECRUITER). Be professional and help them find candidates.\n\n=== CANDIDATES LIST ===\n${studentsContext}`;
             }
 
-            const langMap = { 'vi': 'Vietnamese', 'en': 'English', 'de': 'German' };
-            const replyLang = langMap[userLang] || 'German';
-            systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST reply in ${replyLang}. All descriptions, suggestions, and conversation text must be in ${replyLang}.`;
+            systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST detect the language of the user's prompt (e.g. Vietnamese, German, English) and reply in that EXACT SAME language. All descriptions, suggestions, and conversation text must be in the detected language.`;
 
             let responseText;
             const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];

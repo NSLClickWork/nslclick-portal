@@ -4,7 +4,7 @@ const dictionary = {
             'pflege': 'Điều dưỡng / Y tá',
             'mechaniker': 'Thợ cơ khí',
             'koch': 'Đầu bếp',
-            'hotel': 'Nhà hàng Khách sạn',
+            'hotel': 'Nhà hàng & Khách sạn',
             'it': 'Công nghệ thông tin',
             'einzelhandel': 'Bán hàng / Bán lẻ'
         },
@@ -91,7 +91,7 @@ const dictionary = {
             'pflege': 'Nurse / Caregiver',
             'mechaniker': 'Mechanic',
             'koch': 'Chef / Cook',
-            'hotel': 'Hospitality',
+            'hotel': 'Hotel & Restaurant',
             'it': 'IT Specialist',
             'einzelhandel': 'Retail / Sales'
         },
@@ -178,7 +178,7 @@ const dictionary = {
             'pflege': 'Pflegefachkraft',
             'mechaniker': 'Mechaniker/in',
             'koch': 'Koch/Köchin',
-            'hotel': 'Hotelfachmann/-frau',
+            'hotel': 'Hotel- & Restaurantfachkraft',
             'it': 'IT-Fachkraft',
             'einzelhandel': 'Einzelhandel / Verkauf'
         },
