@@ -172,7 +172,7 @@
                             'Content-Type': 'application/json',
                             'x-csrf-token': csrfToken
                         },
-                        body: JSON.stringify({ prompt: input, role: 'partner', _csrf: csrfToken })
+                        body: JSON.stringify({ prompt: input, role: 'partner', filteredIds: window.currentFilteredIds || null, _csrf: csrfToken })
                     });
                     
                     const data = await response.json();

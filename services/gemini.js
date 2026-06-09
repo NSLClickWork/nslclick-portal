@@ -22,7 +22,7 @@ try {
         console.warn("OpenAI fallback not configured.");
     }
 
-    async function chatWithGemini(prompt, userRole = 'partner', userLang = 'de', partnerConfig = null) {
+    async function chatWithGemini(prompt, userRole = 'partner', userLang = 'de', partnerConfig = null, filteredIds = null) {
         if (!ai || !process.env.GEMINI_API_KEY) {
             return "Lỗi: Chưa cấu hình GEMINI_API_KEY. Bạn vui lòng thêm biến môi trường này vào server để AI hoạt động nhé!";
         }
@@ -32,9 +32,14 @@ try {
             const students = await sheetsService.getAllStudents();
             const partners = await sheetsService.getPartnerAccessConfigs();
 
-            // Filter students based on partner config if role is partner
+            // Filter students based on UI filteredIds or partner config
             let filteredStudents = students.filter(s => s.Status !== 'ARCHIVED');
-            if (userRole === 'partner' && partnerConfig) {
+            
+            if (Array.isArray(filteredIds) && filteredIds.length > 0) {
+                // If frontend passed filteredIds (what user sees on screen), use it strictly!
+                filteredStudents = filteredStudents.filter(s => filteredIds.includes(s.StudentID));
+            } else if (userRole === 'partner' && partnerConfig) {
+                // Fallback to strict partner access check if no UI filter is provided
                 const allowedProfessions = partnerConfig.allowedProfessions ? partnerConfig.allowedProfessions.split(',').map(s => s.trim().toLowerCase()) : [];
                 const allowedCenters = partnerConfig.allowedCenters ? partnerConfig.allowedCenters.split(',').map(s => s.trim().toLowerCase()) : [];
                 

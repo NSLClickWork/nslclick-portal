@@ -121,7 +121,7 @@
                             'Content-Type': 'application/json',
                             'x-csrf-token': csrfToken
                         },
-                        body: JSON.stringify({ prompt: input, role: 'admin', _csrf: csrfToken })
+                        body: JSON.stringify({ prompt: input, role: 'admin', filteredIds: window.currentFilteredIds || null, _csrf: csrfToken })
                     });
                     
                     const data = await response.json();

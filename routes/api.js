@@ -4,7 +4,7 @@ const geminiService = require('../services/gemini');
 
 router.post('/chat', async (req, res) => {
     try {
-        const { prompt, role } = req.body;
+        const { prompt, role, filteredIds } = req.body;
         if (!prompt) {
             return res.status(400).json({ error: 'Prompt is required' });
         }
@@ -17,7 +17,7 @@ router.post('/chat', async (req, res) => {
 
         const userLang = req.session.lang || 'de';
         const partnerConfig = req.session.partner;
-        const responseText = await geminiService.chatWithGemini(prompt, userRole, userLang, partnerConfig);
+        const responseText = await geminiService.chatWithGemini(prompt, userRole, userLang, partnerConfig, filteredIds);
         res.json({ response: responseText });
     } catch (error) {
         console.error("Chat API Error:", error);
