@@ -15,19 +15,22 @@ if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_ap
 
 router.post('/message', async (req, res) => {
     try {
-        const { message } = req.body;
+        const { message, filteredIds } = req.body;
         if (!model) {
             return res.json({ reply: 'AI đang bảo trì (chưa có API Key). Vui lòng cấu hình GEMINI_API_KEY trong file .env' });
         }
 
-        const students = await getAllStudents();
-        const studentData = students.map(s => `- ${s.FullName} (ID: ${s.StudentID}), Profession: ${s.ProfessionCode || 'N/A'}, German Level: ${s.DeutschLevel || 'N/A'}, NSL Rank: ${s.NSLGrade || 'N/A'}, Superpowers: ${[s.Strength1, s.Strength2, s.Strength3].filter(Boolean).join(', ')}`).join('\n');
+        let students = await getAllStudents();
+        if (Array.isArray(filteredIds) && filteredIds.length > 0) {
+            students = students.filter(s => filteredIds.includes(s.StudentID));
+        }
+        const studentData = students.map(s => `- ${s.FullName} (ID: ${s.StudentID}), Profession: ${s.ProfessionCode || 'N/A'}, NSL Score: ${s.NSLScore || 0}, NSL Rank: ${s.NSLGrade || 'N/A'}, Superpowers: ${[s.Strength1, s.Strength2, s.Strength3].filter(Boolean).join(', ')}, Video: ${s.YouTubeLink || s['Introduction Video'] || 'No Video'}`).join('\n');
 
         const userLang = req.session.lang || 'de';
         const langMap = { 'vi': 'Vietnamese', 'en': 'English', 'de': 'German' };
         const replyLang = langMap[userLang];
 
-        const fullPrompt = `You must reply in ${replyLang}.\n\nHere is the current NSL candidate database:\n${studentData}\n\nUser Message: ${message}`;
+        const fullPrompt = `You must reply in ${replyLang}. When listing candidates, show their NSL Score instead of German Level, and if they have a Video link, provide it as a clickable markdown link [Watch Video](link).\n\nHere is the current NSL candidate database:\n${studentData}\n\nUser Message: ${message}`;
         const result = await model.generateContent(fullPrompt);
         const responseText = result.response.text();
 

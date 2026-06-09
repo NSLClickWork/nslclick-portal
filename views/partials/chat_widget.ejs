@@ -166,7 +166,7 @@
                     'Content-Type': 'application/json',
                     'x-csrf-token': csrfToken
                 },
-                body: JSON.stringify({ message: text, _csrf: csrfToken })
+                body: JSON.stringify({ message: text, _csrf: csrfToken, filteredIds: window.currentFilteredIds })
             });
             const data = await res.json();
             

@@ -82,7 +82,8 @@ const dictionary = {
             chat_greeting: 'Xin chào! Tôi là <b>Sharkie</b>, trợ lý tuyển dụng AI của hệ thống NSL. Bạn cần lọc CV hay tìm kiếm ứng viên hôm nay? (Tôi nói được tiếng Việt, Anh & Đức)',
             chat_placeholder: 'Nhập tin nhắn...',
             chat_send: 'Gửi',
-            chat_error: 'Lỗi kết nối.'
+            chat_error: 'Lỗi kết nối.',
+            sharkie_searching: 'Sharkie đang tìm kiếm ứng viên...'
         }
     },
     en: {
@@ -168,7 +169,8 @@ const dictionary = {
             chat_greeting: 'Hello! I am <b>Sharkie</b>, the AI recruiting assistant for the NSL system. Do you need to screen CVs or search for candidates today? (I speak English & German)',
             chat_placeholder: 'Type your message...',
             chat_send: 'Send',
-            chat_error: 'Connection error.'
+            chat_error: 'Connection error.',
+            sharkie_searching: 'Sharkie is searching for candidates...'
         }
     },
     de: {
@@ -254,7 +256,8 @@ const dictionary = {
             chat_greeting: 'Hallo! Ich bin <b>Sharkie</b>, der KI-Recruiting-Assistent für das NSL-System. Möchten Sie heute Lebensläufe prüfen oder nach Kandidaten suchen? (Ich spreche Englisch & Deutsch)',
             chat_placeholder: 'Ihre Nachricht...',
             chat_send: 'Senden',
-            chat_error: 'Verbindungsfehler.'
+            chat_error: 'Verbindungsfehler.',
+            sharkie_searching: 'Sharkie sucht nach Kandidaten...'
         }
     }
 };
