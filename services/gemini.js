@@ -1,18 +1,19 @@
-const { GoogleGenAI } = require('@google/genai');
+const Groq = require('groq-sdk');
 const sheetsService = require('./sheets');
 
-// Initialize the Google Gen AI Client
+// Initialize the Groq Client
 let ai;
 try {
-    if (process.env.GEMINI_API_KEY) {
-        ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const groqKey = process.env.GROQ_API_KEY;
+    if (groqKey) {
+        ai = new Groq({ apiKey: groqKey });
     }
 } catch (error) {
-    console.warn("GoogleGenAI initialized without API key or failed. Make sure GEMINI_API_KEY is in your .env");
+    console.warn("Groq initialized without API key or failed.");
 }
 
-    // Ultimate Fallback: OpenAI
-    const { OpenAI } = require('openai');
+// Ultimate Fallback: OpenAI
+const { OpenAI } = require('openai');
     let openaiClient;
     try {
         if (process.env.OPENAI_API_KEY) {
@@ -23,8 +24,8 @@ try {
     }
 
     async function chatWithGemini(prompt, userRole = 'partner', userLang = 'de', partnerConfig = null, filteredIds = null) {
-        if (!ai || !process.env.GEMINI_API_KEY) {
-            return "Lỗi: Chưa cấu hình GEMINI_API_KEY. Bạn vui lòng thêm biến môi trường này vào server để AI hoạt động nhé!";
+        if (!ai) {
+            return "Lỗi: Chưa cấu hình GROQ_API_KEY. Bạn vui lòng thêm biến môi trường này vào server để AI hoạt động nhé!";
         }
 
         try {
@@ -72,7 +73,7 @@ try {
             systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST detect the language of the user's prompt (e.g. Vietnamese, German, English) and reply in that EXACT SAME language. All descriptions, suggestions, and conversation text must be in the detected language.`;
 
             let responseText;
-            const modelsToTry = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+            const modelsToTry = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
             let lastError;
             let success = false;
 
@@ -82,15 +83,15 @@ try {
 
                 while (retries > 0) {
                     try {
-                        const response = await ai.models.generateContent({
+                        const response = await ai.chat.completions.create({
                             model: modelName,
-                            contents: prompt,
-                            config: {
-                                systemInstruction: systemInstruction,
-                                temperature: 0.2,
-                            }
+                            temperature: 0.2,
+                            messages: [
+                                { role: "system", content: systemInstruction },
+                                { role: "user", content: prompt }
+                            ]
                         });
-                        responseText = response.text;
+                        responseText = response.choices[0].message.content;
                         success = true;
                         break; // Success for this model
                     } catch (error) {
