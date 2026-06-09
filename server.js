@@ -52,6 +52,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Prevent caching for dynamic routes to fix aggressive browser 302 caching (e.g. language switcher kickout)
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Surrogate-Control', 'no-store');
+    next();
+});
+
 // Global unhandled rejection handler to prevent server from crashing on Google API quota errors
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Rejection:', reason);
