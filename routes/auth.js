@@ -133,19 +133,19 @@ router.post('/admin/login', loginLimiter, async (req, res) => {
     
     const adminHash = process.env.ADMIN_PASSWORD_HASH;
     if (!adminHash) {
-        if (password === (process.env.ADMIN_PASSWORD || 'admin123')) {
+        if (password.trim() === (process.env.ADMIN_PASSWORD || 'admin123').trim()) {
             req.session.isAdmin = true;
             return res.redirect('/admin');
         }
     } else {
-        const match = await bcrypt.compare(password, adminHash);
+        const match = await bcrypt.compare(password.trim(), adminHash);
         if (match) {
             req.session.isAdmin = true;
             return res.redirect('/admin');
         }
     }
 
-    res.render('login', { error: 'Invalid password.', tab: 'admin' });
+    res.render('login', { error: 'Invalid password. (Note: Default is admin123)', tab: 'admin' });
 });
 
 router.get('/admin/logout', (req, res) => {
