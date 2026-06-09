@@ -50,9 +50,9 @@
     <div class="wavy-header">
         <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
             <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px;">
-                <a href="?lang=de" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=en" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=vi" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
+                <a href="?lang=de&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=en&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=vi&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
             <a href="admin/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;">Logout</a>
         </div>
@@ -185,7 +185,7 @@
                         <option value="HOT,HOTEL,RESTAURANT,GASTRONOMIE">Hotelfachmann</option>
                         <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH">Einzelhandel</option>
                     </select>
-                    <input type="text" id="adminStudentSearch" class="form-control" placeholder="Search students..." style="flex-grow: 1; max-width: 300px; padding: 8px 15px;" oninput="renderTable()">
+                    <input type="text" id="adminStudentSearch" class="form-control" placeholder="<%= __('admin_search') %>" style="flex-grow: 1; max-width: 300px; padding: 8px 15px;" oninput="renderTable()">
                 </div>
 
             <div class="job-panel" id="jobPanel">
@@ -198,14 +198,14 @@
                         <thead>
                             <tr>
                                 <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll()"></th>
-                                <th>Student ID</th>
-                                <th>Full Name</th>
-                                <th>Profession</th>
-                                <th>Center</th>
-                                <th>Progress</th>
-                                <th>PDF Status</th>
-                                <th>Video Status</th>
-                                <th>Actions</th>
+                                <th><%= __('admin_col_student_id') %></th>
+                                <th><%= __('admin_col_full_name') %></th>
+                                <th><%= __('admin_col_profession') %></th>
+                                <th><%= __('admin_col_center') %></th>
+                                <th><%= __('admin_col_progress') %></th>
+                                <th><%= __('admin_col_pdf') %></th>
+                                <th><%= __('admin_col_video') %></th>
+                                <th><%= __('admin_col_actions') %></th>
                             </tr>
                         </thead>
                         <tbody id="tableBody"></tbody>
@@ -226,11 +226,11 @@
                     <table class="nsl-table nsl-sticky-table" style="margin: 0; width: 100%;">
                         <thead>
                             <tr>
-                                <th>Partner Name</th>
-                                <th>Access Code</th>
-                                <th>Allowed Professions</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <th><%= __('admin_col_partner_name') %></th>
+                                <th><%= __('admin_col_access_code') %></th>
+                                <th><%= __('admin_col_allowed_professions') %></th>
+                                <th><%= __('admin_col_status') %></th>
+                                <th><%= __('admin_col_actions') %></th>
                             </tr>
                         </thead>
                         <tbody id="partnerTableBody"></tbody>
