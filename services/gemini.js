@@ -22,7 +22,7 @@ try {
         console.warn("OpenAI fallback not configured.");
     }
 
-    async function chatWithGemini(prompt, userRole = 'partner', userLang = 'de') {
+    async function chatWithGemini(prompt, userRole = 'partner', userLang = 'de', partnerConfig = null) {
         if (!ai || !process.env.GEMINI_API_KEY) {
             return "Lỗi: Chưa cấu hình GEMINI_API_KEY. Bạn vui lòng thêm biến môi trường này vào server để AI hoạt động nhé!";
         }
@@ -32,8 +32,25 @@ try {
             const students = await sheetsService.getAllStudents();
             const partners = await sheetsService.getPartnerAccessConfigs();
 
+            // Filter students based on partner config if role is partner
+            let filteredStudents = students.filter(s => s.Status !== 'ARCHIVED');
+            if (userRole === 'partner' && partnerConfig) {
+                const allowedProfessions = partnerConfig.allowedProfessions ? partnerConfig.allowedProfessions.split(',').map(s => s.trim().toLowerCase()) : [];
+                const allowedCenters = partnerConfig.allowedCenters ? partnerConfig.allowedCenters.split(',').map(s => s.trim().toLowerCase()) : [];
+                
+                filteredStudents = filteredStudents.filter(s => {
+                    let pMatch = allowedProfessions.includes('*');
+                    if (!pMatch && s.ProfessionCode) {
+                        const studentProfs = s.ProfessionCode.split(/[,/]/).map(p => p.trim());
+                        pMatch = studentProfs.some(p => allowedProfessions.some(ap => p.toLowerCase().includes(ap)));
+                    }
+                    const cMatch = allowedCenters.includes('*') || (s.CenterCode && allowedCenters.includes(s.CenterCode.toLowerCase()));
+                    return pMatch && cMatch;
+                });
+            }
+
             // Prepare context data. Limit fields to avoid massive token usage.
-            const studentsContext = students.map(s => {
+            const studentsContext = filteredStudents.map(s => {
                 let birthYear = s.DOB ? s.DOB.split('.').pop() : (s.StudentID ? s.StudentID.split('_').pop().split('.').pop() : 'N/A');
                 return `- ID: ${s.StudentID} | Name: ${s.FullName} | Profession: ${s.ProfessionCode || 'N/A'} | NSL Score: ${s.NSLScore || '0'} | NSL Grade: ${s.NSLGrade || 'N/A'} | German Level: ${s.DeutschLevel || 'N/A'} | Available From: ${s.AvailableFrom || 'N/A'} | Birth Year: ${birthYear} | Strengths: ${[s.Strength1, s.Strength2, s.Strength3].filter(Boolean).join(', ')} | YouTubeLink: ${s.YouTubeLink || s['Introduction Video'] || ''}`;
             }).join('\n');
