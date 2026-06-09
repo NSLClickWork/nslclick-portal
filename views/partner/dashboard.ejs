@@ -132,7 +132,7 @@
             <div style="position: absolute; bottom: -20px; left: -20px; font-size: 100px; opacity: 0.1; transform: rotate(-15deg);">🧠</div>
         </div>
 
-        <div id="aiChatResultBoxPartner" style="display: none; background: white; border: 3px solid var(--text-main); border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; text-align: left; box-shadow: 6px 6px 0px var(--text-main);">
+        <div id="aiChatResultBoxPartner" style="display: none; background: white; border: 3px solid var(--text-main); border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; margin-bottom: 30px; text-align: left; box-shadow: 6px 6px 0px var(--text-main);">
             <div style="font-weight: 900; color: var(--nsl-red); margin-bottom: 10px; text-transform: uppercase;">🦈 Sharkie AI:</div>
             <div id="aiChatResultTextPartner" style="font-size: 15px; line-height: 1.6; color: var(--nsl-dark); margin-bottom: 15px;"></div>
             <div style="font-size: 13px; color: #666; border-top: 1px dashed #ccc; padding-top: 10px; font-weight: 600;">
@@ -142,8 +142,10 @@
 
         <script>
             async function triggerAIChat(inputId) {
-                const input = document.getElementById(inputId).value;
+                const inputElement = document.getElementById(inputId);
+                const input = inputElement.value;
                 if (!input.trim()) return;
+                inputElement.value = '';
                 
                 const resultBox = document.getElementById('aiChatResultBoxPartner');
                 const resultText = document.getElementById('aiChatResultTextPartner');

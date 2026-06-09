@@ -91,8 +91,10 @@
 
         <script>
             async function triggerAIChat(inputId) {
-                const input = document.getElementById(inputId).value;
+                const inputElement = document.getElementById(inputId);
+                const input = inputElement.value;
                 if (!input.trim()) return;
+                inputElement.value = '';
                 
                 const resultBox = document.getElementById('aiChatResultBoxAdmin');
                 const resultText = document.getElementById('aiChatResultTextAdmin');
