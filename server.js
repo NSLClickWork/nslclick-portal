@@ -135,6 +135,15 @@ app.use((req, res, next) => {
         }
         return originalRedirect.call(this, url);
     };
+
+    next();
+});
+
+// Inject global booking links to all templates
+app.use((req, res, next) => {
+    res.locals.candidateBookingLink = process.env.CANDIDATE_BOOKING_LINK || 'https://calendar.google.com/';
+    res.locals.partnerBookingLink = process.env.PARTNER_BOOKING_LINK || 'https://calendar.google.com/';
+    res.locals.adminBookingLink = process.env.ADMIN_BOOKING_LINK || 'https://calendar.google.com/';
     next();
 });
 
