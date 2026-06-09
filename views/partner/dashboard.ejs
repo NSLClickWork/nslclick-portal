@@ -119,12 +119,12 @@
         <!-- AI Hero Section -->
         <div class="ai-hero-section" style="background: linear-gradient(135deg, #cc1f1f 0%, #f2a900 100%); padding: 40px; border-radius: var(--radius-sm); margin-bottom: 30px; text-align: center; box-shadow: 0 10px 30px rgba(204, 31, 31, 0.2); position: relative; overflow: hidden; border: 4px solid var(--text-main);">
             <div style="position: relative; z-index: 2;">
-                <h2 style="color: white; font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 0px var(--text-main);">🦈 SHARKIE AI SEARCH</h2>
-                <p style="color: white; font-weight: 600; margin-bottom: 25px; font-size: 16px;">Describe the candidate you are looking for, Sharkie will help you filter...</p>
+                <h2 style="color: white; font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 0px var(--text-main);">🦈 <%= __('sharkie_ai_search') %></h2>
+                <p style="color: white; font-weight: 600; margin-bottom: 25px; font-size: 16px;"><%= __('sharkie_desc') %></p>
                 
                 <div class="search-bar-wrapper" style="display: flex; max-width: 700px; margin: 0 auto; background: white; border-radius: 50px; padding: 5px; border: 3px solid var(--text-main); box-shadow: 6px 6px 0px var(--text-main); transition: transform 0.2s;">
-                    <input type="text" id="aiSearchInputPartner" placeholder="e.g. Find me a nursing candidate with B1 German..." style="flex: 1; border: none; padding: 15px 25px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 600; outline: none; border-radius: 40px; color: var(--text-main); min-width: 0;">
-                    <button onclick="triggerAIChat('aiSearchInputPartner')" style="background: var(--text-main); color: white; border: none; padding: 0 30px; border-radius: 40px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: background 0.2s;">Ask Sharkie</button>
+                    <input type="text" id="aiSearchInputPartner" placeholder="<%= __('sharkie_placeholder') %>" style="flex: 1; border: none; padding: 15px 25px; font-size: 16px; font-family: 'Montserrat', sans-serif; font-weight: 600; outline: none; border-radius: 40px; color: var(--text-main); min-width: 0;">
+                    <button onclick="triggerAIChat('aiSearchInputPartner')" style="background: var(--text-main); color: white; border: none; padding: 0 30px; border-radius: 40px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: background 0.2s;"><%= __('ask_sharkie') %></button>
                 </div>
             </div>
             <!-- Decorative background elements -->
@@ -189,36 +189,36 @@
 
         <div style="margin-bottom: 25px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
-                <h2 style="color: var(--text-main); font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--nsl-red); padding-left: 15px; margin: 0;">Candidates Database</h2>
+                <h2 style="color: var(--text-main); font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--nsl-red); padding-left: 15px; margin: 0;"><%= __('candidates_database') %></h2>
                 <a href="https://outlook.office365.com/owa/calendar/PARTNER_BOOKING_LINK" target="_blank" class="btn-nsl-brutal" style="background: var(--nsl-gold); color: var(--text-main); text-decoration: none; display: flex; align-items: center; padding: 10px 15px;">
-                    📅 Request Partner Onboarding
+                    <%= __('req_partner_onboarding') %>
                 </a>
             </div>
             
             <div class="tabs" id="rankTabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-                <button class="btn-nsl-brutal active" style="padding: 8px 15px; background: var(--text-main); color: #fff;" onclick="filterByRank('ALL', this)">ALL</button>
-                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('A', this)">Rank A</button>
-                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('B', this)">Rank B</button>
-                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('C', this)">Rank C</button>
-                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('D', this)">Rank D</button>
-                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('E', this)">Rank E</button>
+                <button class="btn-nsl-brutal active" style="padding: 8px 15px; background: var(--text-main); color: #fff;" onclick="filterByRank('ALL', this)"><%= __('rank_all') %></button>
+                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('A', this)"><%= __('rank_a') %></button>
+                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('B', this)"><%= __('rank_b') %></button>
+                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('C', this)"><%= __('rank_c') %></button>
+                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('D', this)"><%= __('rank_d') %></button>
+                <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('E', this)"><%= __('rank_e') %></button>
             </div>
 
             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
-                <span id="studentCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;"><%= students ? students.length : 0 %> Candidates</span>
+                <span id="studentCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;"><%= students ? students.length : 0 %> <%= __('candidates_count') %></span>
                 <button id="fullInfoToggle" class="btn-nsl-brutal" style="padding: 6px 12px; font-size: 13px; display: flex; align-items: center; gap: 8px; background: var(--text-main); color: #fff;" onclick="toggleFullInfo(this)">
                     <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #0f0; border: 2px solid #fff;" id="fullInfoIndicator"></span>
-                    Full Info Only
+                    <%= __('full_info_only') %>
                 </button>
                 <select id="sortFilter" class="form-control" style="max-width: 170px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
-                    <option value="DEFAULT">Default Sort</option>
-                    <option value="SCORE_DESC">Highest Score</option>
-                    <option value="NAME_ASC">Name (A-Z)</option>
-                    <option value="NAME_DESC">Name (Z-A)</option>
-                    <option value="HAS_VIDEO">Has Video Only</option>
+                    <option value="DEFAULT"><%= __('sort_default') %></option>
+                    <option value="SCORE_DESC"><%= __('sort_highest_score') %></option>
+                    <option value="NAME_ASC"><%= __('sort_name_asc') %></option>
+                    <option value="NAME_DESC"><%= __('sort_name_desc') %></option>
+                    <option value="HAS_VIDEO"><%= __('sort_has_video') %></option>
                 </select>
                 <select id="professionFilter" class="form-control" style="max-width: 170px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
-                    <option value="ALL">All Professions</option>
+                    <option value="ALL"><%= __('all_professions') %></option>
                     <option value="PFLEGE,NURSE,ĐIỀU DƯỠNG,HDEU"><%= __('professions')['pflege'] %></option>
                     <option value="MEC,MECHATRONIKER,MECHANIKER,IT,CƠ KHÍ"><%= __('professions')['mechaniker'] %></option>
                     <option value="KOC,KOCH,ĐẦU BẾP"><%= __('professions')['koch'] %></option>
@@ -435,7 +435,7 @@
             
             const countBadge = document.getElementById('studentCount');
             if (countBadge) {
-                countBadge.innerText = totalItems + ' Candidates';
+                countBadge.innerText = totalItems + ' <%= __('candidates_count') %>';
             }
 
             renderPagination(totalPages);
