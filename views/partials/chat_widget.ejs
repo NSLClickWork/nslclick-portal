@@ -96,6 +96,26 @@
         background: white;
         color: var(--nsl-red, #cc1f1f);
     }
+    
+    .typing-indicator {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 5px;
+    }
+    .typing-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--text-muted, #888);
+        border-radius: 50%;
+        animation: typing 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes typing {
+        0%, 80%, 100% { transform: scale(0); }
+        40% { transform: scale(1); }
+    }
 </style>
 
 <div id="chat-widget">
@@ -134,6 +154,17 @@
         // Add User Message
         body.innerHTML += `<div class="msg user">${escapeHtmlChat(text)}</div>`;
         input.value = '';
+        
+        // Add Loading Indicator
+        const loadingId = 'loading-' + Date.now();
+        body.innerHTML += `
+            <div id="${loadingId}" class="msg bot" style="background: transparent; padding: 5px;">
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>`;
         body.scrollTop = body.scrollHeight;
 
         // Fetch AI Response
@@ -149,10 +180,18 @@
             });
             const data = await res.json();
             
+            // Remove Loading Indicator
+            const loadingEl = document.getElementById(loadingId);
+            if (loadingEl) loadingEl.remove();
+
             // Add Bot Message
             body.innerHTML += `<div class="msg bot">${data.reply || '...'}</div>`;
             body.scrollTop = body.scrollHeight;
         } catch (e) {
+            // Remove Loading Indicator
+            const loadingEl = document.getElementById(loadingId);
+            if (loadingEl) loadingEl.remove();
+
             body.innerHTML += `<div class="msg bot" style="color:red;"><%= __('chat_error') %></div>`;
             body.scrollTop = body.scrollHeight;
         }
