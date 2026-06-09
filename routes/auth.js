@@ -135,17 +135,17 @@ router.post('/admin/login', loginLimiter, async (req, res) => {
     if (!adminHash) {
         if (password.trim() === (process.env.ADMIN_PASSWORD || 'admin123').trim()) {
             req.session.isAdmin = true;
-            return res.redirect('/admin');
+            return res.redirect('/admin/dashboard');
         }
     } else {
         const match = await bcrypt.compare(password.trim(), adminHash);
         if (match) {
             req.session.isAdmin = true;
-            return res.redirect('/admin');
+            return res.redirect('/admin/dashboard');
         }
     }
 
-    res.render('login', { error: 'Invalid password. (Note: Default is admin123)', tab: 'admin' });
+    return res.render('login', { error: 'Invalid password. (Note: Default is admin123)', tab: 'admin', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
 });
 
 router.get('/admin/logout', (req, res) => {
