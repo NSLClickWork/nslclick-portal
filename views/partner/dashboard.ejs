@@ -109,6 +109,10 @@
 
             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                 <span id="studentCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;"><%= students ? students.length : 0 %> Candidates</span>
+                <button id="fullInfoToggle" class="btn-nsl-brutal" style="padding: 6px 12px; font-size: 13px; display: flex; align-items: center; gap: 8px; background: #fff;" onclick="toggleFullInfo(this)">
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ccc; border: 2px solid var(--text-main);" id="fullInfoIndicator"></span>
+                    Full Info Only
+                </button>
                 <select id="sortFilter" class="form-control" style="max-width: 170px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
                     <option value="DEFAULT">Default Sort</option>
                     <option value="SCORE_DESC">Highest Score</option>
@@ -135,9 +139,10 @@
                     let actualScore = student.NSLScore || student.AssessmentScore || 0;
                     let rawVideo = student['Introduction Video'] || student.YouTubeLink || student.DriveVideoLink || '';
                     let hasVideo = rawVideo && rawVideo.trim().length > 5 && rawVideo.toUpperCase() !== 'FALSE' ? 'true' : 'false';
+                    let hasPhoto = student.PhotoLink && student.PhotoLink.trim() !== '' ? 'true' : 'false';
                     let displayName = student['Short Name'] || student.FullName || '';
                 %>
-                    <div class="nsl-grid-card" data-index="<%= index %>" data-rank="<%= rank %>" data-prof="<%= profCode %>" data-score="<%= actualScore %>" data-name="<%= displayName.toUpperCase() %>" data-hasvideo="<%= hasVideo %>" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>;">
+                    <div class="nsl-grid-card" data-index="<%= index %>" data-rank="<%= rank %>" data-prof="<%= profCode %>" data-score="<%= actualScore %>" data-name="<%= displayName.toUpperCase() %>" data-hasvideo="<%= hasVideo %>" data-hasphoto="<%= hasPhoto %>" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>;">
                         <div class="card-header">
                             <img src="/photos/<%= encodeURIComponent(student.FullName) %>.jpg" onerror="this.onerror=null; this.src='/proxy/students/<%= student.StudentID %>/photo'; this.addEventListener('error', function(){this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(student.FullName) %>&background=random'});" alt="Photo" class="avatar">
                             <div>
@@ -208,6 +213,25 @@
         let currentRankFilter = 'ALL';
         let currentPage = 1;
         let itemsPerPage = window.innerWidth <= 768 ? 10 : 20;
+        let fullInfoOnly = false;
+
+        function toggleFullInfo(btn) {
+            fullInfoOnly = !fullInfoOnly;
+            const indicator = document.getElementById('fullInfoIndicator');
+            if (fullInfoOnly) {
+                btn.style.background = 'var(--text-main)';
+                btn.style.color = '#fff';
+                indicator.style.background = 'var(--nsl-gold)';
+                indicator.style.borderColor = '#fff';
+            } else {
+                btn.style.background = '#fff';
+                btn.style.color = 'var(--text-main)';
+                indicator.style.background = '#ccc';
+                indicator.style.borderColor = 'var(--text-main)';
+            }
+            currentPage = 1;
+            filterStudents();
+        }
 
         window.addEventListener('resize', () => {
             let newItemsPerPage = window.innerWidth <= 768 ? 10 : 20;
@@ -258,13 +282,19 @@
                 const cardRank = card.getAttribute('data-rank');
                 const cardProf = card.getAttribute('data-prof');
                 const cardHasVideo = card.getAttribute('data-hasvideo');
+                const cardHasPhoto = card.getAttribute('data-hasphoto');
                 
                 const matchesSearch = text.includes(query);
                 const matchesRank = currentRankFilter === 'ALL' || cardRank === currentRankFilter;
                 const matchesProf = profFilter === 'ALL' || cardProf.includes(profFilter);
                 const matchesVideo = sortFilter !== 'HAS_VIDEO' || cardHasVideo === 'true';
 
-                if (matchesSearch && matchesRank && matchesProf && matchesVideo) {
+                let matchesFullInfo = true;
+                if (fullInfoOnly) {
+                    matchesFullInfo = (cardHasVideo === 'true' && cardHasPhoto === 'true');
+                }
+
+                if (matchesSearch && matchesRank && matchesProf && matchesVideo && matchesFullInfo) {
                     filteredCards.push(card);
                 } else {
                     card.style.display = 'none';
