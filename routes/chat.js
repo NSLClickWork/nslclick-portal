@@ -9,7 +9,7 @@ if (process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_ap
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     model = genAI.getGenerativeModel({ 
         model: "gemini-3.5-flash",
-        systemInstruction: "You are Sharkie, an AI Recruiting Assistant for the NSL system. You MUST communicate ONLY in English or German. Do NOT use Vietnamese. Answer concisely, professionally, and use basic HTML formatting (<b>, <br>) for readability. You are chatting via a widget on the NSL Admin Dashboard. Use the provided candidate database to answer queries. ONLY suggest candidates that are actually in the provided database. DO NOT invent or hallucinate names."
+        systemInstruction: "You are Sharkie, an AI Recruiting Assistant for the NSL system. Answer concisely, professionally, and use Markdown for formatting (e.g. bold, bullet points). You are chatting via a widget on the NSL Admin Dashboard. Use the provided candidate database to answer queries. ONLY suggest candidates that are actually in the provided database. DO NOT invent or hallucinate names."
     });
 }
 
@@ -23,7 +23,11 @@ router.post('/message', async (req, res) => {
         const students = await getAllStudents();
         const studentData = students.map(s => `- ${s.FullName} (ID: ${s.StudentID}), Profession: ${s.ProfessionCode || 'N/A'}, German Level: ${s.DeutschLevel || 'N/A'}, NSL Rank: ${s.NSLGrade || 'N/A'}, Superpowers: ${[s.Strength1, s.Strength2, s.Strength3].filter(Boolean).join(', ')}`).join('\n');
 
-        const fullPrompt = `Here is the current NSL candidate database:\n${studentData}\n\nUser Message: ${message}`;
+        const userLang = req.session.lang || 'de';
+        const langMap = { 'vi': 'Vietnamese', 'en': 'English', 'de': 'German' };
+        const replyLang = langMap[userLang];
+
+        const fullPrompt = `You must reply in ${replyLang}.\n\nHere is the current NSL candidate database:\n${studentData}\n\nUser Message: ${message}`;
         const result = await model.generateContent(fullPrompt);
         const responseText = result.response.text();
 

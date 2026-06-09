@@ -61,8 +61,13 @@
         gap: 10px;
         font-size: 14px;
     }
-    .msg { padding: 10px; border-radius: 8px; max-width: 85%; word-wrap: break-word; }
+    .msg { padding: 10px; border-radius: 8px; max-width: 85%; word-wrap: break-word; line-height: 1.4; }
     .msg.bot { background: #f1f1f1; align-self: flex-start; border-bottom-left-radius: 0; color: #333; }
+    .msg.bot p { margin: 0 0 8px 0; }
+    .msg.bot p:last-child { margin-bottom: 0; }
+    .msg.bot ul, .msg.bot ol { margin: 5px 0 10px 0; padding-left: 20px; }
+    .msg.bot strong { color: var(--nsl-red, #cc1f1f); font-weight: bold; }
+    .msg.bot h1, .msg.bot h2, .msg.bot h3, .msg.bot h4 { margin: 10px 0 5px 0; font-size: 1.1em; color: var(--text-main, #333); }
     .msg.user { background: var(--nsl-gold, #f2a900); color: #fff; align-self: flex-end; border-bottom-right-radius: 0; }
     #chat-footer {
         padding: 10px;
@@ -123,6 +128,7 @@
     <div id="chat-bubble" onclick="toggleChat()">💬</div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
     function toggleChat() {
         const win = document.getElementById('chat-window');
@@ -168,8 +174,9 @@
             const loadingEl = document.getElementById(loadingId);
             if (loadingEl) loadingEl.remove();
 
-            // Add Bot Message
-            body.innerHTML += `<div class="msg bot">${data.reply || '...'}</div>`;
+            // Render Markdown and Add Bot Message
+            const htmlReply = marked.parse(data.reply || '...');
+            body.innerHTML += `<div class="msg bot">${htmlReply}</div>`;
             body.scrollTop = body.scrollHeight;
         } catch (e) {
             // Remove Loading Indicator
