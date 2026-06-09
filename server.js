@@ -143,7 +143,6 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     res.locals.candidateBookingLink = process.env.CANDIDATE_BOOKING_LINK || 'https://calendar.google.com/';
     res.locals.partnerBookingLink = process.env.PARTNER_BOOKING_LINK || 'https://calendar.google.com/';
-    res.locals.adminBookingLink = process.env.ADMIN_BOOKING_LINK || 'https://calendar.google.com/';
     next();
 });
 
