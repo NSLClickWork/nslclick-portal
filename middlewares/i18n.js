@@ -78,7 +78,11 @@ const dictionary = {
             sharkie_desc: 'Mô tả ứng viên bạn đang tìm kiếm, Sharkie sẽ giúp bạn lọc...',
             sharkie_placeholder: 'VD: Tìm cho tôi một ứng viên điều dưỡng có tiếng Đức B1...',
             ask_sharkie: 'Hỏi Sharkie',
-            req_partner_onboarding: 'Yêu cầu Trở thành Đối tác'
+            req_partner_onboarding: 'Yêu cầu Trở thành Đối tác',
+            chat_greeting: 'Xin chào! Tôi là <b>Sharkie</b>, trợ lý tuyển dụng AI của hệ thống NSL. Bạn cần lọc CV hay tìm kiếm ứng viên hôm nay? (Tôi nói được tiếng Việt, Anh & Đức)',
+            chat_placeholder: 'Nhập tin nhắn...',
+            chat_send: 'Gửi',
+            chat_error: 'Lỗi kết nối.'
         }
     },
     en: {
@@ -160,7 +164,11 @@ const dictionary = {
             sharkie_desc: 'Describe the candidate you are looking for, Sharkie will help you filter...',
             sharkie_placeholder: 'e.g. Find me a nursing candidate with B1 German...',
             ask_sharkie: 'Ask Sharkie',
-            req_partner_onboarding: 'Request Partner Onboarding'
+            req_partner_onboarding: 'Request Partner Onboarding',
+            chat_greeting: 'Hello! I am <b>Sharkie</b>, the AI recruiting assistant for the NSL system. Do you need to screen CVs or search for candidates today? (I speak English & German)',
+            chat_placeholder: 'Type your message...',
+            chat_send: 'Send',
+            chat_error: 'Connection error.'
         }
     },
     de: {
@@ -242,7 +250,11 @@ const dictionary = {
             sharkie_desc: 'Beschreiben Sie den Kandidaten, den Sie suchen, Sharkie hilft Ihnen beim Filtern...',
             sharkie_placeholder: 'z.B. Finde einen Pflegekandidaten mit B1 Deutsch...',
             ask_sharkie: 'Sharkie fragen',
-            req_partner_onboarding: 'Partner-Onboarding anfragen'
+            req_partner_onboarding: 'Partner-Onboarding anfragen',
+            chat_greeting: 'Hallo! Ich bin <b>Sharkie</b>, der KI-Recruiting-Assistent für das NSL-System. Möchten Sie heute Lebensläufe prüfen oder nach Kandidaten suchen? (Ich spreche Englisch & Deutsch)',
+            chat_placeholder: 'Ihre Nachricht...',
+            chat_send: 'Senden',
+            chat_error: 'Verbindungsfehler.'
         }
     }
 };

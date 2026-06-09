@@ -105,11 +105,11 @@
             <span id="chat-close" onclick="toggleChat()">×</span>
         </div>
         <div id="chat-body">
-            <div class="msg bot">Hello! I am <b>Sharkie</b>, the AI recruiting assistant for the NSL system. Do you need to screen CVs or search for candidates today? (I speak English & German)</div>
+            <div class="msg bot"><%- __('chat_greeting') %></div>
         </div>
         <div id="chat-footer">
-            <input type="text" id="chat-input" placeholder="Type your message..." onkeypress="if(event.key === 'Enter') sendMsg()">
-            <button id="chat-send" onclick="sendMsg()">Send</button>
+            <input type="text" id="chat-input" placeholder="<%= __('chat_placeholder') %>" onkeypress="if(event.key === 'Enter') sendMsg()">
+            <button id="chat-send" onclick="sendMsg()"><%= __('chat_send') %></button>
         </div>
     </div>
     <div id="chat-bubble" onclick="toggleChat()">💬</div>
@@ -153,7 +153,7 @@
             body.innerHTML += `<div class="msg bot">${data.reply || '...'}</div>`;
             body.scrollTop = body.scrollHeight;
         } catch (e) {
-            body.innerHTML += `<div class="msg bot" style="color:red;">Lỗi kết nối.</div>`;
+            body.innerHTML += `<div class="msg bot" style="color:red;"><%= __('chat_error') %></div>`;
             body.scrollTop = body.scrollHeight;
         }
     }
