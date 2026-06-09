@@ -76,9 +76,9 @@
     <div class="wavy-header">
         <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
             <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px;">
-                <a href="?lang=de" style="color: #fff; text-decoration: none; font-weight: <%= lang === 'de' ? '900' : '500' %>; opacity: <%= lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=en" style="color: #fff; text-decoration: none; font-weight: <%= lang === 'en' ? '900' : '500' %>; opacity: <%= lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=vi" style="color: #fff; text-decoration: none; font-weight: <%= lang === 'vi' ? '900' : '500' %>; opacity: <%= lang === 'vi' ? '1' : '0.6' %>;">VI</a>
+                <a href="?lang=de&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=en&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=vi&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
             <a href="/partner/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;"><%= __('logout') %></a>
         </div>
@@ -109,8 +109,8 @@
 
             <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
                 <span id="studentCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;"><%= students ? students.length : 0 %> Candidates</span>
-                <button id="fullInfoToggle" class="btn-nsl-brutal" style="padding: 6px 12px; font-size: 13px; display: flex; align-items: center; gap: 8px; background: #fff;" onclick="toggleFullInfo(this)">
-                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ccc; border: 2px solid var(--text-main);" id="fullInfoIndicator"></span>
+                <button id="fullInfoToggle" class="btn-nsl-brutal" style="padding: 6px 12px; font-size: 13px; display: flex; align-items: center; gap: 8px; background: var(--text-main); color: #fff;" onclick="toggleFullInfo(this)">
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #0f0; border: 2px solid #fff;" id="fullInfoIndicator"></span>
                     Full Info Only
                 </button>
                 <select id="sortFilter" class="form-control" style="max-width: 170px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
@@ -213,7 +213,7 @@
         let currentRankFilter = 'ALL';
         let currentPage = 1;
         let itemsPerPage = window.innerWidth <= 768 ? 10 : 20;
-        let fullInfoOnly = false;
+        let fullInfoOnly = true;
 
         function toggleFullInfo(btn) {
             fullInfoOnly = !fullInfoOnly;
@@ -221,7 +221,7 @@
             if (fullInfoOnly) {
                 btn.style.background = 'var(--text-main)';
                 btn.style.color = '#fff';
-                indicator.style.background = 'var(--nsl-gold)';
+                indicator.style.background = '#0f0';
                 indicator.style.borderColor = '#fff';
             } else {
                 btn.style.background = '#fff';

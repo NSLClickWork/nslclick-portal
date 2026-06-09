@@ -44,7 +44,20 @@ const dictionary = {
             prog_3: '3. Hồ sơ',
             prog_4: '4. Doanh nghiệp',
             prog_5: '5. Hợp đồng',
-            prog_6: '6. Visa'
+            prog_6: '6. Visa',
+            admin_col_student_id: 'Mã HV',
+            admin_col_full_name: 'Họ và tên',
+            admin_col_profession: 'Ngành nghề',
+            admin_col_center: 'Trung tâm',
+            admin_col_progress: 'Tiến độ',
+            admin_col_pdf: 'Trạng thái PDF',
+            admin_col_video: 'Trạng thái Video',
+            admin_col_actions: 'Thao tác',
+            admin_col_partner_name: 'Tên Đối Tác',
+            admin_col_access_code: 'Mã Truy Cập',
+            admin_col_allowed_professions: 'Ngành Nghề Cho Phép',
+            admin_col_status: 'Trạng thái',
+            admin_search: 'Tìm kiếm học viên...'
         }
     },
     en: {
@@ -92,7 +105,20 @@ const dictionary = {
             prog_3: '3. Media',
             prog_4: '4. Matching',
             prog_5: '5. Contract',
-            prog_6: '6. Visa'
+            prog_6: '6. Visa',
+            admin_col_student_id: 'Student ID',
+            admin_col_full_name: 'Full Name',
+            admin_col_profession: 'Profession',
+            admin_col_center: 'Center',
+            admin_col_progress: 'Progress',
+            admin_col_pdf: 'PDF Status',
+            admin_col_video: 'Video Status',
+            admin_col_actions: 'Actions',
+            admin_col_partner_name: 'Partner Name',
+            admin_col_access_code: 'Access Code',
+            admin_col_allowed_professions: 'Allowed Professions',
+            admin_col_status: 'Status',
+            admin_search: 'Search students...'
         }
     },
     de: {
@@ -140,7 +166,20 @@ const dictionary = {
             prog_3: '3. Medien',
             prog_4: '4. Matching',
             prog_5: '5. Vertrag',
-            prog_6: '6. Visum'
+            prog_6: '6. Visum',
+            admin_col_student_id: 'Studenten-ID',
+            admin_col_full_name: 'Vollständiger Name',
+            admin_col_profession: 'Beruf',
+            admin_col_center: 'Zentrum',
+            admin_col_progress: 'Fortschritt',
+            admin_col_pdf: 'PDF-Status',
+            admin_col_video: 'Video-Status',
+            admin_col_actions: 'Aktionen',
+            admin_col_partner_name: 'Partnername',
+            admin_col_access_code: 'Zugangscode',
+            admin_col_allowed_professions: 'Erlaubte Berufe',
+            admin_col_status: 'Status',
+            admin_search: 'Studenten suchen...'
         }
     }
 };

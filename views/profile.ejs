@@ -446,10 +446,10 @@
         <!-- Top Banner Waves -->
         <div class="wavy-header">
         <div class="header-controls">
-            <div class="lang-switch">
-                <a href="?lang=de" style="color: #fff; text-decoration: none; font-weight: <%= lang === 'de' ? '900' : '500' %>; opacity: <%= lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=en" style="color: #fff; text-decoration: none; font-weight: <%= lang === 'en' ? '900' : '500' %>; opacity: <%= lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=vi" style="color: #fff; text-decoration: none; font-weight: <%= lang === 'vi' ? '900' : '500' %>; opacity: <%= lang === 'vi' ? '1' : '0.6' %>;">VI</a>
+            <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px;">
+                <a href="?lang=de&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=en&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=vi&_cb=<%= Date.now() %>" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
             <% if (typeof partner !== 'undefined' && partner) { %>
                 <a href="/partner/dashboard" class="header-link">Back</a>
