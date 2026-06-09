@@ -222,7 +222,7 @@
                     <option value="NAME_DESC"><%= __('sort_name_desc') %></option>
                     <option value="HAS_VIDEO"><%= __('sort_has_video') %></option>
                 </select>
-                <% if (partner && partner.allowedProfessions === 'ALL') { %>
+                <% if (typeof partner !== 'undefined' && partner && partner.allowedProfessions === 'ALL') { %>
                 <select id="professionFilter" class="form-control" style="max-width: 250px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
                     <option value="ALL"><%= __('all_professions') %></option>
                     <option value="PFLEGE,NURSE,ĐIỀU DƯỠNG,HDEU"><%= __('pflege', 'professions') %></option>

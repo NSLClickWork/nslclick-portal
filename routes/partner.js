@@ -41,10 +41,10 @@ router.get('/partner/dashboard', async (req, res) => {
             }
         }
 
-        res.render('partner/dashboard', { students: filteredStudents });
+        res.render('partner/dashboard', { students: filteredStudents, partner: partnerConfig });
     } catch (err) {
         console.error('Error in partner dashboard:', err);
-        res.render('partner/dashboard', { students: [], error: 'Failed to load candidates due to Google API limits.' });
+        res.render('partner/dashboard', { students: [], error: 'Failed to load candidates due to Google API limits.', partner: partnerConfig || null });
     }
 });
 
