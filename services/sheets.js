@@ -567,6 +567,49 @@ async function batchUpdateStudentsFields(studentIds, updates) {
     throw new Error(`Column not found in Google Sheets for updates: ${Object.keys(updates).join(', ')}. Please make sure you added the 'Progress Status' column in your Google Sheet!`);
 }
 
+/**
+ * Lưu lịch sử chat và quyết định của khách vào tab CHAT_LOGS
+ */
+async function logChatRequest(logData) {
+    if (isMockMode) {
+        console.log('[MOCK] Logged chat request:', logData);
+        return true;
+    }
+
+    if (!SPREADSHEET_ID) return false;
+
+    try {
+        const sheets = await getSheetsInstance();
+        
+        const timestamp = new Date().toISOString();
+        const { partnerId, role, language, userMessage, botReply, chosenCandidate } = logData;
+
+        const rowData = [
+            timestamp,
+            partnerId || 'Unknown',
+            role || 'Unknown',
+            language || 'Unknown',
+            userMessage || '',
+            botReply || '',
+            chosenCandidate || ''
+        ];
+
+        await sheets.spreadsheets.values.append({
+            spreadsheetId: SPREADSHEET_ID,
+            range: `CHAT_LOGS!A:G`,
+            valueInputOption: 'USER_ENTERED',
+            insertDataOption: 'INSERT_ROWS',
+            requestBody: {
+                values: [rowData]
+            }
+        });
+        return true;
+    } catch (error) {
+        console.error('Error logging chat to CHAT_LOGS Sheet (Please ensure a tab named CHAT_LOGS exists):', error.message);
+        return false;
+    }
+}
+
 module.exports = {
     getAllStudents,
     getStudentById,
@@ -575,5 +618,6 @@ module.exports = {
     addStudent,
     addPartnerAccess,
     updatePartnerAccess,
-    getPartnerAccessConfigs
+    getPartnerAccessConfigs,
+    logChatRequest
 };

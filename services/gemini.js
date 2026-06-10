@@ -72,6 +72,9 @@ const { OpenAI } = require('openai');
 
             systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST detect the language of the user's prompt (e.g. Vietnamese, German, English) and reply in that EXACT SAME language. All descriptions, suggestions, and conversation text must be in the detected language.`;
 
+            systemInstruction += `\n\nCRITICAL TRACKING RULE: At the end of your response, always politely ask the user which candidate they would like to proceed with or select for an interview. If the user EXPLICITLY states they have chosen a candidate in their message, you MUST append a hidden tag at the very end of your response exactly like this: [CHOSEN_CANDIDATE: StudentID] (replace StudentID with the actual ID). Do not output this tag unless a clear choice is made.`;
+
+
             let responseText;
             const modelsToTry = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
             let lastError;
