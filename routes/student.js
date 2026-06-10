@@ -6,6 +6,8 @@ const sheetsService = require('../services/sheets');
 const driveService = require('../services/drive');
 
 // Student Profile
+router.get('/student', (req, res) => res.redirect('/profile'));
+
 router.get('/profile', async (req, res) => {
     if (!req.session.studentId) {
         return res.redirect('/');

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const sheetsService = require('../services/sheets');
 
+router.get('/partner', (req, res) => res.redirect('/partner/dashboard'));
+
 router.get('/partner/dashboard', async (req, res) => {
     if (!req.session.partner) return res.redirect('/partner/login');
 

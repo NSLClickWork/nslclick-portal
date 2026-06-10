@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="<%= appBaseUrl %>">
     <title>NSL Portal – Sign In</title>
-    <link rel="icon" type="image/png" href="logo-shadow.png">
+    <link rel="icon" type="image/png" href="assets/design/Logo_YTB-removebg-preview.png">
     <link rel="stylesheet" href="css/nsl-design-system.css?v=4">
 
     <style>
@@ -164,11 +164,11 @@
         <div class="login-content">
             <div class="login-form-box">
                 <div class="logo-box">
-                    <img src="logo-shadow.png" alt="NSL">
+                    <img src="assets/design/Logo_Mid_PersonalKampagne.png" alt="NSL" style="object-fit: contain; max-width: 100%;">
                 </div>
 
                 <h1>Portal Access</h1>
-                <p class="subtitle">Select your role to sign in</p>
+                <p class="subtitle">Bitte wählen Sie Ihren Bereich</p>
 
                 <% if (typeof error !=='undefined' && error) { %>
                     <div class="error-msg">
@@ -180,9 +180,9 @@
                     <% } %>
 
                         <div class="nsl-tabs">
-                            <button class="nsl-tab-btn" onclick="switchTab('student')">Student</button>
-                            <button class="nsl-tab-btn" onclick="switchTab('partner')">Partner</button>
-                            <button class="nsl-tab-btn" onclick="switchTab('admin')">Admin</button>
+                            <button class="nsl-tab-btn" onclick="switchTab('student')">TALENTE</button>
+                            <button class="nsl-tab-btn" onclick="switchTab('partner')">PARTNER</button>
+                            <button class="nsl-tab-btn" id="btn-admin" style="display: none;" onclick="switchTab('admin')">Admin</button>
                         </div>
 
                         <!-- STUDENT FORM -->

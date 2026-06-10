@@ -40,6 +40,10 @@ router.get('/oauth2callback', isAdmin, async (req, res) => {
 });
 
 // ==================== Admin Dashboard ====================
+router.get('/admin', isAdmin, (req, res) => {
+    res.redirect('/admin/dashboard');
+});
+
 router.get('/admin/dashboard', isAdmin, async (req, res) => {
     res.render('admin/dashboard');
 });
