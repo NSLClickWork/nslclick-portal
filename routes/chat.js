@@ -19,11 +19,11 @@ router.post('/message', async (req, res) => {
 
         // Extract chosen candidate tag if present
         let chosenCandidate = '';
-        const chosenMatch = responseText.match(/\[CHOSEN_CANDIDATE:\s*([^\]]+)\]/);
+        const chosenMatch = responseText.match(/\[\s*CHOSEN_CANDIDATE\s*:\s*([^\]]+)\]/i);
         if (chosenMatch) {
             chosenCandidate = chosenMatch[1].trim();
             // Remove the tag from the final output so the user doesn't see it
-            responseText = responseText.replace(/\[CHOSEN_CANDIDATE:\s*[^\]]+\]/g, '').trim();
+            responseText = responseText.replace(/\[\s*CHOSEN_CANDIDATE\s*:\s*[^\]]+\]/gi, '').trim();
         }
 
         // Log the chat to Google Sheets
