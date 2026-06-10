@@ -61,13 +61,28 @@ const { OpenAI } = require('openai');
                 return `- ID: ${s.StudentID} | Name: ${s.FullName} | Profession: ${s.ProfessionCode || 'N/A'} | NSL Score: ${s.NSLScore || '0'} | NSL Grade: ${s.NSLGrade || 'N/A'} | German Level: ${s.DeutschLevel || 'N/A'} | Available From: ${s.AvailableFrom || 'N/A'} | Birth Year: ${birthYear} | Strengths: ${[s.Strength1, s.Strength2, s.Strength3].filter(Boolean).join(', ')} | YouTubeLink: ${s.YouTubeLink || s['Introduction Video'] || ''}`;
             }).join('\n');
 
+            // --- RAG VECTOR SEARCH ---
+            let extraRagContext = "";
+            try {
+                // We only do vector search if we have the api key
+                if (process.env.PINECONE_API_KEY && process.env.OPENAI_API_KEY) {
+                    const pineconeService = require('./pinecone');
+                    const searchResult = await pineconeService.searchSimilarDocuments(prompt, 3);
+                    if (searchResult) {
+                        extraRagContext = `\n\n=== RELEVANT INTERVIEW TRANSCRIPTS & CERTIFICATES ===\n${searchResult}\n(Use this extra context to answer specific questions about candidate backgrounds, interviews, or certificates. If asked about something not here, just use the basic candidate list).`;
+                    }
+                }
+            } catch (ragErr) {
+                console.error("Vector search failed, continuing with normal DB:", ragErr);
+            }
+
             let systemInstruction = "Your name is Sharkie. You are a smart AI recruiting assistant for NSL (NSL Click & Work). Your task is to read the provided database context to answer questions, search, and suggest candidates concisely and accurately.\n\nCRITICAL LANGUAGE RULE: You MUST detect the exact language of the user's prompt. Translate all labels and candidate data (Profession, Strengths) into the detected language before inserting them into the flashcards.\n\nCRITICAL RULE: You MUST ONLY answer based on the provided database context. Do not hallucinate candidates. If you cannot find the answer, politely decline and tell the user to contact newsolution.eu@gmail.com.\n\nCRITICAL FORMATTING RULE: When you suggest candidates, you MUST format EACH candidate as a beautiful HTML flashcard. Use exactly this HTML code (replace bracketed text with data) on a SINGLE LINE so it renders perfectly:\n<div style=\"background: #fff; border: 2px solid #222; border-radius: 8px; padding: 15px; margin: 10px 0; box-shadow: 4px 4px 0px #222; display: flex; align-items: stretch; gap: 15px;\"><img src=\"proxy/students/[ID]/photo\" onerror=\"this.onerror=null; this.src='https://ui-avatars.com/api/?name=[Name]&background=random'\" style=\"width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid #222; flex-shrink: 0;\"><div style=\"flex-grow: 1;\"><h4 style=\"margin: 0 0 5px 0; color: #222; font-weight: 900; font-size: 18px; text-transform: uppercase;\">[Name]</h4><div style=\"font-weight: bold; color: #cc1f1f; font-size: 13px; text-transform: uppercase; margin-bottom: 10px;\">[Profession]</div><div style=\"display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 13px; color: #333; margin-bottom: 10px; border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 8px 0;\"><div><strong>[Label for Birth Year]:</strong> [Birth Year]</div><div><strong>[Label for German]:</strong> [German Level]</div><div><strong>[Label for NSL Score]:</strong> [NSL Score]</div><div><strong>[Label for Rank]:</strong> [NSL Grade]</div><div style=\"grid-column: span 2;\"><strong>[Label for Availability]:</strong> [Available From]</div></div><div style=\"font-size: 13px; color: #333;\"><strong style=\"text-transform: uppercase;\">[Label for Superpowers]:</strong><br>[Strengths (e.g. as <ul><li> list)]</div></div>[VIDEO_BUTTON_HTML]</div>\n\nFor `[VIDEO_BUTTON_HTML]`, IF AND ONLY IF the candidate has a YouTubeLink, replace it with this HTML block: `<div style=\"display: flex; align-items: center; justify-content: center; border-left: 2px dashed #ccc; padding-left: 15px;\"><a href=\"[YouTubeLink]\" target=\"_blank\" style=\"display: inline-block; background: #fff; color: #222; border: 2px solid #222; padding: 10px 15px; text-decoration: none; font-weight: 900; font-size: 12px; text-transform: uppercase; text-align: center; box-shadow: 3px 3px 0px #222; white-space: nowrap;\">[Label for Watch Video]</a></div>`. If they DO NOT have a video, replace `[VIDEO_BUTTON_HTML]` with an empty string. Do NOT use markdown lists (*) for candidates anymore. ONLY use the HTML flashcard above.\n\n";
             
             if (userRole === 'admin') {
                 const partnersContext = partners.map(p => `- Name: ${p.partnerName} | Status: ${p.revoked === 'TRUE' ? 'Revoked' : 'Active'} | Professions: ${p.allowedProfessions}`).join('\n');
-                systemInstruction += `The user is an ADMIN. You have full access to all data.\n\n=== PARTNERS LIST ===\n${partnersContext}\n\n=== CANDIDATES LIST ===\n${studentsContext}`;
+                systemInstruction += `The user is an ADMIN. You have full access to all data.\n\n=== PARTNERS LIST ===\n${partnersContext}\n\n=== CANDIDATES LIST ===\n${studentsContext}${extraRagContext}`;
             } else {
-                systemInstruction += `The user is a PARTNER (RECRUITER). Be professional and help them find candidates.\n\n=== CANDIDATES LIST ===\n${studentsContext}`;
+                systemInstruction += `The user is a PARTNER (RECRUITER). Be professional and help them find candidates.\n\n=== CANDIDATES LIST ===\n${studentsContext}${extraRagContext}`;
             }
 
             systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST detect the language of the user's prompt (e.g. Vietnamese, German, English) and reply in that EXACT SAME language. All descriptions, suggestions, and conversation text must be in the detected language.`;
