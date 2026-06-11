@@ -57,7 +57,7 @@ async function getAllStudents() {
         // Fetch both CHECKLIST and NSL-ASSESS tabs
         const response = await sheets.spreadsheets.values.batchGet({
             spreadsheetId: SPREADSHEET_ID,
-            ranges: [`${MASTER_SHEET}!A:AZ`, `NSL-ASSESS!A:AZ`],
+            ranges: [`${MASTER_SHEET}!A:ZZ`, `NSL-ASSESS!A:ZZ`],
         });
 
         const checklistRows = response.data.valueRanges[0].values;
