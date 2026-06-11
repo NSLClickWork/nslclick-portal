@@ -610,6 +610,25 @@ async function logChatRequest(logData) {
     }
 }
 
+/**
+ * Xóa thông tin đối tác
+ */
+async function deletePartnerAccess(rowIndex) {
+    if (isMockMode) {
+        const db = readMockDb();
+        db.partners = db.partners.filter(p => p.rowIndex != rowIndex);
+        writeMockDb(db);
+        return true;
+    }
+
+    const sheets = await getSheetsInstance();
+    await sheets.spreadsheets.values.clear({
+        spreadsheetId: SPREADSHEET_ID,
+        range: `${PARTNER_SHEET}!A${rowIndex}:Z${rowIndex}`
+    });
+    return true;
+}
+
 module.exports = {
     getAllStudents,
     getStudentById,
@@ -618,6 +637,7 @@ module.exports = {
     addStudent,
     addPartnerAccess,
     updatePartnerAccess,
+    deletePartnerAccess,
     getPartnerAccessConfigs,
     logChatRequest
 };

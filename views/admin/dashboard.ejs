@@ -142,21 +142,21 @@
 
         <div class="section-card" style="border: 4px solid var(--text-main); border-radius: 0; box-shadow: 8px 8px 0px var(--text-main);">
             <div class="tabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
-                <button class="btn btn-nsl-brutal" id="tabStudents" style="background: var(--text-main); color: #fff;" onclick="switchTab('students')">Students</button>
-                <button class="btn btn-nsl-brutal" id="tabPartners" onclick="switchTab('partners')">Partners</button>
+                <button class="btn btn-nsl-brutal" id="tabStudents" style="background: var(--text-main); color: #fff;" onclick="switchTab('students')"><%= __('admin_tab_students') %></button>
+                <button class="btn btn-nsl-brutal" id="tabPartners" onclick="switchTab('partners')"><%= __('admin_tab_partners') %></button>
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                <div class="section-title" id="pageTitle" style="color: var(--text-main); border-left: 8px solid var(--nsl-gold); padding-left: 15px; margin: 0;">Students</div>
+                <div class="section-title" id="pageTitle" style="color: var(--text-main); border-left: 8px solid var(--nsl-gold); padding-left: 15px; margin: 0;"><%= __('admin_tab_students') %></div>
             </div>
             
             <div id="studentsView">
                 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px;" id="actionButtons">
                     <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-                        <button class="btn btn-nsl-brutal" onclick="showAddRow()" style="background: var(--text-main); color: #fff;">+ Add Student</button>
-                        <button class="btn btn-nsl-brutal" onclick="batchGenerate('pdfs')" style="border-color: var(--nsl-red); color: var(--nsl-red);">Generate PDF</button>
-                        <button class="btn btn-nsl-brutal" onclick="batchGenerate('videos')" style="border-color: var(--nsl-gold); color: var(--nsl-gold);">Generate Video</button>
-                        <button class="btn btn-nsl-brutal" onclick="batchUpdateProgress()" style="background: #2e7d32; color: #fff;">Batch Update Progress</button>
+                        <button class="btn btn-nsl-brutal" onclick="showAddRow()" style="background: var(--text-main); color: #fff;">+ <%= __('admin_add_student') %></button>
+                        <button class="btn btn-nsl-brutal" onclick="batchGenerate('pdfs')" style="border-color: var(--nsl-red); color: var(--nsl-red);"><%= __('admin_generate_pdf') %></button>
+                        <button class="btn btn-nsl-brutal" onclick="batchGenerate('videos')" style="border-color: var(--nsl-gold); color: var(--nsl-gold);"><%= __('admin_generate_video') %></button>
+                        <button class="btn btn-nsl-brutal" onclick="batchUpdateProgress()" style="background: #2e7d32; color: #fff;"><%= __('admin_batch_update_progress') %></button>
                     </div>
                 </div>
 
@@ -190,7 +190,7 @@
                 </div>
 
             <div class="job-panel" id="jobPanel">
-                <h4 style="margin-bottom: 10px;">Active Jobs</h4>
+                <h4 style="margin-bottom: 10px;"><%= __('admin_active_jobs') %></h4>
                 <ul id="jobList" style="font-size: 13px; list-style: none;"></ul>
             </div>
 
@@ -217,10 +217,10 @@
             <!-- PARTNERS VIEW -->
             <div id="partnersView" style="display: none;">
                 <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
-                    <button class="btn btn-nsl-brutal" onclick="showCreatePartnerModal()" style="background: var(--text-main); color: #fff;">+ Generate Partner Code</button>
+                    <button class="btn btn-nsl-brutal" onclick="showCreatePartnerModal()" style="background: var(--text-main); color: #fff;">+ <%= __('admin_gen_partner_code') %></button>
                     <div style="margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <span id="adminPartnerCount" style="font-weight: bold; background: var(--text-main); color: #fff; padding: 5px 12px; border-radius: var(--radius-pill); font-size: 14px;">0</span>
-                        <input type="text" id="adminPartnerSearch" class="form-control" placeholder="Search partners..." style="width: 250px; max-width: 100%; padding: 8px 15px;" oninput="renderPartnerTable()">
+                        <input type="text" id="adminPartnerSearch" class="form-control" placeholder="<%= __('admin_search_partners') %>" style="width: 250px; max-width: 100%; padding: 8px 15px;" oninput="renderPartnerTable()">
                     </div>
                 </div>
                 <div class="table-container" style="max-height: 600px; overflow-y: auto; border: 2px solid var(--text-main);">
@@ -248,7 +248,7 @@
             <p id="batchProgressCount" style="font-size: 14px; font-weight: bold; color: #666; margin-bottom: 20px;">Updating 0 students</p>
             
             <div class="edit-group">
-                <label style="font-weight: bold; margin-bottom: 8px; display: block;">Select New Step:</label>
+                <label style="font-weight: bold; margin-bottom: 8px; display: block;"><%= __('admin_select_new_step') %></label>
                 <select id="batchProgressSelect" class="form-control" style="width: 100%; padding: 12px; font-size: 16px; border: 2px solid var(--text-main); border-radius: 4px; font-weight: bold;">
                     <option value="1">1. Assessment Test</option>
                     <option value="2">2. Interview</option>
@@ -260,8 +260,8 @@
             </div>
             
             <div style="margin-top: 25px; display: flex; gap: 10px;">
-                <button class="btn btn-nsl-brutal" style="background: #2e7d32; color: #fff; width: 100%;" onclick="submitBatchProgress()">Update All</button>
-                <button class="btn btn-nsl-brutal" style="background: #eee; color: #333;" onclick="document.getElementById('batchProgressModal').style.display='none'">Cancel</button>
+                <button class="btn btn-nsl-brutal" style="background: #2e7d32; color: #fff; width: 100%;" onclick="submitBatchProgress()"><%= __('admin_update_all') %></button>
+                <button class="btn btn-nsl-brutal" style="background: #eee; color: #333;" onclick="document.getElementById('batchProgressModal').style.display='none'"><%= __('admin_cancel') %></button>
             </div>
         </div>
     </div>
@@ -299,10 +299,10 @@
                 </div>
             </div>
             <div id="p-Result" style="margin-top: 15px; display: none; padding: 15px; background: #e8f5e9; border: 2px solid #2e7d32; border-radius: 4px;">
-                <strong style="color: #2e7d32; font-size: 16px;">Code Generated Successfully!</strong><br><br>
-                Please copy this code and send it to the partner. <b style="color: var(--nsl-red);">You won't be able to see it again.</b><br><br>
+                <strong style="color: #2e7d32; font-size: 16px;"><%= __('admin_code_generated_success') %></strong><br><br>
+                <%- __('admin_code_copy_warning') %><br><br>
                 <code id="p-ResultCode" style="font-size: 18px; font-weight: bold; background: #fff; border: 2px solid #ccc; padding: 10px; display: block; text-align: center;"></code>
-                <button class="btn btn-nsl-brutal" style="margin-top: 15px; width: 100%;" onclick="copyAndClose()">Copy & Close</button>
+                <button class="btn btn-nsl-brutal" style="margin-top: 15px; width: 100%;" onclick="copyAndClose()"><%= __('admin_copy_close') %></button>
             </div>
         </div>
     </div>
@@ -320,7 +320,7 @@
                 document.getElementById('tabStudents').style.color = '#fff';
                 document.getElementById('tabPartners').style.background = 'transparent';
                 document.getElementById('tabPartners').style.color = 'var(--text-main)';
-                document.getElementById('pageTitle').innerText = 'Students';
+                document.getElementById('pageTitle').innerText = '<%= __('admin_tab_students') %>';
             } else {
                 document.getElementById('studentsView').style.display = 'none';
                 document.getElementById('partnersView').style.display = 'block';
@@ -328,7 +328,7 @@
                 document.getElementById('tabPartners').style.color = '#fff';
                 document.getElementById('tabStudents').style.background = 'transparent';
                 document.getElementById('tabStudents').style.color = 'var(--text-main)';
-                document.getElementById('pageTitle').innerText = 'Partner Management';
+                document.getElementById('pageTitle').innerText = '<%= __('admin_tab_partners') %>';
                 fetchPartners();
             }
         }
@@ -700,16 +700,17 @@
                     <td>
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <code>${escapeHtml(p.accessCode || 'N/A')}</code>
-                            ${p.accessCode ? `<button onclick="copyToClipboard('${escapeHtml(p.accessCode)}')", style="background:none; border:none; cursor:pointer; padding:2px;" title="Copy Code">📋</button>` : ''}
+                            ${p.accessCode ? `<button onclick="copyToClipboard('${escapeHtml(p.accessCode)}')" style="background:none; border:none; cursor:pointer; padding:2px; display:flex; align-items:center;" title="Copy Code"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>` : ''}
                         </div>
                     </td>
                     <td>${escapeHtml(p.allowedProfessions)}</td>
                     <td>${statusBadge}</td>
                     <td>
                         ${isRevoked 
-                            ? `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px;" onclick="togglePartnerStatus('${escapeHtml(p.rowIndex)}', false)">Restore</button>`
-                            : `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; color:#fff; background:var(--nsl-red); border-color:var(--nsl-red);" onclick="togglePartnerStatus('${escapeHtml(p.rowIndex)}', true)">Revoke</button>`
+                            ? `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px;" onclick="togglePartnerStatus('${escapeHtml(p.rowIndex)}', false)"><%= __('admin_restore') %></button>`
+                            : `<button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; color:#fff; background:var(--nsl-red); border-color:var(--nsl-red);" onclick="togglePartnerStatus('${escapeHtml(p.rowIndex)}', true)"><%= __('admin_revoke') %></button>`
                         }
+                        <button class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; color:#fff; background:#d32f2f; border-color:#d32f2f;" onclick="deletePartner('${escapeHtml(p.rowIndex)}')"><%= __('admin_delete') %></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -727,6 +728,23 @@
                 fetchPartners();
             } else {
                 notify('Error updating status', 'error');
+            }
+        }
+
+        async function deletePartner(rowIndex) {
+            if (!confirm('Are you sure you want to permanently delete this partner?')) return;
+            try {
+                const res = await apiFetch(`/admin/partners/${rowIndex}`, {
+                    method: 'DELETE'
+                });
+                if (res.ok) {
+                    notify('Partner deleted successfully');
+                    fetchPartners();
+                } else {
+                    notify('Error deleting partner', 'error');
+                }
+            } catch (err) {
+                notify('Network error', 'error');
             }
         }
 

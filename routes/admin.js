@@ -161,6 +161,15 @@ router.put('/admin/partners/:rowIndex/revoke', isAdmin, async (req, res) => {
     }
 });
 
+router.delete('/admin/partners/:rowIndex', isAdmin, async (req, res) => {
+    try {
+        await sheetsService.deletePartnerAccess(req.params.rowIndex);
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // ==================== Batch Processing ====================
 router.post('/admin/batch/pdfs', isAdmin, async (req, res) => {
     const { studentIds } = req.body;
