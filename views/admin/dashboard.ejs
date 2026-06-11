@@ -8,7 +8,7 @@
     <title>NSL Admin - Dashboard</title>
     <link rel="icon" type="image/png" href="assets/design/favicon_square.png?v=10">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/nsl-design-system.css?v=4">
+    <link rel="stylesheet" href="css/nsl-design-system.css?v=5">
     <style>
         .table-container { overflow-x: auto; margin-top: 20px; }
         .edit-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; padding: 20px; background: var(--bg-gray); border-radius: var(--radius-sm); margin-top: 10px;}
@@ -212,7 +212,7 @@
                         <option value="MEC,MECHATRONIKER,MECHANIKER,IT,CƠ KHÍ">Mechaniker/in</option>
                         <option value="KOC,KOCH,ĐẦU BẾP">Koch/Köchin</option>
                         <option value="HOT,HOTEL,RESTAURANT,GASTRONOMIE">Hotelfachmann</option>
-                        <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH">Einzelhandel</option>
+                        <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH,KUNDENBERATER,ADVISOR">Einzelhandel</option>
                     </select>
                     <input type="text" id="adminStudentSearch" class="form-control" placeholder="<%= __('admin_search') %>" style="flex-grow: 1; max-width: 300px; padding: 8px 15px;" oninput="renderTable()">
                 </div>
@@ -310,7 +310,7 @@
                         <label><input type="checkbox" name="prof" value="HDEU, Pflege, Nursing, Điều dưỡng" data-short="NURSING" onchange="updateAutoCode()"> <%= __('admin_prof_nursing') %></label>
                         <label><input type="checkbox" name="prof" value="KOC, HOT, Koch, Hotel, Restaurant, Gastronomie, Đầu bếp, Ẩm thực, NHKS" data-short="NHKS" onchange="updateAutoCode()"> <%= __('admin_prof_nhks') %></label>
                         <label><input type="checkbox" name="prof" value="MEC, Mechatroniker, Mechaniker, IT, Kỹ thuật, Cơ khí" data-short="TECH" onchange="updateAutoCode()"> <%= __('admin_prof_tech') %></label>
-                        <label><input type="checkbox" name="prof" value="EINZ, Einzelhandel, Bán hàng, Bán bánh, Verkäufer, Bäckerei, Retail, Sales, Dịch vụ" data-short="SALES" onchange="updateAutoCode()"> <%= __('admin_prof_sales') %></label>
+                        <label><input type="checkbox" name="prof" value="EINZ, Einzelhandel, Bán hàng, Bán bánh, Verkäufer, Bäckerei, Retail, Sales, Dịch vụ, Kundenberater, Advisor" data-short="SALES" onchange="updateAutoCode()"> <%= __('admin_prof_sales') %></label>
                         <label><input type="checkbox" name="prof" value="ZfA, Nha khoa, Zahnmedizinische" data-short="ZfA" onchange="updateAutoCode()"> <%= __('admin_prof_zfa') %></label>
                     </div>
                     <small style="color: #666; font-size: 11px; display: block; margin-top: 8px;">
@@ -781,8 +781,8 @@
             document.getElementById('p-Result').style.display = 'none';
             document.getElementById('p-Name').value = '';
             document.querySelectorAll('input[name="prof"]').forEach(cb => cb.checked = false);
-            document.getElementById('p-Code').value = '';
             document.getElementById('partnerModal').style.display = 'flex';
+            updateAutoCode();
         }
 
         function copyAndClose() {
@@ -836,6 +836,7 @@
                     document.getElementById('p-Form').style.display = 'none';
                     document.getElementById('p-ResultCode').innerText = rawCode;
                     document.getElementById('p-Result').style.display = 'block';
+                    fetchPartners();
                 } else {
                     notify('Failed to create partner', 'error');
                 }

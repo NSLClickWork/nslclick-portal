@@ -7,9 +7,9 @@
     <base href="<%= appBaseUrl %>">
     <title>NSL Partner Portal</title>
     <link rel="icon" type="image/png" href="assets/design/favicon_square.png?v=10">
-    <link rel="stylesheet" href="css/nsl-design-system.css?v=4">
+    <link rel="stylesheet" href="css/nsl-design-system.css?v=5">
     <style>
-        .nav-brand-logo { height: 100px; margin-top: -5px; margin-bottom: 20px;}
+        .nav-brand-logo { height: 100px; max-width: 100%; object-fit: contain; margin-top: -5px; margin-bottom: 20px;}
         .lang-switch a { color: #fff; text-decoration: none; margin-left: 10px; font-weight: 600; opacity: 0.7; }
         .lang-switch a.active { color: #fff; opacity: 1; text-decoration: underline; }
         
@@ -67,6 +67,19 @@
             }
             .ai-hero-section {
                 padding: 20px !important;
+            }
+            .container {
+                padding: 15px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-brand-logo {
+                width: 80%;
+                max-width: 300px;
+                height: auto;
+                margin: 0 auto 15px auto;
+                display: block;
             }
         }
         .search-bar-wrapper:focus-within {
