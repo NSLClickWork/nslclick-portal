@@ -246,6 +246,7 @@
                 </button>
                 <select id="sortFilter" class="form-control" style="max-width: 220px; padding: 8px 15px; font-size: 14px;" onchange="currentPage=1; filterStudents()">
                     <option value="DEFAULT"><%= __('sort_default') %></option>
+                    <option value="SETCARD_FIRST" selected>Setcard zuerst</option>
                     <option value="SCORE_DESC"><%= __('sort_highest_score') %></option>
                     <option value="NAME_ASC"><%= __('sort_name_asc') %></option>
                     <option value="NAME_DESC"><%= __('sort_name_desc') %></option>
@@ -258,7 +259,7 @@
                     <option value="MEC,MECHATRONIKER,MECHANIKER,IT,CƠ KHÍ"><%= __('mechaniker', 'professions') %></option>
                     <option value="KOC,KOCH,ĐẦU BẾP"><%= __('koch', 'professions') %></option>
                     <option value="HOT,HOTEL,RESTAURANT,GASTRONOMIE"><%= __('hotel', 'professions') %></option>
-                    <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH"><%= __('einzelhandel', 'professions') %></option>
+                    <option value="EINZ,EINZELHANDEL,VERKÄUFER,BÄCKEREI,RETAIL,SALES,BÁN HÀNG,BÁN BÁNH,KUNDENBERATER,ADVISOR"><%= __('einzelhandel', 'professions') %></option>
                 </select>
                 <% } else { %>
                 <input type="hidden" id="professionFilter" value="ALL">
@@ -276,9 +277,10 @@
                     let rawVideo = student['Introduction Video'] || student.YouTubeLink || student.DriveVideoLink || '';
                     let hasVideo = rawVideo && rawVideo.trim().length > 5 && rawVideo.toUpperCase() !== 'FALSE' ? 'true' : 'false';
                     let hasPhoto = student.PhotoLink && student.PhotoLink.trim() !== '' ? 'true' : 'false';
+                    let hasSetcard = student.SetcardLink && student.SetcardLink.trim().length > 5 ? 'true' : 'false';
                     let displayName = student['Short Name'] || student.FullName || '';
                 %>
-                    <div class="nsl-grid-card" data-studentid="<%= student.StudentID %>" data-index="<%= index %>" data-rank="<%= rank %>" data-prof="<%= profCode %>" data-score="<%= actualScore %>" data-name="<%= displayName.toUpperCase() %>" data-hasvideo="<%= hasVideo %>" data-hasphoto="<%= hasPhoto %>" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>; position: relative;">
+                    <div class="nsl-grid-card" data-studentid="<%= student.StudentID %>" data-index="<%= index %>" data-rank="<%= rank %>" data-prof="<%= profCode %>" data-score="<%= actualScore %>" data-name="<%= displayName.toUpperCase() %>" data-hasvideo="<%= hasVideo %>" data-hasphoto="<%= hasPhoto %>" data-hassetcard="<%= hasSetcard %>" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>; position: relative;">
                         <% if (student.ProgressStatus && parseInt(student.ProgressStatus) >= 4) { %>
                             <div style="position: absolute; top: 4px; right: 4px; z-index: 10; width: 110px; height: 50px; filter: drop-shadow(2px 2px 0px #333); transform-origin: 102px 4px; transform: rotate(-2deg);">
                                 <svg width="110" height="50" viewBox="0 0 110 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; top: 0; left: 0;">
@@ -465,6 +467,13 @@
                 filteredCards.sort((a, b) => a.getAttribute('data-name').localeCompare(b.getAttribute('data-name')));
             } else if (sortFilter === 'NAME_DESC') {
                 filteredCards.sort((a, b) => b.getAttribute('data-name').localeCompare(a.getAttribute('data-name')));
+            } else if (sortFilter === 'SETCARD_FIRST') {
+                filteredCards.sort((a, b) => {
+                    const aHas = a.getAttribute('data-hassetcard') === 'true' ? 0 : 1;
+                    const bHas = b.getAttribute('data-hassetcard') === 'true' ? 0 : 1;
+                    if (aHas !== bHas) return aHas - bHas;
+                    return a.getAttribute('data-name').localeCompare(b.getAttribute('data-name'));
+                });
             } else {
                 filteredCards.sort((a, b) => parseInt(a.getAttribute('data-index') || 0) - parseInt(b.getAttribute('data-index') || 0));
             }
