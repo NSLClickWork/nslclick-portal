@@ -300,7 +300,7 @@ const dictionary = {
             sharkie_desc: 'Beschreiben Sie den Kandidaten, den Sie suchen, Sharkie hilft Ihnen beim Filtern...',
             sharkie_placeholder: 'z.B. Finde einen Pflegekandidaten mit B1 Deutsch...',
             ask_sharkie: 'Sharkie fragen',
-            req_partner_onboarding: 'Partner-Onboarding anfragen',
+            req_partner_onboarding: 'Partnerschaft anfragen',
             chat_greeting: 'Hallo! Ich bin <b>Sharkie</b>, der KI-Recruiting-Assistent für das NSL-System. Möchten Sie heute Lebensläufe prüfen oder nach Kandidaten suchen? (Ich spreche Englisch & Deutsch)',
             chat_placeholder: 'Ihre Nachricht...',
             chat_send: 'Senden',
