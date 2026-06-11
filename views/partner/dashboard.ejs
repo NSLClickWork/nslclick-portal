@@ -7,7 +7,7 @@
     <base href="<%= appBaseUrl %>">
     <title>NSL Partner Portal</title>
     <link rel="icon" type="image/png" href="assets/design/favicon_square.png?v=10">
-    <link rel="stylesheet" href="css/nsl-design-system.css?v=9">
+    <link rel="stylesheet" href="css/nsl-design-system.css?v=10">
     <style>
         .nav-brand-logo { height: 100px; max-width: 100%; object-fit: contain; margin-top: -5px; margin-bottom: 20px;}
         .lang-switch a { color: #fff; text-decoration: none; margin-left: 10px; font-weight: 600; opacity: 0.7; }
@@ -91,6 +91,9 @@
                 transform-origin: top right;
                 top: 10px !important;
                 right: 10px !important;
+                flex-direction: column-reverse !important;
+                align-items: flex-end !important;
+                gap: 8px !important;
             }
         }
         .search-bar-wrapper:focus-within {
