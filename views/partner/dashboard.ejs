@@ -250,7 +250,12 @@
                     let displayName = student['Short Name'] || student.FullName || '';
                 %>
                     <div class="nsl-grid-card" data-studentid="<%= student.StudentID %>" data-index="<%= index %>" data-rank="<%= rank %>" data-prof="<%= profCode %>" data-score="<%= actualScore %>" data-name="<%= displayName.toUpperCase() %>" data-hasvideo="<%= hasVideo %>" data-hasphoto="<%= hasPhoto %>" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>;">
-                        <div class="card-header">
+                        <div class="card-header" style="position: relative;">
+                            <% if (student.ProgressStatus && parseInt(student.ProgressStatus) >= 5) { %>
+                                <div style="position: absolute; top: -10px; right: -10px; background: #34A853; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 900; font-size: 13px; border: 2px solid var(--text-main); transform: rotate(10deg); box-shadow: 2px 2px 0px var(--text-main); z-index: 10;">
+                                    AUSGEWÄHLT
+                                </div>
+                            <% } %>
                             <img src="photos/<%= encodeURIComponent(student.FullName) %>.jpg" onerror="this.onerror=null; this.src='proxy/students/<%= student.StudentID %>/photo'; this.addEventListener('error', function(){this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(student.FullName) %>&background=random'});" alt="Photo" class="avatar">
                             <div>
                                 <div class="name"><%= student['Short Name'] || student.FullName %></div>
