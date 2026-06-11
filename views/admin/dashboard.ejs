@@ -42,6 +42,14 @@
             border-color: var(--nsl-red);
         }
         .prof-tag-list input { display: none; }
+        
+        .search-bar-wrapper:focus-within {
+            transform: scale(1.02);
+            box-shadow: 8px 8px 0px var(--text-main) !important;
+        }
+        .search-bar-wrapper:hover {
+            transform: scale(1.01);
+        }
     </style>
 </head>
 <body class="bg-pattern">
@@ -70,12 +78,12 @@
         <!-- AI Hero Section -->
         <div class="ai-hero-section" style="background: linear-gradient(135deg, #cc1f1f 0%, #f2a900 100%); padding: 40px; border-radius: var(--radius-sm); margin-bottom: 30px; text-align: center; box-shadow: 0 10px 30px rgba(204, 31, 31, 0.2); position: relative; overflow: hidden; border: 4px solid var(--text-main);">
             <div style="position: relative; z-index: 2;">
-                <h2 style="color: white; font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 0px var(--text-main);">🦈 SHARKIE ADMIN ASSISTANT</h2>
-                <p style="color: white; font-weight: 600; margin-bottom: 25px; font-size: 16px;">Ask Sharkie to search or extract data across the entire system...</p>
+                <h2 style="color: white; font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; text-shadow: 2px 2px 0px var(--text-main);">🦈 <%= __('sharkie_ai_search') %></h2>
+                <p style="color: white; font-weight: 600; margin-bottom: 25px; font-size: 16px;"><%= __('sharkie_desc') %></p>
                 
                 <div class="search-bar-wrapper" style="display: flex; align-items: center; max-width: 700px; margin: 0 auto; background: white; border-radius: 50px; padding: 8px; border: 3px solid var(--text-main); box-shadow: 6px 6px 0px var(--text-main); transition: transform 0.2s;">
-                    <input type="text" id="aiSearchInputAdmin" placeholder="e.g. Find all candidates from HDEU who have B1..." onkeypress="if(event.key === 'Enter') triggerAIChat('aiSearchInputAdmin')" style="flex: 1; border: none; padding: 15px 25px; font-size: 16px; font-family: 'Inter', sans-serif; font-weight: 600; outline: none; border-radius: 40px; color: var(--text-main); min-width: 0;">
-                    <button onclick="triggerAIChat('aiSearchInputAdmin')" style="background: var(--text-main); color: white; border: none; padding: 15px 35px; border-radius: 40px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: background 0.2s;">Ask Sharkie</button>
+                    <input type="text" id="aiSearchInputAdmin" placeholder="<%= __('sharkie_placeholder') %>" onkeypress="if(event.key === 'Enter') triggerAIChat('aiSearchInputAdmin')" style="flex: 1; border: none; padding: 15px 25px; font-size: 16px; font-family: 'Inter', sans-serif; font-weight: 600; outline: none; border-radius: 40px; color: var(--text-main); min-width: 0;">
+                    <button onclick="triggerAIChat('aiSearchInputAdmin')" style="background: var(--text-main); color: white; border: none; padding: 15px 35px; border-radius: 40px; font-weight: 800; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: background 0.2s;"><%= __('ask_sharkie') %></button>
                 </div>
             </div>
             <!-- Decorative background elements -->

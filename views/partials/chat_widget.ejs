@@ -204,4 +204,12 @@
              .replace(/"/g, "&quot;")
              .replace(/'/g, "&#039;");
     }
+
+    document.addEventListener('click', function(event) {
+        const widget = document.getElementById('chat-widget');
+        const win = document.getElementById('chat-window');
+        if (win && win.style.display === 'flex' && !widget.contains(event.target)) {
+            win.style.display = 'none';
+        }
+    });
 </script>
