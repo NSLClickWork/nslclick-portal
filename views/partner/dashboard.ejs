@@ -268,9 +268,9 @@
                         <% } %>
                         <div class="card-header" style="position: relative;">
                             <img src="photos/<%= encodeURIComponent(student.FullName) %>.jpg" onerror="this.onerror=null; this.src='proxy/students/<%= student.StudentID %>/photo'; this.addEventListener('error', function(){this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(student.FullName) %>&background=random'});" alt="Photo" class="avatar">
-                            <div>
-                                <div class="name"><%= student['Short Name'] || student.FullName %></div>
-                                <div class="profession"><%= student.ProfessionCode || '' %></div>
+                            <div style="flex: 1; min-width: 0; <%= (student.ProgressStatus && parseInt(student.ProgressStatus) >= 4) ? 'padding-right: 90px;' : '' %>">
+                                <div class="name" style="word-wrap: break-word;"><%= student['Short Name'] || student.FullName %></div>
+                                <div class="profession" style="word-wrap: break-word;"><%= student.ProfessionCode || '' %></div>
                             </div>
                         </div>
                         <div class="card-body">
