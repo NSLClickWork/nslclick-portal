@@ -13,9 +13,9 @@ async function createSquareFavicon() {
         const padding = 20; 
         const size = Math.max(width, height) + (padding * 2);
         
-        console.log(`Original cropped size: ${width}x${height}. Creating ${size}x${size} white square canvas...`);
-        // Create a solid white background square for better visibility
-        const square = new Jimp({ width: size, height: size, color: 0xFFFFFFFF });
+        console.log(`Original cropped size: ${width}x${height}. Creating ${size}x${size} transparent square canvas...`);
+        // Create a transparent background square
+        const square = new Jimp({ width: size, height: size, color: 0x00000000 });
         
         const x = Math.floor((size - width) / 2);
         const y = Math.floor((size - height) / 2);

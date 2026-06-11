@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
     <base href="<%= appBaseUrl %>">
     <title>NSL Partner Portal</title>
-    <link rel="icon" type="image/png" href="assets/design/favicon_square.png?v=5">
+    <link rel="icon" type="image/png" href="assets/design/favicon_square.png?v=7">
     <link rel="stylesheet" href="css/nsl-design-system.css?v=4">
     <style>
         .nav-brand-logo { height: 100px; margin-top: -5px; margin-bottom: 20px;}
@@ -252,8 +252,8 @@
                     <div class="nsl-grid-card" data-studentid="<%= student.StudentID %>" data-index="<%= index %>" data-rank="<%= rank %>" data-prof="<%= profCode %>" data-score="<%= actualScore %>" data-name="<%= displayName.toUpperCase() %>" data-hasvideo="<%= hasVideo %>" data-hasphoto="<%= hasPhoto %>" style="--card-hover-color: <%= getCenterColor(student.CenterCode) %>;">
                         <div class="card-header" style="position: relative;">
                             <% if (student.ProgressStatus && parseInt(student.ProgressStatus) >= 4) { %>
-                                <div style="position: absolute; top: 10px; right: 10px; background: var(--nsl-red); color: white; padding: 4px 10px; border-radius: 6px; font-weight: 900; font-size: 11px; border: 2px solid var(--text-main); box-shadow: 2px 2px 0px var(--text-main); z-index: 10;">
-                                    AUSGEWÄHLT
+                                <div style="position: absolute; top: 12px; right: 12px; background: white; color: var(--nsl-red); padding: 5px 12px; border-radius: 20px; font-weight: 900; font-size: 11px; border: 2px solid var(--nsl-red); box-shadow: 2px 2px 0px var(--nsl-red); z-index: 10; display: flex; align-items: center; gap: 4px;">
+                                    ✓ AUSGEWÄHLT
                                 </div>
                             <% } %>
                             <img src="photos/<%= encodeURIComponent(student.FullName) %>.jpg" onerror="this.onerror=null; this.src='proxy/students/<%= student.StudentID %>/photo'; this.addEventListener('error', function(){this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(student.FullName) %>&background=random'});" alt="Photo" class="avatar">
