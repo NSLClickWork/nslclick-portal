@@ -106,6 +106,25 @@ async function getAllStudents() {
                     }
                 }
             }
+
+            // Compute Short Name from StudentID if missing from sheet
+            // ID format: [Center]_[GivenName]_[FAMILYNAME]_[DOB or year]
+            // e.g. ANG_Tinh_NGUYEN_26.09.2005 → "Tinh NGUYEN"
+            if (!student['Short Name'] && student.StudentID) {
+                const idParts = student.StudentID.split('_');
+                // Needs at least: center, given, family (3 meaningful parts)
+                if (idParts.length >= 3) {
+                    const lastPart = idParts[idParts.length - 1];
+                    const hasDOB = /\d/.test(lastPart); // last part is date/year
+                    const familyIdx = hasDOB ? idParts.length - 2 : idParts.length - 1;
+                    const givenIdx = 1; // always index 1 (after center code)
+                    if (familyIdx > givenIdx) {
+                        const given = idParts[givenIdx];
+                        const family = idParts[familyIdx].toUpperCase();
+                        student['Short Name'] = given.charAt(0).toUpperCase() + given.slice(1).toLowerCase() + ' ' + family;
+                    }
+                }
+            }
             
             return student;
         });
