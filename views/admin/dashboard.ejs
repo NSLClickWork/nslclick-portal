@@ -73,6 +73,9 @@
     <div id="toastContainer" class="toast-container"></div>
     
     <div class="wavy-header">
+        <div class="header-logo" style="position: absolute; top: 20px; left: 30px; z-index: 100; background: white; padding: 5px 15px; border-radius: 8px; box-shadow: 4px 4px 0px rgba(0,0,0,0.2);">
+            <img src="assets/design/NSL_logo_mid.png" alt="NSL Logo" style="height: 40px;">
+        </div>
         <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
             <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px; display: flex; align-items: center; gap: 10px;">
                 <a href="javascript:void(0)" onclick="window.location.search='?lang=de&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a>
