@@ -8,9 +8,9 @@ async function createFavicon() {
         const height = image.bitmap.height;
         
         console.log(`Cropping left square of size ${height}x${height}...`);
-        image.crop(0, 0, height, height);
+        image.crop({ x: 0, y: 0, w: height, h: height });
         
-        image.resize(256, 256);
+        image.resize({ w: 256, h: 256 });
         console.log("Saving new favicon...");
         await image.write('public/assets/design/favicon_square.png');
         console.log("Favicon created successfully!");
