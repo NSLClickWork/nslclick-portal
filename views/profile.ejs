@@ -596,7 +596,7 @@
                 <button onclick="closeModal()" style="background: var(--nsl-red, #cc1f1f); border: 3px solid var(--text-main, #1a1a1a); color: white; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; font-weight: bold; border-radius: 50%; box-shadow: 3px 3px 0px var(--text-main, #1a1a1a); transition: all 0.2s; padding: 0;">&times;</button>
             </div>
             <div style="flex: 1; width: 100%; height: 100%; background: #f0f0f0; position: relative;">
-                <iframe id="modalIframe" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe id="modalIframe" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
         </div>
     </div>
@@ -611,8 +611,7 @@
                     const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/))([\w-]{11})/i;
                     const match = url.match(ytRegex);
                     if (match && match[1]) {
-                        const origin = window.location.origin;
-                        return `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0&origin=${origin}`;
+                        return `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0`;
                     }
                 }
                 
