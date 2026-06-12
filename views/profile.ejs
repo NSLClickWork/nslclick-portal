@@ -605,16 +605,18 @@
         function getEmbedUrl(url) {
             if (!url) return '';
             try {
-                if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                    if (url.includes('youtube.com/embed/')) return url;
-                    const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/))([\w-]{11})/;
+                const lowerUrl = url.toLowerCase();
+                if (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be')) {
+                    if (lowerUrl.includes('/embed/')) return url.replace('youtube.com', 'youtube-nocookie.com');
+                    const ytRegex = /(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/))([\w-]{11})/i;
                     const match = url.match(ytRegex);
                     if (match && match[1]) {
-                        return `https://www.youtube.com/embed/${match[1]}`;
+                        const origin = window.location.origin;
+                        return `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0&origin=${origin}`;
                     }
                 }
                 
-                if (url.includes('drive.google.com/file/d/')) {
+                if (lowerUrl.includes('drive.google.com/file/d/')) {
                     const parts = url.split('/');
                     const idIndex = parts.indexOf('d') + 1;
                     if (idIndex > 0 && parts[idIndex]) {
