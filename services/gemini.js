@@ -1,31 +1,18 @@
-const Groq = require('groq-sdk');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 const sheetsService = require('./sheets');
 
-// Initialize the Groq Client
-let ai;
+let genAI;
 try {
-    const groqKey = process.env.GROQ_API_KEY;
-    if (groqKey) {
-        ai = new Groq({ apiKey: groqKey });
+    if (process.env.GEMINI_API_KEY) {
+        genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     }
 } catch (error) {
-    console.warn("Groq initialized without API key or failed.");
+    console.warn("Gemini initialized without API key or failed.");
 }
 
-// Ultimate Fallback: OpenAI
-const { OpenAI } = require('openai');
-    let openaiClient;
-    try {
-        if (process.env.OPENAI_API_KEY) {
-            openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-        }
-    } catch (e) {
-        console.warn("OpenAI fallback not configured.");
-    }
-
     async function chatWithGemini(prompt, userRole = 'partner', userLang = 'de', partnerConfig = null, filteredIds = null) {
-        if (!ai) {
-            return "Lỗi: Chưa cấu hình GROQ_API_KEY. Bạn vui lòng thêm biến môi trường này vào server để AI hoạt động nhé!";
+        if (!genAI) {
+            return "Lỗi: Chưa cấu hình GEMINI_API_KEY. Bạn vui lòng thêm biến môi trường này vào server để AI hoạt động nhé!";
         }
 
         try {
@@ -90,73 +77,17 @@ const { OpenAI } = require('openai');
             systemInstruction += `\n\nCRITICAL TRACKING RULE: At the end of your response, always politely ask the user which candidate they would like to proceed with or select for an interview. If the user EXPLICITLY states they have chosen a candidate in their message, you MUST append a hidden tag at the very end of your response exactly like this: [CHOSEN_CANDIDATE: StudentID] (replace StudentID with the actual ID). Do not output this tag unless a clear choice is made.`;
 
 
-            let responseText;
-            const modelsToTry = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
-            let lastError;
-            let success = false;
+            const model = genAI.getGenerativeModel({ 
+                model: "gemini-2.5-flash",
+                systemInstruction: { parts: [{ text: systemInstruction }] }
+            });
 
-            for (const modelName of modelsToTry) {
-                let retries = 2; // Try each model max 2 times
-                let delay = 1000;
+            const chatResponse = await model.generateContent({
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+                generationConfig: { temperature: 0.2 }
+            });
 
-                while (retries > 0) {
-                    try {
-                        const response = await ai.chat.completions.create({
-                            model: modelName,
-                            temperature: 0.2,
-                            messages: [
-                                { role: "system", content: systemInstruction },
-                                { role: "user", content: prompt }
-                            ]
-                        });
-                        responseText = response.choices[0].message.content;
-                        success = true;
-                        break; // Success for this model
-                    } catch (error) {
-                        lastError = error;
-                        if (error.status === 503 || error.message.includes('503') || error.status === 429) {
-                            retries--;
-                            if (retries > 0) {
-                                console.log(`[${modelName}] quota/503 error. Retrying in ${delay/1000}s...`);
-                                await new Promise(res => setTimeout(res, delay));
-                                delay *= 2;
-                            } else {
-                                console.log(`[${modelName}] failed after retries. Falling back to next model...`);
-                            }
-                        } else {
-                            // If it's a 4xx error (e.g., model not found), just break out of retry loop and try next model
-                            console.log(`[${modelName}] error: ${error.message}. Falling back to next model...`);
-                            break; 
-                        }
-                    }
-                }
-                if (success) break;
-            }
-
-            if (!success) {
-                if (openaiClient) {
-                    console.log("All Gemini models failed. Falling back to OpenAI (gpt-4o-mini)...");
-                    try {
-                        const openAiResponse = await openaiClient.chat.completions.create({
-                            model: "gpt-4o-mini",
-                            temperature: 0.2,
-                            messages: [
-                                { role: "system", content: systemInstruction },
-                                { role: "user", content: prompt }
-                            ]
-                        });
-                        responseText = openAiResponse.choices[0].message.content;
-                        success = true;
-                    } catch (openAiError) {
-                        console.error("OpenAI fallback also failed:", openAiError);
-                        throw new Error("Both Google Gemini and OpenAI fallbacks failed.");
-                    }
-                } else {
-                    throw lastError || new Error("All fallback models failed and OpenAI is not configured.");
-                }
-            }
-
-            return responseText;
+            return chatResponse.response.text();
         } catch (error) {
             console.error("AI Generation Error:", error);
             return "Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolution.eu@gmail.com.";
