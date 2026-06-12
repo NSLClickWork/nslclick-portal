@@ -631,15 +631,17 @@
             </div>
             <% } %>
 
+            <% if (typeof candidateBookingLink !== 'undefined' && candidateBookingLink && candidateBookingLink.trim() !== '') { %>
             <!-- ONBOARDING CTA FOR CANDIDATES -->
             <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
                 <p style="font-size: 14px; font-weight: 600; color: var(--nsl-red); margin-bottom: 15px; text-transform: uppercase;">
-                    Ready for the next step?
+                    <%= __('ready_for_next_step') %>
                 </p>
                 <a href="<%= candidateBookingLink %>" target="_blank" class="btn-nsl-brutal" style="display: inline-block; padding: 15px 30px; border-radius: 50px; background: var(--text-main); color: #fff; border: 2px solid var(--text-main); text-decoration: none;">
-                    📅 Book Onboarding Session
+                    📅 <%= __('book_onboarding') %>
                 </a>
             </div>
+            <% } %>
 
             <p class="disclaimer-text">
                 <%= __('disclaimer') %>
