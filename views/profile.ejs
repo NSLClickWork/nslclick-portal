@@ -754,13 +754,14 @@
             </div>
             
             <!-- Body -->
-            <div style="padding: 20px; overflow-y: auto; flex: 1;">
+            <div style="padding: 20px; overflow-y: auto; flex: 1;" id="gdprFormSection">
                 <div style="font-size: 13px; margin-bottom: 20px; line-height: 1.6; color: #333; background: #f8f9fa; padding: 15px; border: 1px solid #ddd; max-height: 300px; overflow-y: auto;">
                     <%- __('gdpr_body') %>
                 </div>
 
                 <form action="/profile/gdpr-consent" method="POST" id="gdprForm">
                     <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                    <input type="hidden" name="gdpr_signature" id="gdpr_signature">
                     
                     <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
                         <label style="display: flex; align-items: flex-start; cursor: pointer; gap: 10px;">
@@ -809,8 +810,27 @@
                     </button>
                 </form>
             </div>
+
+            <!-- Signature Pad Section (Hidden initially) -->
+            <div style="padding: 20px; display: none; flex-direction: column; align-items: center;" id="gdprSignatureSection">
+                <h3 style="margin-top: 0; color: var(--text-main, #1a1a1a);"><%= __('gdpr_signature_title', 'Vui lòng ký tên của bạn (Please sign)') %></h3>
+                <div style="border: 3px dashed #ccc; background: #fafafa; margin-bottom: 15px; border-radius: 8px;">
+                    <canvas id="signatureCanvas" width="400" height="200" style="touch-action: none;"></canvas>
+                </div>
+                <div style="display: flex; gap: 15px; width: 100%; max-width: 400px;">
+                    <button type="button" id="clearSignatureBtn" style="flex: 1; padding: 12px; background: #f5f5f5; border: 2px solid #ccc; font-weight: bold; cursor: pointer;">
+                        Xóa (Clear)
+                    </button>
+                    <button type="button" id="submitSignatureBtn" style="flex: 2; padding: 12px; background: var(--text-main, #1a1a1a); color: white; border: 2px solid var(--text-main, #1a1a1a); font-weight: bold; cursor: pointer;">
+                        Hoàn tất (Complete)
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Include Signature Pad library -->
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -848,6 +868,45 @@
                 checkboxes.forEach(chk => chk.addEventListener('change', checkAll));
                 textInputs.forEach(input => input.addEventListener('input', checkAll));
                 
+                // Signature Pad Logic
+                const formSection = document.getElementById('gdprFormSection');
+                const sigSection = document.getElementById('gdprSignatureSection');
+                const form = document.getElementById('gdprForm');
+                const sigInput = document.getElementById('gdpr_signature');
+                const canvas = document.getElementById('signatureCanvas');
+                let signaturePad;
+
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (submitBtn.disabled) return;
+                    
+                    formSection.style.display = 'none';
+                    sigSection.style.display = 'flex';
+                    
+                    // Resize canvas properly
+                    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+                    canvas.width = canvas.offsetWidth * ratio;
+                    canvas.height = canvas.offsetHeight * ratio;
+                    canvas.getContext("2d").scale(ratio, ratio);
+
+                    signaturePad = new SignaturePad(canvas, {
+                        penColor: "rgb(0, 0, 0)"
+                    });
+                });
+
+                document.getElementById('clearSignatureBtn').addEventListener('click', function() {
+                    if (signaturePad) signaturePad.clear();
+                });
+
+                document.getElementById('submitSignatureBtn').addEventListener('click', function() {
+                    if (signaturePad && signaturePad.isEmpty()) {
+                        alert("Vui lòng ký tên trước khi hoàn tất! (Please provide a signature)");
+                        return;
+                    }
+                    sigInput.value = signaturePad.toDataURL();
+                    form.submit();
+                });
+
                 // Initial check in case some fields are pre-filled
                 checkAll();
             }

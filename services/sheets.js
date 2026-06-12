@@ -679,7 +679,7 @@ async function logGDPRConsent(logData) {
         const sheets = await getSheetsInstance();
         
         const timestamp = new Date().toISOString();
-        const { studentId, fullName, dob, centerCode, email, ipAddress, consentVersion } = logData;
+        const { studentId, fullName, dob, centerCode, email, ipAddress, consentVersion, signatureBase64 } = logData;
 
         const rowData = [
             timestamp,
@@ -689,12 +689,13 @@ async function logGDPRConsent(logData) {
             centerCode || '',
             email || '',
             ipAddress || '',
-            consentVersion || '1.0-official'
+            consentVersion || '1.0-official',
+            signatureBase64 || ''
         ];
 
         await sheets.spreadsheets.values.append({
             spreadsheetId: SPREADSHEET_ID,
-            range: `GDPR_LOGS!A:H`,
+            range: `GDPR_LOGS!A:I`,
             valueInputOption: 'USER_ENTERED',
             insertDataOption: 'INSERT_ROWS',
             requestBody: {

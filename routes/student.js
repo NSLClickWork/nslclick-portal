@@ -30,7 +30,7 @@ router.get('/profile', async (req, res) => {
 router.post('/profile/gdpr-consent', express.urlencoded({ extended: true }), async (req, res) => {
     if (!req.session.studentId) return res.redirect('/');
     
-    const { gdpr_fullname, gdpr_dob, gdpr_centercode, gdpr_email } = req.body;
+    const { gdpr_fullname, gdpr_dob, gdpr_centercode, gdpr_email, gdpr_signature } = req.body;
     const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
 
     const logData = {
@@ -40,7 +40,8 @@ router.post('/profile/gdpr-consent', express.urlencoded({ extended: true }), asy
         centerCode: gdpr_centercode,
         email: gdpr_email,
         ipAddress: ipAddress,
-        consentVersion: '1.0-official'
+        consentVersion: '1.0-official-signed',
+        signatureBase64: gdpr_signature || ''
     };
 
     const success = await sheetsService.logGDPRConsent(logData);
