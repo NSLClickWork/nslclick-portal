@@ -153,6 +153,7 @@ app.use('/', require('./routes/auth'));
 app.use('/', require('./routes/student'));
 app.use('/', require('./routes/partner'));
 app.use('/', require('./routes/admin'));
+app.use('/marketing', require('./routes/marketing'));
 app.use('/api', require('./routes/api'));
 
 // ==================== Start Server ====================
