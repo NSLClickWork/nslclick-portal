@@ -8,6 +8,47 @@
     <link rel="icon" type="image/png" href="assets/design/favicon_square.png?v=10">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        .close-btn {
+            background: var(--nsl-yellow, #ffc107); 
+            border: 3px solid var(--text-main, #1a1a1a); 
+            color: var(--text-main, #1a1a1a); 
+            width: 40px; 
+            height: 40px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 28px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 50%; 
+            box-shadow: 4px 4px 0px var(--text-main, #1a1a1a); 
+            transition: all 0.1s ease-out; 
+            padding: 0;
+        }
+        .close-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px var(--text-main, #1a1a1a);
+        }
+        .close-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px var(--text-main, #1a1a1a);
+        }
+        .lang-link {
+            color: #fff; 
+            text-decoration: none; 
+            padding: 6px 12px; 
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        .lang-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+        .lang-link:active {
+            transform: scale(0.95);
+        }
+
         :root {
             --nsl-red: #cc1f1f;
             --nsl-gold: #f2a900;
@@ -451,9 +492,9 @@
         </div>
         <div class="header-controls">
             <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 20px; display: flex; align-items: center; gap: 5px; margin-right: 20px;">
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=de&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; padding: 5px 10px; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=en&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; padding: 5px 10px; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=vi&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; padding: 5px 10px; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
+                <a href="?lang=de" class="lang-link" style="font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=en" class="lang-link" style="font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a> <span style="color:#fff;opacity:0.5">|</span>
+                <a href="?lang=vi" class="lang-link" style="font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
             <% if (typeof partner !== 'undefined' && partner) { %>
                 <a href="partner/dashboard" class="header-link">Back</a>
@@ -593,7 +634,7 @@
         <div style="position: relative; width: 100%; max-width: 900px; height: 85vh; background: #fff; border: 4px solid var(--text-main, #1a1a1a); border-radius: 0; overflow: hidden; display: flex; flex-direction: column; box-shadow: 12px 12px 0px var(--text-main, #1a1a1a); transition: transform 0.2s;">
             <div style="background: var(--nsl-red, #cc1f1f); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--text-main, #1a1a1a);">
                 <h3 id="modalTitle" style="margin: 0; font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">PREVIEW</h3>
-                <button onclick="closeModal()" style="background: var(--nsl-yellow, #ffc107); border: 3px solid var(--text-main, #1a1a1a); color: var(--text-main, #1a1a1a); width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; font-weight: bold; border-radius: 50%; box-shadow: 3px 3px 0px var(--text-main, #1a1a1a); transition: all 0.2s; padding: 0;">&times;</button>
+                <button onclick="closeModal()" class="close-btn">&times;</button>
             </div>
             <div style="flex: 1; width: 100%; background: #000; position: relative;">
                 <iframe id="modalIframe" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
