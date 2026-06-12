@@ -48,8 +48,11 @@ async function createEmbedding(text) {
     if (!ai) return null;
 
     try {
-        const model = ai.getGenerativeModel({ model: "text-embedding-004" });
-        const result = await model.embedContent(text.replace(/\n/g, ' '));
+        const model = ai.getGenerativeModel({ model: "gemini-embedding-2" });
+        const result = await model.embedContent({
+            content: { parts: [{ text: text.replace(/\n/g, ' ') }] },
+            outputDimensionality: 768
+        });
         return result.embedding.values;
     } catch (error) {
         console.error("Lỗi khi tạo Embedding bằng Gemini:", error);
