@@ -225,7 +225,7 @@
                                     value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <div class="form-group text-left">
                                     <label class="form-label">ZUGANGSCODE</label>
-                                    <input type="text" name="partnerId" class="form-control" placeholder="Partner ID eingeben" required>
+                                    <input type="password" name="accessCode" class="form-control" placeholder="Partner ID eingeben" required>
                                 </div>
                                 <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
                                 <button type="submit" id="btn-partner" class="btn-submit-brutal">LOGIN PARTNER</button>
