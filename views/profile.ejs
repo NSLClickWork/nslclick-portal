@@ -176,16 +176,26 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: nowrap;
+            gap: 20px;
+            width: 100%;
         }
         .card-logo-box img {
-            height: 80px;
+            height: clamp(40px, 6vw, 80px);
+            flex-shrink: 0;
+            object-fit: contain;
         }
         .card-profession-title {
-            font-size: 36px;
+            font-size: clamp(14px, 3.2vw, 36px);
             font-weight: 900;
             color: var(--nsl-red);
             text-transform: uppercase;
             letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: right;
+            flex-shrink: 1;
         }
 
         /* Profile Content Layout */
@@ -377,9 +387,8 @@
             }
             .info-label { max-width: 140px; }
             
-            .card-logo-box { flex-direction: column; gap: 15px; margin-bottom: 20px; }
-            .card-logo-box img { height: 60px; }
-            .card-profession-title { font-size: 20px; text-align: center; }
+            .card-logo-box { margin-bottom: 20px; gap: 10px; }
+            /* card-logo-box img and title handled by clamp now */
             .superpowers-box { max-width: 100%; padding: 20px; }
             
             .video-action { margin-top: 25px; margin-bottom: 15px; }
@@ -574,7 +583,7 @@
                         <div class="info-label"><%= __('birth_year') %></div><div class="info-sep">:</div><div class="info-value"><%= birthYear %></div>
                         <div class="info-label"><%= __('deutsch_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(student.DeutschLevel) %></div>
                         <div class="info-label"><%= __('nsl_result') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualScore) %></div>
-                        <div class="info-label"><%= __('integration_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(student.Rank) %></div>
+                        <div class="info-label"><%= __('integration_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualLevel) %></div>
                         <div class="info-label"><%= __('availability') %></div><div class="info-sep">:</div><div class="info-value"><%= actualAvailability %></div>
                     </div>
 
