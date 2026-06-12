@@ -101,7 +101,7 @@ async function getAllStudents() {
                 const parts = student.StudentID.split('_');
                 if (parts.length > 0) {
                     const lastPart = parts[parts.length - 1];
-                    if (/\d{2}\.\d{2}\.\d{4}/.test(lastPart)) {
+                    if (/\d/.test(lastPart)) {
                         student.DOB = lastPart;
                     }
                 }
