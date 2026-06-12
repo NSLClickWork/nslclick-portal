@@ -242,7 +242,7 @@
                 <button class="btn btn-nsl-brutal" id="tabRag" onclick="switchTab('rag')">Knowledge Base</button>
             </div>
 
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <div style="display: flex; justify-content: space-between; alig n-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                 <div class="section-title" id="pageTitle" style="color: var(--text-main); border-left: 8px solid var(--nsl-gold); padding-left: 15px; margin: 0;"><%= __('admin_tab_students') %></div>
             </div>
             
@@ -347,6 +347,38 @@
                     </form>
                     
                     <div id="ragUploadStatus" style="margin-top: 15px; font-weight: bold; font-size: 14px; display: none;"></div>
+                </div>
+
+                <!-- MANAGE RAG KNOWLEDGE BASE -->
+                <div style="background: var(--nsl-bg-gray); padding: 20px; border-radius: var(--radius-sm); border: 2px solid var(--text-main); margin-bottom: 20px;">
+                    <h3 style="margin: 0 0 10px 0; font-size: 18px; text-transform: uppercase;">Quản lý dữ liệu AI (RAG)</h3>
+                    <p style="margin-bottom: 15px; font-size: 14px;">Nhập ID Ứng viên (VD: NSL-12345) để xem danh sách các file đã nạp vào bộ nhớ AI và xóa chúng.</p>
+                    
+                    <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                        <input type="text" id="ragManageStudentId" placeholder="Nhập Student ID..." class="form-control" style="max-width: 300px; padding: 10px; border: 2px solid var(--text-main);">
+                        <button type="button" class="btn btn-nsl-brutal" onclick="fetchRagDocuments()">Tìm kiếm</button>
+                    </div>
+
+                    <div id="ragManageResults" style="display: none;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 16px;">Danh sách File đã nạp:</h4>
+                        <table class="nsl-table" style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                            <thead>
+                                <tr style="background: #222; color: #fff;">
+                                    <th style="padding: 10px; text-align: left;">Thời gian tải lên</th>
+                                    <th style="padding: 10px; text-align: left;">Tên File / Loại</th>
+                                    <th style="padding: 10px; text-align: left;">Số vector</th>
+                                    <th style="padding: 10px; text-align: left;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ragManageTableBody">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                        
+                        <div style="text-align: right;">
+                            <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="deleteAllRagForStudent()">Xóa sạch trí nhớ AI của Ứng viên này</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -484,6 +516,91 @@
             } catch (err) {
                 statusDiv.style.color = 'var(--nsl-red)';
                 statusDiv.innerText = 'Connection error during upload.';
+            }
+        }
+
+        let currentRagSessions = [];
+
+        async function fetchRagDocuments() {
+            const studentId = document.getElementById('ragManageStudentId').value.trim();
+            if (!studentId) return notify('Please enter a Student ID.', 'error');
+
+            try {
+                const res = await apiFetch(`/admin/rag/list/${encodeURIComponent(studentId)}`);
+                const data = await res.json();
+                if (data.success) {
+                    currentRagSessions = data.sessions;
+                    const tbody = document.getElementById('ragManageTableBody');
+                    tbody.innerHTML = '';
+                    
+                    if (currentRagSessions.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 10px;">Không tìm thấy file RAG nào cho ứng viên này.</td></tr>';
+                    } else {
+                        currentRagSessions.forEach((session, index) => {
+                            const date = new Date(session.timestamp).toLocaleString();
+                            tbody.innerHTML += `
+                                <tr style="border-bottom: 1px solid #ccc;">
+                                    <td style="padding: 10px;">${date}</td>
+                                    <td style="padding: 10px; font-weight: bold;">${escapeHtml(session.docType)}</td>
+                                    <td style="padding: 10px;">${session.chunksCount} chunks</td>
+                                    <td style="padding: 10px;">
+                                        <button class="btn btn-nsl-brutal" style="padding: 5px 10px; font-size: 12px; background: #666; color: white;" onclick="deleteRagDocument(${index})">Xóa</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                    document.getElementById('ragManageResults').style.display = 'block';
+                } else {
+                    notify(data.error, 'error');
+                }
+            } catch (err) {
+                notify('Connection error', 'error');
+            }
+        }
+
+        async function deleteRagDocument(index) {
+            if (!confirm('Bạn có chắc chắn muốn xóa lượt add này không? AI sẽ mất đi trí nhớ về file này.')) return;
+            
+            const session = currentRagSessions[index];
+            try {
+                const res = await apiFetch('/admin/rag/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId: session.studentId, vectorIds: session.vectorIds })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    notify(data.message, 'success');
+                    fetchRagDocuments(); // reload list
+                } else {
+                    notify(data.error, 'error');
+                }
+            } catch (err) {
+                notify('Connection error', 'error');
+            }
+        }
+
+        async function deleteAllRagForStudent() {
+            const studentId = document.getElementById('ragManageStudentId').value.trim();
+            if (!studentId) return;
+            if (!confirm(`CẢNH BÁO: Xóa toàn bộ dữ liệu RAG của ứng viên ${studentId} khỏi AI?`)) return;
+
+            try {
+                const res = await apiFetch('/admin/rag/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId, vectorIds: [] }) // Empty vectorIds = delete all
+                });
+                const data = await res.json();
+                if (data.success) {
+                    notify(data.message, 'success');
+                    fetchRagDocuments(); // reload list
+                } else {
+                    notify(data.error, 'error');
+                }
+            } catch (err) {
+                notify('Connection error', 'error');
             }
         }
 

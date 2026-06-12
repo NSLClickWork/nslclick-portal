@@ -233,4 +233,46 @@ router.post('/admin/rag/upload', isAdmin, upload.single('document'), async (req,
     }
 });
 
+// GET list of RAG documents for a specific student
+router.get('/rag/list/:studentId', requireAdmin, async (req, res) => {
+    try {
+        const pineconeService = require('../services/pinecone');
+        const sessions = await pineconeService.listDocumentsByStudent(req.params.studentId);
+        res.json({ success: true, sessions });
+    } catch (error) {
+        console.error('RAG List Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// POST delete RAG documents
+router.post('/rag/delete', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const pineconeService = require('../services/pinecone');
+        const { studentId, vectorIds } = req.body;
+        
+        if (!studentId && (!vectorIds || vectorIds.length === 0)) {
+            return res.status(400).json({ error: 'Must provide vectorIds to delete' });
+        }
+
+        let idsToDelete = vectorIds;
+        
+        // If they want to delete everything for a student and didn't provide specific vectorIds
+        if (studentId && (!vectorIds || vectorIds.length === 0)) {
+            const sessions = await pineconeService.listDocumentsByStudent(studentId);
+            idsToDelete = sessions.flatMap(s => s.vectorIds);
+        }
+
+        if (idsToDelete && idsToDelete.length > 0) {
+            await pineconeService.deleteDocuments(idsToDelete);
+            res.json({ success: true, message: `Successfully deleted ${idsToDelete.length} vector chunks.` });
+        } else {
+            res.json({ success: true, message: `No documents found to delete.` });
+        }
+    } catch (error) {
+        console.error('RAG Delete Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 module.exports = router;

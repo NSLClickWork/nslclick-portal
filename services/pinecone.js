@@ -94,8 +94,83 @@ async function searchSimilarDocuments(queryText, topK = 3) {
     }
 }
 
+async function listDocumentsByStudent(studentId) {
+    try {
+        const index = await getIndex();
+        if (!index) return [];
+
+        let results = [];
+        let paginationToken;
+        do {
+            const res = await index.listPaginated({
+                prefix: studentId + "_",
+                paginationToken: paginationToken
+            });
+            if (res.vectors && res.vectors.length > 0) {
+                results = results.concat(res.vectors.map(v => v.id));
+            }
+            paginationToken = res.pagination ? res.pagination.next : undefined;
+        } while (paginationToken);
+
+        // Parse IDs to group by timestamp and docType
+        // Format: `${studentId}_${docType}_chunk_${i}_${timestamp}`
+        const sessionsMap = {};
+        
+        for (const id of results) {
+            const parts = id.split('_chunk_');
+            if (parts.length === 2) {
+                const prefixPart = parts[0]; // e.g. "NSL-12345_ChungChiTiengDuc.txt"
+                const docType = prefixPart.substring(studentId.length + 1);
+                
+                const suffixParts = parts[1].split('_'); // e.g. "0", "1781281346439"
+                if (suffixParts.length >= 2) {
+                    const timestamp = suffixParts[suffixParts.length - 1];
+                    const sessionId = `${docType}_${timestamp}`;
+                    
+                    if (!sessionsMap[sessionId]) {
+                        sessionsMap[sessionId] = {
+                            studentId,
+                            docType,
+                            timestamp: parseInt(timestamp),
+                            chunksCount: 0,
+                            vectorIds: []
+                        };
+                    }
+                    sessionsMap[sessionId].chunksCount++;
+                    sessionsMap[sessionId].vectorIds.push(id);
+                }
+            }
+        }
+        
+        // Convert to array and sort by timestamp descending
+        return Object.values(sessionsMap).sort((a, b) => b.timestamp - a.timestamp);
+    } catch (error) {
+        console.error("Lỗi khi liệt kê tài liệu từ Pinecone:", error);
+        throw error;
+    }
+}
+
+async function deleteDocuments(vectorIds) {
+    try {
+        const index = await getIndex();
+        if (!index || !vectorIds || vectorIds.length === 0) return false;
+        
+        // Delete in batches of 1000
+        for (let i = 0; i < vectorIds.length; i += 1000) {
+            const batch = vectorIds.slice(i, i + 1000);
+            await index.deleteMany(batch);
+        }
+        return true;
+    } catch (error) {
+        console.error("Lỗi khi xóa tài liệu khỏi Pinecone:", error);
+        throw error;
+    }
+}
+
 module.exports = {
     getIndex,
     createEmbedding,
-    searchSimilarDocuments
+    searchSimilarDocuments,
+    listDocumentsByStudent,
+    deleteDocuments
 };
