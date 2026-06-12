@@ -35,19 +35,28 @@
             box-shadow: 0px 0px 0px var(--text-main, #1a1a1a);
         }
         .lang-link {
-            color: #fff; 
-            text-decoration: none; 
-            padding: 6px 12px; 
-            border-radius: 20px;
-            transition: all 0.2s ease;
-            display: inline-block;
+            color: #fff !important; 
+            text-decoration: none !important; 
+            padding: 6px 12px !important; 
+            border-radius: 20px !important;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+            display: inline-block !important;
+            font-weight: 500 !important;
+            opacity: 0.6 !important;
+        }
+        .lang-link.lang-active {
+            font-weight: 900 !important;
+            opacity: 1 !important;
+            background: rgba(255, 255, 255, 0.15) !important;
         }
         .lang-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
+            background: var(--nsl-yellow, #ffc107) !important;
+            color: var(--text-main, #1a1a1a) !important;
+            transform: scale(1.15) !important;
+            opacity: 1 !important;
         }
         .lang-link:active {
-            transform: scale(0.95);
+            transform: scale(0.9) !important;
         }
 
         .nav-brand-logo { height: 100px; max-width: 100%; object-fit: contain; margin-top: -5px; margin-bottom: 20px;}
@@ -201,11 +210,11 @@
         </div>
         <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
             <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 20px; display: flex; align-items: center; gap: 5px;">
-                <a href="?lang=de" class="lang-link" style="font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a>
+                <a href="?lang=de" class="lang-link <%= typeof lang !== 'undefined' && lang === 'de' ? 'lang-active' : '' %>">DE</a>
                 <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=en" class="lang-link" style="font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a>
+                <a href="?lang=en" class="lang-link <%= typeof lang !== 'undefined' && lang === 'en' ? 'lang-active' : '' %>">EN</a>
                 <span style="color:#fff;opacity:0.5">|</span>
-                <a href="?lang=vi" class="lang-link" style="font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
+                <a href="?lang=vi" class="lang-link <%= typeof lang !== 'undefined' && lang === 'vi' ? 'lang-active' : '' %>">VI</a>
             </div>
             <a href="partner/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;"><%= __('logout') %></a>
         </div>
