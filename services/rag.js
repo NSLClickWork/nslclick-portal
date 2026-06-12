@@ -76,6 +76,7 @@ async function syncSingleDocumentToPinecone(filePath, originalName) {
     const chunks = chunkText(textContent);
     console.log(`  -> Đã cắt thành ${chunks.length} mảnh văn bản (chunks).`);
 
+    let lastError = null;
     const vectorsToUpsert = [];
     for (let i = 0; i < chunks.length; i++) {
         const chunkTextContent = chunks[i];
@@ -95,15 +96,16 @@ async function syncSingleDocumentToPinecone(filePath, originalName) {
                 }
             });
         } catch (err) {
-            console.error(`  -> Lỗi khi tạo Vector cho chunk ${i}`);
+            console.error(`  -> Lỗi khi tạo Vector cho chunk ${i}:`, err);
+            lastError = err;
         }
     }
 
     if (vectorsToUpsert.length > 0) {
-        await index.upsert(vectorsToUpsert);
+        await index.upsert({ records: vectorsToUpsert });
         return { success: true, chunks: vectorsToUpsert.length };
     } else {
-        throw new Error("Không tạo được vector nào từ file này.");
+        throw new Error(`Không tạo được vector nào từ file này. Lỗi chi tiết: ${lastError ? lastError.message : 'Unknown'}`);
     }
 }
 
