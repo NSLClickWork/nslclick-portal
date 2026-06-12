@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
 
-const SCREENSHOT_DIR = path.join(__dirname, 'public', 'images', 'marketing');
+const SCREENSHOT_DIR = path.join(__dirname, '..', 'public', 'images', 'marketing');
 
 if (!fs.existsSync(SCREENSHOT_DIR)) {
     fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
