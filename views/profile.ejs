@@ -741,5 +741,131 @@
             }
         });
     </script>
+
+    <% if (typeof needsGdprConsent !== 'undefined' && needsGdprConsent) { %>
+    <!-- GDPR CONSENT MODAL -->
+    <div id="gdprModal" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div style="background: white; border: 4px solid var(--text-main, #1a1a1a); width: 95%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 8px 8px 0px var(--text-main, #1a1a1a);">
+            <!-- Header -->
+            <div style="background: var(--nsl-yellow, #ffc107); padding: 20px; border-bottom: 4px solid var(--text-main, #1a1a1a);">
+                <h2 style="margin: 0; font-size: 22px; font-weight: 900; text-transform: uppercase;">Datenschutzerklärung & Einwilligung</h2>
+            </div>
+            
+            <!-- Body -->
+            <div style="padding: 20px; overflow-y: auto; flex: 1;">
+                <div style="font-size: 13px; margin-bottom: 20px; line-height: 1.6; color: #333; background: #f8f9fa; padding: 15px; border: 1px solid #ddd; max-height: 300px; overflow-y: auto;">
+                    <strong>Einwilligung zur Bewerbervermittlung, Datenweitergabe und Talentpool-Nutzung</strong><br>
+                    <strong>NSL Click & Work GmbH</strong><br><br>
+
+                    <strong>1. Einleitung</strong><br>
+                    Ich bewerbe mich über die NSL Click & Work GmbH („NSL“) auf Ausbildungs-, Praktikums-, Arbeits- oder Qualifizierungsangebote in Deutschland oder anderen Zielländern. Mir ist bekannt, dass NSL als Personalvermittler und Integrationsdienstleister tätig ist und zur Durchführung des Vermittlungsprozesses personenbezogene Daten verarbeitet.<br><br>
+
+                    <strong>2. Verarbeitung meiner Bewerbungsdaten</strong><br>
+                    Ich willige ein, dass NSL die von mir bereitgestellten personenbezogenen Daten verarbeitet, soweit dies für die Durchführung von Bewerbungs-, Vermittlungs-, Integrations- und Betreuungsprozessen erforderlich ist.<br><br>
+
+                    <strong>3. Weitergabe meiner Daten an Arbeitgeber und Partner</strong><br>
+                    Ich willige ein, dass NSL meine Bewerbungsunterlagen und die für den Vermittlungsprozess erforderlichen personenbezogenen Daten an potenzielle Arbeitgeber und sonstige am Vermittlungsprozess beteiligte Stellen weitergeben darf.<br><br>
+
+                    <strong>4. Internationale Datenübermittlung</strong><br>
+                    Mir ist bekannt, dass im Rahmen internationaler Vermittlungsprozesse Daten zwischen verschiedenen Ländern ausgetauscht werden können.<br><br>
+
+                    <strong>5. Talentpool</strong><br>
+                    Ich willige ein, dass NSL meine Bewerbungsunterlagen auch nach Abschluss eines konkreten Bewerbungsverfahrens speichern darf, um mich über zukünftige Möglichkeiten zu informieren.<br><br>
+
+                    <strong>6. Kommunikationswege</strong><br>
+                    Ich bin damit einverstanden, dass NSL mich im Zusammenhang mit meiner Bewerbung über E-Mail, Telefon, SMS, WhatsApp, Messenger-Dienste und Videokonferenzen kontaktiert.<br><br>
+
+                    <strong>7. Speicherdauer, 8. Widerrufsrecht & 9. Betroffenenrechte</strong><br>
+                    Meine Daten werden gemäß DSGVO gespeichert und ich kann jede Einwilligung jederzeit widerrufen.
+                </div>
+
+                <form action="/profile/gdpr-consent" method="POST" id="gdprForm">
+                    <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                        <label style="display: flex; align-items: flex-start; cursor: pointer; gap: 10px;">
+                            <input type="checkbox" class="gdpr-chk" required style="margin-top: 4px; transform: scale(1.2);">
+                            <span style="font-size: 13px; font-weight: 600;">Ich bestätige, die Datenschutzhinweise für Bewerber erhalten und gelesen zu haben.</span>
+                        </label>
+                        <label style="display: flex; align-items: flex-start; cursor: pointer; gap: 10px;">
+                            <input type="checkbox" class="gdpr-chk" required style="margin-top: 4px; transform: scale(1.2);">
+                            <span style="font-size: 13px; font-weight: 600;">Ich willige in die Verarbeitung meiner personenbezogenen Daten für Bewerbungs-, Vermittlungs- und Integrationszwecke ein.</span>
+                        </label>
+                        <label style="display: flex; align-items: flex-start; cursor: pointer; gap: 10px;">
+                            <input type="checkbox" class="gdpr-chk" required style="margin-top: 4px; transform: scale(1.2);">
+                            <span style="font-size: 13px; font-weight: 600;">Ich willige in die Weitergabe meiner Daten an potenzielle Arbeitgeber und weitere am Vermittlungsprozess beteiligte Stellen ein.</span>
+                        </label>
+                        <label style="display: flex; align-items: flex-start; cursor: pointer; gap: 10px;">
+                            <input type="checkbox" class="gdpr-chk" required style="margin-top: 4px; transform: scale(1.2);">
+                            <span style="font-size: 13px; font-weight: 600;">Ich möchte in den NSL-Talentpool aufgenommen werden.</span>
+                        </label>
+                        <label style="display: flex; align-items: flex-start; cursor: pointer; gap: 10px;">
+                            <input type="checkbox" class="gdpr-chk" required style="margin-top: 4px; transform: scale(1.2);">
+                            <span style="font-size: 13px; font-weight: 600;">Ich bin mit der Kontaktaufnahme über Messenger-Dienste und WhatsApp einverstanden.</span>
+                        </label>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <div>
+                            <label style="display: block; font-weight: 700; margin-bottom: 5px; font-size: 12px;">VOLLSTÄNDIGER NAME</label>
+                            <input type="text" name="gdpr_fullname" required style="width: 100%; padding: 10px; border: 2px solid var(--text-main, #1a1a1a); font-size: 14px;" placeholder="Ex: Nguyen Van A">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 700; margin-bottom: 5px; font-size: 12px;">GEBURTSDATUM</label>
+                            <input type="text" name="gdpr_dob" required style="width: 100%; padding: 10px; border: 2px solid var(--text-main, #1a1a1a); font-size: 14px;" placeholder="DD.MM.YYYY" value="<%= student.DOB || '' %>">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 700; margin-bottom: 5px; font-size: 12px;">ZENTRUM (Center Code)</label>
+                            <input type="text" name="gdpr_centercode" required style="width: 100%; padding: 10px; border: 2px solid var(--text-main, #1a1a1a); font-size: 14px;" placeholder="Ex: NSL" value="<%= student.CenterCode || '' %>">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 700; margin-bottom: 5px; font-size: 12px;">E-MAIL</label>
+                            <input type="email" name="gdpr_email" required style="width: 100%; padding: 10px; border: 2px solid var(--text-main, #1a1a1a); font-size: 14px;" placeholder="your@email.com">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="gdprSubmitBtn" disabled style="width: 100%; background: #ccc; color: #666; border: 3px solid #999; padding: 15px; font-size: 16px; font-weight: 800; text-transform: uppercase; cursor: not-allowed; transition: all 0.2s;">
+                        ZUSTIMMEN & FORTFAHREN
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.gdpr-chk');
+            const submitBtn = document.getElementById('gdprSubmitBtn');
+            
+            if (checkboxes.length > 0 && submitBtn) {
+                function checkAll() {
+                    let allChecked = true;
+                    checkboxes.forEach(chk => {
+                        if (!chk.checked) allChecked = false;
+                    });
+                    
+                    if (allChecked) {
+                        submitBtn.style.background = 'var(--text-main, #1a1a1a)';
+                        submitBtn.style.color = '#fff';
+                        submitBtn.style.borderColor = 'var(--text-main, #1a1a1a)';
+                        submitBtn.style.cursor = 'pointer';
+                        submitBtn.disabled = false;
+                    } else {
+                        submitBtn.style.background = '#ccc';
+                        submitBtn.style.color = '#666';
+                        submitBtn.style.borderColor = '#999';
+                        submitBtn.style.cursor = 'not-allowed';
+                        submitBtn.disabled = true;
+                    }
+                }
+                
+                checkboxes.forEach(chk => chk.addEventListener('change', checkAll));
+            }
+            
+            // Prevent scrolling on body when modal is open
+            document.body.style.overflow = 'hidden';
+        });
+    </script>
+    <% } %>
 </body>
 </html>

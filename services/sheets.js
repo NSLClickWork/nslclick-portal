@@ -630,6 +630,85 @@ async function logChatRequest(logData) {
 }
 
 /**
+ * Kiểm tra xem học viên đã ký GDPR chưa
+ */
+async function hasSignedGDPR(studentId) {
+    if (!studentId) return false;
+    
+    if (isMockMode) {
+        return false;
+    }
+
+    if (!SPREADSHEET_ID) return false;
+
+    try {
+        const sheets = await getSheetsInstance();
+        const response = await sheets.spreadsheets.values.get({
+            spreadsheetId: SPREADSHEET_ID,
+            range: `GDPR_LOGS!B:B`, // Cột B là StudentID
+        });
+
+        const rows = response.data.values;
+        if (!rows || rows.length === 0) return false;
+
+        // Bỏ qua dòng tiêu đề
+        for (let i = 1; i < rows.length; i++) {
+            if (rows[i][0] === studentId) {
+                return true;
+            }
+        }
+        return false;
+    } catch (error) {
+        console.error('Error checking GDPR status:', error.message);
+        return false; // Bắt ký lại nếu có lỗi (fail-safe)
+    }
+}
+
+/**
+ * Lưu Log ký GDPR của học viên
+ */
+async function logGDPRConsent(logData) {
+    if (isMockMode) {
+        console.log('[MOCK] Logged GDPR Consent:', logData);
+        return true;
+    }
+
+    if (!SPREADSHEET_ID) return false;
+
+    try {
+        const sheets = await getSheetsInstance();
+        
+        const timestamp = new Date().toISOString();
+        const { studentId, fullName, dob, centerCode, email, ipAddress, consentVersion } = logData;
+
+        const rowData = [
+            timestamp,
+            studentId || '',
+            fullName || '',
+            dob || '',
+            centerCode || '',
+            email || '',
+            ipAddress || '',
+            consentVersion || '1.0-official'
+        ];
+
+        await sheets.spreadsheets.values.append({
+            spreadsheetId: SPREADSHEET_ID,
+            range: `GDPR_LOGS!A:H`,
+            valueInputOption: 'USER_ENTERED',
+            insertDataOption: 'INSERT_ROWS',
+            requestBody: {
+                values: [rowData]
+            }
+        });
+        return true;
+    } catch (error) {
+        console.error('Error logging GDPR consent to GDPR_LOGS Sheet:', error.message);
+        return false;
+    }
+}
+
+/**
  * Xóa thông tin đối tác
  */
 async function deletePartnerAccess(rowIndex) {
@@ -658,5 +737,7 @@ module.exports = {
     updatePartnerAccess,
     deletePartnerAccess,
     getPartnerAccessConfigs,
-    logChatRequest
+    logChatRequest,
+    hasSignedGDPR,
+    logGDPRConsent
 };

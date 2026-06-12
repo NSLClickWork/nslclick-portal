@@ -18,8 +18,38 @@ router.get('/profile', async (req, res) => {
         req.session = null;
         return res.redirect('/');
     }
+    const isGdprSigned = req.session.gdprSigned || await sheetsService.hasSignedGDPR(req.session.studentId);
+    if (isGdprSigned) {
+        req.session.gdprSigned = true; // Cache in session
+    }
     
-    res.render('profile', { student });
+    res.render('profile', { student, needsGdprConsent: !isGdprSigned });
+});
+
+// Submit GDPR Consent
+router.post('/profile/gdpr-consent', express.urlencoded({ extended: true }), async (req, res) => {
+    if (!req.session.studentId) return res.redirect('/');
+    
+    const { gdpr_fullname, gdpr_dob, gdpr_centercode, gdpr_email } = req.body;
+    const ipAddress = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+
+    const logData = {
+        studentId: req.session.studentId,
+        fullName: gdpr_fullname,
+        dob: gdpr_dob,
+        centerCode: gdpr_centercode,
+        email: gdpr_email,
+        ipAddress: ipAddress,
+        consentVersion: '1.0-official'
+    };
+
+    const success = await sheetsService.logGDPRConsent(logData);
+    if (success) {
+        req.session.gdprSigned = true;
+        res.redirect('/profile');
+    } else {
+        res.status(500).send('Error saving GDPR consent. Please try again.');
+    }
 });
 
 // Shared Photo Proxy Helper
