@@ -263,7 +263,6 @@
             font-weight: 900;
             color: var(--nsl-gold);
             margin-bottom: 30px;
-            text-transform: uppercase;
             letter-spacing: -0.5px;
         }
 
@@ -587,7 +586,7 @@
                     <h2 class="student-name"><%= student['Short Name'] || student.FullName %></h2>
                     
                     <div class="info-grid">
-                        <div class="info-label"><%= __('birth_year') %></div><div class="info-sep">:</div><div class="info-value"><%= birthYear %></div>
+                        <div class="info-label"><%= __('date_of_birth') || 'Date of Birth' %></div><div class="info-sep">:</div><div class="info-value"><%= student.DOB || '—' %></div>
                         <div class="info-label"><%= __('deutsch_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualDeutsch) %></div>
                         <div class="info-label"><%= __('nsl_result') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualScore) %></div>
                         <div class="info-label"><%= __('integration_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualLevel) %></div>
