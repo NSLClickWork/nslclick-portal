@@ -33,8 +33,8 @@
             page-break-after: always;
         }
         @media print {
-            body { background: white; margin: 0; }
-            .page { margin: 0; box-shadow: none; width: 297mm; height: 210mm; page-break-after: always; }
+            html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
+            .page { margin: 0; box-shadow: none; width: 100%; height: 100%; page-break-after: always; border: none; }
             @page { size: A4 landscape; margin: 0; }
         }
         
