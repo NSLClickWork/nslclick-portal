@@ -234,7 +234,7 @@ router.post('/admin/rag/upload', isAdmin, upload.single('document'), async (req,
 });
 
 // GET list of RAG documents for a specific student
-router.get('/rag/list/:studentId', requireAdmin, async (req, res) => {
+router.get('/admin/rag/list/:studentId', isAdmin, async (req, res) => {
     try {
         const pineconeService = require('../services/pinecone');
         const sessions = await pineconeService.listDocumentsByStudent(req.params.studentId);
@@ -246,7 +246,7 @@ router.get('/rag/list/:studentId', requireAdmin, async (req, res) => {
 });
 
 // POST delete RAG documents
-router.post('/rag/delete', requireAdmin, express.json(), async (req, res) => {
+router.post('/admin/rag/delete', isAdmin, express.json(), async (req, res) => {
     try {
         const pineconeService = require('../services/pinecone');
         const { studentId, vectorIds } = req.body;
