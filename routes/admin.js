@@ -8,6 +8,10 @@ const sheetsService = require('../services/sheets');
 const pdfService = require('../services/pdf');
 const videoService = require('../services/video');
 const jobsService = require('../services/jobs');
+const ragService = require('../services/rag');
+const multer = require('multer');
+
+const upload = multer({ dest: process.env.VERCEL ? '/tmp' : 'public/uploads/' });
 
 // Admin Middleware
 function isAdmin(req, res, next) {
@@ -209,6 +213,24 @@ router.get('/admin/jobs/:jobId', isAdmin, (req, res) => {
     const job = jobsService.getJob(req.params.jobId);
     if (!job) return res.status(404).json({ error: 'Job not found' });
     res.json(job);
+});
+
+// ==================== RAG Management ====================
+router.post('/admin/rag/upload', isAdmin, upload.single('document'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No document file uploaded' });
+    }
+    
+    try {
+        const result = await ragService.syncSingleDocumentToPinecone(req.file.path, req.file.originalname);
+        // Optionally clean up the temp file
+        try { fs.unlinkSync(req.file.path); } catch (e) {}
+        
+        res.json({ success: true, message: `Successfully synced document. Generated ${result.chunks} vector chunks.` });
+    } catch (error) {
+        console.error('RAG Upload Error:', error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 module.exports = router;

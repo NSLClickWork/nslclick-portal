@@ -65,7 +65,7 @@ const { OpenAI } = require('openai');
             let extraRagContext = "";
             try {
                 // We only do vector search if we have the api key
-                if (process.env.PINECONE_API_KEY && process.env.OPENAI_API_KEY) {
+                if (process.env.PINECONE_API_KEY && process.env.GEMINI_API_KEY) {
                     const pineconeService = require('./pinecone');
                     const searchResult = await pineconeService.searchSimilarDocuments(prompt, 3);
                     if (searchResult) {

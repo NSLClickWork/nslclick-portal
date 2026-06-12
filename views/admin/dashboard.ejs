@@ -239,6 +239,7 @@
             <div class="tabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
                 <button class="btn btn-nsl-brutal" id="tabStudents" style="background: var(--text-main); color: #fff;" onclick="switchTab('students')"><%= __('admin_tab_students') %></button>
                 <button class="btn btn-nsl-brutal" id="tabPartners" onclick="switchTab('partners')"><%= __('admin_tab_partners') %></button>
+                <button class="btn btn-nsl-brutal" id="tabRAG" onclick="switchTab('rag')">Knowledge Base</button>
             </div>
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
@@ -333,6 +334,22 @@
                     </table>
                 </div>
             </div>
+
+            <!-- RAG VIEW -->
+            <div id="ragView" style="display: none;">
+                <div style="background: var(--bg-gray); padding: 20px; border-radius: var(--radius-sm); border: 2px solid var(--text-main);">
+                    <h3 style="margin-bottom: 15px;">Upload Document to AI Knowledge Base (RAG)</h3>
+                    <p style="font-size: 14px; margin-bottom: 20px; color: #555;">Upload PDF or TXT files. The AI will learn from these documents to answer queries better. Naming convention: <strong>NSL-12345_Transcript.pdf</strong>.</p>
+                    
+                    <form id="ragUploadForm" enctype="multipart/form-data" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <input type="file" id="ragFile" name="document" accept=".pdf,.txt,.md" style="border: 2px solid var(--text-main); padding: 10px; background: white; border-radius: 4px;" required>
+                        <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="uploadRAGDocument()">Upload & Sync</button>
+                    </form>
+                    
+                    <div id="ragUploadStatus" style="margin-top: 15px; font-weight: bold; font-size: 14px; display: none;"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -408,23 +425,65 @@
         let activeJobs = [];
         
         function switchTab(tab) {
-            if (tab === 'students') {
-                document.getElementById('studentsView').style.display = 'block';
-                document.getElementById('partnersView').style.display = 'none';
-                document.getElementById('tabStudents').style.background = 'var(--text-main)';
-                document.getElementById('tabStudents').style.color = '#fff';
-                document.getElementById('tabPartners').style.background = 'transparent';
-                document.getElementById('tabPartners').style.color = 'var(--text-main)';
-                document.getElementById('pageTitle').innerText = '<%= __('admin_tab_students') %>';
-            } else {
-                document.getElementById('studentsView').style.display = 'none';
-                document.getElementById('partnersView').style.display = 'block';
-                document.getElementById('tabPartners').style.background = 'var(--text-main)';
-                document.getElementById('tabPartners').style.color = '#fff';
-                document.getElementById('tabStudents').style.background = 'transparent';
-                document.getElementById('tabStudents').style.color = 'var(--text-main)';
-                document.getElementById('pageTitle').innerText = '<%= __('admin_tab_partners') %>';
-                fetchPartners();
+            ['students', 'partners', 'rag'].forEach(t => {
+                const view = document.getElementById(t + 'View');
+                const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+                if (view && btn) {
+                    if (t === tab) {
+                        view.style.display = 'block';
+                        btn.style.background = 'var(--text-main)';
+                        btn.style.color = '#fff';
+                    } else {
+                        view.style.display = 'none';
+                        btn.style.background = 'transparent';
+                        btn.style.color = 'var(--text-main)';
+                    }
+                }
+            });
+
+            const titles = {
+                'students': '<%= __('admin_tab_students') %>',
+                'partners': '<%= __('admin_tab_partners') %>',
+                'rag': 'Knowledge Base (RAG)'
+            };
+            document.getElementById('pageTitle').innerText = titles[tab];
+
+            if (tab === 'partners') fetchPartners();
+        }
+
+        async function uploadRAGDocument() {
+            const fileInput = document.getElementById('ragFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                return notify('Please select a file first.', 'error');
+            }
+
+            const statusDiv = document.getElementById('ragUploadStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.style.color = 'var(--nsl-gold)';
+            statusDiv.innerText = 'Uploading and syncing vector chunks... Please wait.';
+
+            const formData = new FormData();
+            formData.append('document', fileInput.files[0]);
+
+            try {
+                const res = await apiFetch('/admin/rag/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    statusDiv.style.color = '#2e7d32';
+                    statusDiv.innerText = data.message;
+                    fileInput.value = ''; // clear
+                    notify('Sync complete', 'success');
+                } else {
+                    statusDiv.style.color = 'var(--nsl-red)';
+                    statusDiv.innerText = 'Error: ' + data.error;
+                }
+            } catch (err) {
+                statusDiv.style.color = 'var(--nsl-red)';
+                statusDiv.innerText = 'Connection error during upload.';
             }
         }
 

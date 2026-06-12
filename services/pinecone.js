@@ -1,9 +1,9 @@
 const { Pinecone } = require('@pinecone-database/pinecone');
-const { OpenAI } = require('openai');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 require('dotenv').config();
 
 let pineconeClient = null;
-let openaiClient = null;
+let genAI = null;
 
 function getPinecone() {
     if (!pineconeClient) {
@@ -18,15 +18,15 @@ function getPinecone() {
     return pineconeClient;
 }
 
-function getOpenAI() {
-    if (!openaiClient) {
-        if (!process.env.OPENAI_API_KEY) {
-            console.warn("OPENAI_API_KEY is missing. Embeddings will not work.");
+function getGemini() {
+    if (!genAI) {
+        if (!process.env.GEMINI_API_KEY) {
+            console.warn("GEMINI_API_KEY is missing. Embeddings will not work.");
             return null;
         }
-        openaiClient = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+        genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     }
-    return openaiClient;
+    return genAI;
 }
 
 /**
@@ -41,21 +41,18 @@ async function getIndex() {
 }
 
 /**
- * Gọi OpenAI để biến một đoạn Text thành dãy số Vector
+ * Gọi Gemini để biến một đoạn Text thành dãy số Vector
  */
 async function createEmbedding(text) {
-    const openai = getOpenAI();
-    if (!openai) return null;
+    const ai = getGemini();
+    if (!ai) return null;
 
     try {
-        const response = await openai.embeddings.create({
-            model: "text-embedding-3-small", // Model nhúng rẻ và tốt nhất hiện nay
-            input: text.replace(/\n/g, ' '),
-            encoding_format: "float",
-        });
-        return response.data[0].embedding;
+        const model = ai.getGenerativeModel({ model: "text-embedding-004" });
+        const result = await model.embedContent(text.replace(/\n/g, ' '));
+        return result.embedding.values;
     } catch (error) {
-        console.error("Lỗi khi tạo Embedding:", error);
+        console.error("Lỗi khi tạo Embedding bằng Gemini:", error);
         throw error;
     }
 }
