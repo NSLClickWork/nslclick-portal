@@ -379,10 +379,10 @@
                         </div>
                         <div class="card-actions">
                             <% if (student.SetcardLink) { %>
-                                <a href="<%= student.SetcardLink %>" target="_blank" class="btn-nsl-brutal primary" style="display: block; width: 100%;"><%= __('download_pdf') %></a>
+                                <button onclick="openModal('<%= student.SetcardLink %>')" class="btn-nsl-brutal primary" style="display: block; width: 100%;"><%= __('download_pdf') %></button>
                             <% } %>
                             <% if (student.YouTubeLink || student.DriveVideoLink) { %>
-                                <a href="<%= student.YouTubeLink || student.DriveVideoLink %>" target="_blank" class="btn-nsl-brutal" style="display: block; width: 100%;"><%= __('view_video') %></a>
+                                <button onclick="openModal('<%= student.YouTubeLink || student.DriveVideoLink %>')" class="btn-nsl-brutal" style="display: block; width: 100%;"><%= __('view_video') %></button>
                             <% } %>
                         </div>
                     </div>
@@ -563,5 +563,71 @@
         filterStudents();
     </script>
 
+    <div id="iframeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+        <div style="position: relative; width: 100%; max-width: 900px; height: 85vh; background: #fff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div style="background: var(--nsl-red, #cc1f1f); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-weight: 800; font-size: 18px; text-transform: uppercase;">Preview</h3>
+                <button onclick="closeModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; font-weight: bold; line-height: 1; padding: 0;">&times;</button>
+            </div>
+            <div style="flex: 1; width: 100%; height: 100%; background: #f0f0f0; position: relative;">
+                <iframe id="modalIframe" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getEmbedUrl(url) {
+            if (!url) return '';
+            try {
+                if (url.includes('youtube.com/watch')) {
+                    const urlObj = new URL(url);
+                    const v = urlObj.searchParams.get('v');
+                    if (v) return `https://www.youtube.com/embed/${v}`;
+                }
+                if (url.includes('youtu.be/')) {
+                    const id = url.split('youtu.be/')[1].split('?')[0];
+                    if (id) return `https://www.youtube.com/embed/${id}`;
+                }
+                if (url.includes('drive.google.com/file/d/')) {
+                    const parts = url.split('/');
+                    const idIndex = parts.indexOf('d') + 1;
+                    if (idIndex > 0 && parts[idIndex]) {
+                        return `https://drive.google.com/file/d/${parts[idIndex]}/preview`;
+                    }
+                }
+                if (url.includes('drive.google.com/open')) {
+                     const urlObj = new URL(url);
+                     const id = urlObj.searchParams.get('id');
+                     if (id) return `https://drive.google.com/file/d/${id}/preview`;
+                }
+                // For direct links or drive folders, just return as is
+                return url;
+            } catch (e) {
+                return url;
+            }
+        }
+
+        function openModal(url) {
+            const embedUrl = getEmbedUrl(url);
+            const modal = document.getElementById('iframeModal');
+            const iframe = document.getElementById('modalIframe');
+            iframe.src = embedUrl;
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('iframeModal');
+            const iframe = document.getElementById('modalIframe');
+            iframe.src = '';
+            modal.style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('iframeModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
 </body>
 </html>
