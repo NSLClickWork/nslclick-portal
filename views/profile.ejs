@@ -22,8 +22,15 @@
             font-weight: bold; 
             border-radius: 50%; 
             box-shadow: 4px 4px 0px var(--text-main, #1a1a1a); 
-            transition: all 0.1s ease-out; 
-            padding: 0;
+            transition: all 0.2s ease; 
+        }
+        
+        .btn-nsl-brutal {
+            transition: all 0.2s;
+        }
+        .btn-nsl-brutal:hover {
+            box-shadow: 4px 4px 0px var(--nsl-red);
+            transform: translate(-2px, -2px);
         }
         .close-btn:hover {
             transform: translate(-2px, -2px);
@@ -188,15 +195,16 @@
             object-fit: contain;
         }
         .card-profession-title {
-            font-size: clamp(12px, 4.5cqi, 36px);
+            font-size: clamp(10px, 4.2cqi, 36px);
             font-weight: 900;
             color: var(--nsl-red);
-            text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
             text-align: right;
             flex-shrink: 1;
+            min-width: 0;
         }
 
         /* Profile Content Layout */
