@@ -77,12 +77,12 @@
             <img src="assets/design/NSL_logo_mid.png" alt="NSL Logo" style="height: 50px;">
         </div>
         <div class="header-controls" style="display: flex; gap: 20px; align-items: center;">
-            <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 8px 15px; border-radius: 20px; display: flex; align-items: center; gap: 10px;">
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=de&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a>
+            <div class="lang-switch" style="background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 20px; display: flex; align-items: center; gap: 5px;">
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=de&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; padding: 5px 10px; font-weight: <%= typeof lang !== 'undefined' && lang === 'de' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'de' ? '1' : '0.6' %>;">DE</a>
                 <span style="color:#fff;opacity:0.5">|</span>
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=en&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a>
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=en&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; padding: 5px 10px; font-weight: <%= typeof lang !== 'undefined' && lang === 'en' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'en' ? '1' : '0.6' %>;">EN</a>
                 <span style="color:#fff;opacity:0.5">|</span>
-                <a href="javascript:void(0)" onclick="window.location.search='?lang=vi&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
+                <a href="javascript:void(0)" onclick="window.location.search='?lang=vi&_cb=<%= Date.now() %>'" style="color: #fff; text-decoration: none; padding: 5px 10px; font-weight: <%= typeof lang !== 'undefined' && lang === 'vi' ? '900' : '500' %>; opacity: <%= typeof lang !== 'undefined' && lang === 'vi' ? '1' : '0.6' %>;">VI</a>
             </div>
             <a href="admin/logout" class="header-link" style="border: 2px solid #fff; background: transparent; padding: 6px 15px; border-radius: 5px;">Logout</a>
         </div>
@@ -465,9 +465,9 @@
             filtered.forEach(s => {
                 const tr = document.createElement('tr');
                 tr.id = `row-${escapeHtml(s.StudentID)}`;
-                let pdfBtn = s.SetcardLink ? `<button onclick="openModal('${escapeHtml(s.SetcardLink)}')" class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; margin-right: 4px; border-color:var(--nsl-red); color:var(--nsl-red); text-decoration:none; background:transparent; cursor:pointer;">View PDF</button>` : '';
+                let pdfBtn = s.SetcardLink ? `<button onclick="openModal('${escapeHtml(s.SetcardLink)}', '<%= __('candidate_setcard') %>')" class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; margin-right: 4px; border-color:var(--nsl-red); color:var(--nsl-red); text-decoration:none; background:transparent; cursor:pointer;">View PDF</button>` : '';
                 let videoLink = s.YouTubeLink || s.DriveVideoLink || '';
-                let videoBtn = (videoLink && videoLink.toUpperCase() !== 'FALSE') ? `<button onclick="openModal('${escapeHtml(videoLink)}')" class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; margin-right: 4px; border-color:var(--nsl-gold); color:var(--nsl-gold); text-decoration:none; background:transparent; cursor:pointer;">View Video</button>` : '';
+                let videoBtn = (videoLink && videoLink.toUpperCase() !== 'FALSE') ? `<button onclick="openModal('${escapeHtml(videoLink)}', '<%= __('candidate_video') %>')" class="btn btn-nsl-brutal" style="padding:4px 8px; font-size:11px; margin-right: 4px; border-color:var(--nsl-gold); color:var(--nsl-gold); text-decoration:none; background:transparent; cursor:pointer;">View Video</button>` : '';
                 
                 tr.innerHTML = `
                     <td><input type="checkbox" class="student-cb" value="${escapeHtml(s.StudentID)}"></td>
@@ -860,9 +860,9 @@
 
     <div id="iframeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
         <div style="position: relative; width: 100%; max-width: 900px; height: 85vh; background: #fff; border: 4px solid var(--text-main, #1a1a1a); border-radius: 0; overflow: hidden; display: flex; flex-direction: column; box-shadow: 12px 12px 0px var(--text-main, #1a1a1a); transition: transform 0.2s;">
-            <div style="background: var(--nsl-gold, #f2a900); color: var(--text-main, #1a1a1a); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--text-main, #1a1a1a);">
-                <h3 style="margin: 0; font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">PREVIEW</h3>
-                <button onclick="closeModal()" style="background: var(--nsl-red, #cc1f1f); border: 3px solid var(--text-main, #1a1a1a); color: white; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; font-weight: bold; border-radius: 50%; box-shadow: 3px 3px 0px var(--text-main, #1a1a1a); transition: all 0.2s; padding: 0;">&times;</button>
+            <div style="background: var(--nsl-red, #cc1f1f); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--text-main, #1a1a1a);">
+                <h3 id="modalTitle" style="margin: 0; font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">PREVIEW</h3>
+                <button onclick="closeModal()" style="background: var(--nsl-yellow, #ffc107); border: 3px solid var(--text-main, #1a1a1a); color: var(--text-main, #1a1a1a); width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; font-weight: bold; border-radius: 50%; box-shadow: 3px 3px 0px var(--text-main, #1a1a1a); transition: all 0.2s; padding: 0;">&times;</button>
             </div>
             <div style="flex: 1; width: 100%; background: #000; position: relative;">
                 <iframe id="modalIframe" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -902,12 +902,19 @@
             }
         }
 
-        function openModal(url) {
+        function openModal(url, title) {
+            if (title) {
+                const titleEl = document.getElementById('modalTitle');
+                if (titleEl) titleEl.innerText = title;
+            } else {
+                const titleEl = document.getElementById('modalTitle');
+                if (titleEl) titleEl.innerText = 'PREVIEW';
+            }
             const embedUrl = getEmbedUrl(url);
             const modal = document.getElementById('iframeModal');
             const iframe = document.getElementById('modalIframe');
             iframe.src = embedUrl;
-            modal.style.display = 'flex';
+            document.getElementById('iframeModal').style.display = 'flex';
         }
 
         function closeModal() {
