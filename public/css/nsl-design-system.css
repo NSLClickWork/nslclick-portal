@@ -367,9 +367,9 @@ body {
     transition: background 0.3s ease;
 }
 /* German flag colors for the 3 tabs */
-.nsl-tab-btn:nth-child(1).active::after { background: var(--text-main); /* Black */ }
-.nsl-tab-btn:nth-child(2).active::after { background: var(--nsl-red); /* Red */ }
-.nsl-tab-btn:nth-child(3).active::after { background: var(--nsl-gold); /* Gold */ }
+.nsl-tab-btn:nth-child(1).active::after { background: var(--nsl-gold); /* Gold for Student */ }
+.nsl-tab-btn:nth-child(2).active::after { background: var(--nsl-red); /* Red for Partner */ }
+.nsl-tab-btn:nth-child(3).active::after { background: var(--text-main); /* Black for Admin */ }
 
 .tab-content { display: none; animation: fadeIn 0.3s ease; }
 .tab-content.active { display: block; }
