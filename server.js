@@ -115,6 +115,22 @@ app.use((req, res, next) => {
     next();
 });
 
+// Middleware to attach user session
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;
+    next();
+});
+
+app.get('/test-students', async (req, res) => {
+    try {
+        const sheets = require('./services/sheets');
+        await sheets.getAllStudents(); // forces cache load
+        res.json(global.debugAssessKeys || []);
+    } catch (e) {
+        res.status(500).send(e.message);
+    }
+});
+
 // Base URL Middleware for Subpath Support (e.g. /portal)
 app.use((req, res, next) => {
     try {

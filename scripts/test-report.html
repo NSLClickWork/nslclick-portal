@@ -1,0 +1,225 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>AI Test Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; background: #f4f7f6; color: #333; }
+            h1 { color: #2c3e50; }
+            .summary { display: flex; gap: 20px; margin-bottom: 30px; }
+            .card { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex: 1; text-align: center; }
+            .card h3 { margin: 0; font-size: 14px; color: #7f8c8d; text-transform: uppercase; }
+            .card p { margin: 10px 0 0; font-size: 24px; font-weight: bold; color: #2c3e50; }
+            .pass { color: #27ae60 !important; }
+            .fail { color: #c0392b !important; }
+            table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+            th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+            th { background-color: #2c3e50; color: #fff; }
+            tr:hover { background-color: #f5f5f5; }
+        </style>
+    </head>
+    <body>
+        <h1>🤖 AI Testing Framework Report</h1>
+        <div class="summary">
+            <div class="card">
+                <h3>Total Queries</h3>
+                <p>20</p>
+            </div>
+            <div class="card">
+                <h3>Avg Latency</h3>
+                <p class="fail">18706 ms</p>
+            </div>
+            <div class="card">
+                <h3>Max Latency</h3>
+                <p>53783 ms</p>
+            </div>
+            <div class="card">
+                <h3>Hallucination Rate</h3>
+                <p class="fail">15.0%</p>
+            </div>
+            <div class="card">
+                <h3>Accuracy</h3>
+                <p class="fail">20.0%</p>
+            </div>
+        </div>
+        
+        <h2>Detailed Results</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Query</th>
+                    <th>Latency (ms)</th>
+                    <th>Hallucinated</th>
+                    <th>Error</th>
+                    <th>Response Preview</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <tr>
+                    <td>Ich brauche eine Krankenschwester</td>
+                    <td>7597</td>
+                    <td class="pass">No</td>
+                    <td class="pass">No</td>
+                    <td><small>Ich habe Ihre Anfrage verstanden. Ich werde Ihnen einige Kandidatinnen für die Position einer Kranke...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Zeig mir jemanden mit B2 Deutsch</td>
+                    <td>47782</td>
+                    <td class="pass">No</td>
+                    <td class="pass">No</td>
+                    <td><small><div style="background: #fff; border: 2px solid #222; border-radius: 8px; padding: 15px; margin: 10p...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Wer hat die höchste NSL Punktzahl?</td>
+                    <td>52769</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Finde einen Koch für mein Restaurant</td>
+                    <td>5199</td>
+                    <td class="fail">Yes</td>
+                    <td class="pass">No</td>
+                    <td><small>Ich habe einige Kandidaten für die Position als Koch in Ihrem Restaurant gefunden. Hier sind einige ...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Hast du Pflegekräfte, die ab Oktober verfügbar sind?</td>
+                    <td>53783</td>
+                    <td class="fail">Yes</td>
+                    <td class="pass">No</td>
+                    <td><small>Ja, ich habe einige Pflegekräfte, die ab Oktober verfügbar sind. Hier sind einige Kandidaten:  <div ...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Gibt es Kandidaten mit Erfahrung in der Altenpflege?</td>
+                    <td>4517</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Welche Kandidaten haben B1 Deutsch und sind Krankenpfleger?</td>
+                    <td>49735</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Zeig mir alle Kandidaten mit Rank A</td>
+                    <td>3903</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Ich suche nach einem Mechaniker</td>
+                    <td>3579</td>
+                    <td class="pass">No</td>
+                    <td class="pass">No</td>
+                    <td><small>Entschuldigung, aber ich konnte leider keinen Mechaniker in unserer Datenbank finden. Wenn Sie weite...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Wer ist der jüngste Kandidat in der Datenbank?</td>
+                    <td>5430</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Gibt es jemanden, der gut im Team arbeiten kann?</td>
+                    <td>43369</td>
+                    <td class="pass">No</td>
+                    <td class="pass">No</td>
+                    <td><small>Ja, es gibt einige Kandidaten, die gut im Team arbeiten können. Hier sind einige Vorschläge:  <div s...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Ich brauche Pflegekräfte mit Zertifikat</td>
+                    <td>4718</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Zeige mir Kandidaten mit dem Schwerpunkt Intensivpflege</td>
+                    <td>48117</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Wer hat eine NSL Score über 80?</td>
+                    <td>11631</td>
+                    <td class="fail">Yes</td>
+                    <td class="pass">No</td>
+                    <td><small>Ich habe die Daten durchsucht und gefunden, dass folgende Kandidaten einen NSL Score über 80 haben: ...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Finde mir 3 Krankenschwestern mit B2</td>
+                    <td>5871</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Zeig mir Kandidaten, die russisch sprechen</td>
+                    <td>4795</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Hast du jemanden für die Gastronomie?</td>
+                    <td>4964</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Welcher Kandidat ist ab sofort verfügbar?</td>
+                    <td>5424</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Ich suche eine Pflegekraft, die belastbar ist</td>
+                    <td>5742</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+                <tr>
+                    <td>Gibt es jemanden aus Hanoi?</td>
+                    <td>5202</td>
+                    <td class="pass">No</td>
+                    <td class="fail">Yes</td>
+                    <td><small>Xin lỗi, hệ thống AI hiện đang quá tải hoàn toàn. Vui lòng thử lại sau ít phút hoặc liên hệ newsolut...</small></td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </body>
+    </html>
+    
