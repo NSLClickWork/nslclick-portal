@@ -36,17 +36,18 @@
             body { background: white; margin: 0; }
             .page { margin: 0; box-shadow: none; width: 297mm; height: 210mm; page-break-after: always; }
             @page { size: A4 landscape; margin: 0; }
+            .bg-pattern { display: none !important; }
             
-            /* Fake 3D (Isometric 2D) & Vector Shadows for Lag-free, Crisp PDF */
+            /* Fake 3D (Isometric 2D) & Vector Solid Colors (No Alpha) for ZERO LAG */
             .screenshot { 
                 transform: rotate(-2deg) skewY(-3deg) scale(0.95) !important; 
                 filter: none !important;
-                box-shadow: 15px 15px 0px rgba(0,0,0,0.1) !important;
+                box-shadow: 15px 15px 0px #e6e6e6 !important;
             }
             img[src*="dashboard_full"] { transform: rotate(-2deg) skewY(-5deg) scaleX(0.95) translateX(-15px) !important; }
-            img[src*="mockup2"] { transform: rotate(1deg) skewY(3deg) scale(0.95) !important; box-shadow: -10px 15px 0px rgba(0,0,0,0.1) !important; }
-            img[src*="setcard_modal"] { transform: rotate(-2deg) skewY(-4deg) scale(0.9) !important; box-shadow: 15px 15px 0px rgba(0,0,0,0.15) !important; }
-            img[src*="video_frame"] { transform: rotate(2deg) skewY(4deg) scale(0.85) !important; box-shadow: -15px 15px 0px rgba(0,0,0,0.15) !important; }
+            img[src*="mockup2"] { transform: rotate(1deg) skewY(3deg) scale(0.95) !important; box-shadow: -10px 15px 0px #dddddd !important; }
+            img[src*="setcard_modal"] { transform: rotate(-2deg) skewY(-4deg) scale(0.9) !important; box-shadow: 15px 15px 0px #a11818 !important; }
+            img[src*="video_frame"] { transform: rotate(2deg) skewY(4deg) scale(0.85) !important; box-shadow: -15px 15px 0px #a11818 !important; filter: none !important; }
         }
         
         /* Layout Utils */
