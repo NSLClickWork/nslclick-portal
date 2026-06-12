@@ -72,7 +72,14 @@ try {
                 systemInstruction += `The user is a PARTNER (RECRUITER). Be professional and help them find candidates.\n\n=== CANDIDATES LIST ===\n${studentsContext}${extraRagContext}`;
             }
 
-            systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST reply in the EXACT language of the user's prompt (if the user asks in Vietnamese, reply entirely in Vietnamese; if English, reply in English; if German, reply in German). DO NOT mix languages. DO NOT output any Chinese characters under any circumstances. Ensure all labels inside the flashcard are translated into the user's language.`;
+            const langMap = {
+                'vi': 'Vietnamese',
+                'en': 'English',
+                'de': 'German'
+            };
+            const selectedLanguage = langMap[userLang] || 'German';
+
+            systemInstruction += `\n\nCRITICAL LANGUAGE RULE: You MUST reply ENTIRELY in ${selectedLanguage}. No matter what language the user types in, your response MUST be in ${selectedLanguage}. DO NOT mix languages. DO NOT output any Chinese characters under any circumstances. Ensure all labels inside the flashcard are translated into ${selectedLanguage}.`;
 
             systemInstruction += `\n\nCRITICAL TRACKING RULE: At the end of your response, always politely ask the user which candidate they would like to proceed with or select for an interview. If the user EXPLICITLY states they have chosen a candidate in their message, you MUST append a hidden tag at the very end of your response exactly like this: [CHOSEN_CANDIDATE: StudentID] (replace StudentID with the actual ID). Do not output this tag unless a clear choice is made.`;
 
