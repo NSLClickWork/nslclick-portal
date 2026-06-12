@@ -683,11 +683,11 @@
             if (iframeContainer) iframeContainer.className = '';
 
             if (type === 'pdf') {
-                if (titleEl) titleEl.innerText = `<%= __('candidate_setcard') %>`;
+                if (titleEl) titleEl.innerHTML = `<%= __('candidate_setcard') %>`;
                 if (modalContent) modalContent.classList.add('modal-pdf');
                 if (iframeContainer) iframeContainer.classList.add('modal-pdf');
             } else {
-                if (titleEl) titleEl.innerText = `<%= __('candidate_video') %>`;
+                if (titleEl) titleEl.innerHTML = `<%= __('candidate_video') %>`;
                 if (modalContent) modalContent.classList.add('modal-video');
                 if (iframeContainer) iframeContainer.classList.add('modal-video');
             }

@@ -99,14 +99,44 @@
             z-index: 0;
             pointer-events: none;
         }
+         .usp-box h3 { margin: 0 0 10px 0; font-size: 22px; color: var(--nsl-gold); }
+        .usp-box p { margin: 0; font-size: 16px; line-height: 1.5; color: #ccc; }
+
+        .top-nav {
+            position: absolute;
+            top: 30px;
+            right: 40px;
+            z-index: 100;
+        }
+        .btn-login {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .btn-login:hover {
+            background: white;
+            color: var(--nsl-dark);
+        }
     </style>
 </head>
 <body>
 
     <!-- PAGE 1: Introduction -->
     <div class="page grid-2">
+        <div class="top-nav">
+            <a href="/?tab=partner" class="btn-login">Login to Portal</a>
+        </div>
         <div class="col-left" style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);">
-            <img src="/assets/design/NSL_logo_mid.png" alt="NSL Click & Work" style="height: 60px; margin-bottom: 40px;">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 40px;">
+                <img src="/assets/design/NSL_logo_mid.png" alt="NSL Click & Work" style="height: 60px;">
+                <img src="/assets/design/Logo_Mid_PersonalKampagne.png" alt="PersonalKampagne" style="height: 35px; filter: brightness(0) invert(1);">
+            </div>
             <h3 class="highlight-gold">NEXT-GEN RECRUITMENT</h3>
             <h1>Discover Talent.<br>Faster. Smarter.</h1>
             <p style="color: #ccc; font-size: 20px; max-width: 90%;">Welcome to the NSL Click & Work Portal. A revolutionary platform designed for German employers to seamlessly discover, evaluate, and hire international talents across 21 European countries.</p>
@@ -133,8 +163,9 @@
     <!-- PAGE 2: Features & Usage -->
     <div class="page grid-2" style="grid-template-columns: 1.2fr 0.8fr;">
         <div class="col-left" style="background: white; color: var(--nsl-dark);">
-            <div class="header" style="position: relative; top: 0; left: 0; right: 0; margin-bottom: 40px;">
-                <img src="/assets/design/NSL_logo_mid.png" alt="NSL Click & Work" class="logo">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 40px;">
+                <img src="/assets/design/NSL_logo_mid.png" alt="NSL Click & Work" style="height: 40px;">
+                <img src="/assets/design/Logo_Mid_PersonalKampagne.png" alt="PersonalKampagne" style="height: 25px;">
             </div>
             <h2>How It Works For You</h2>
             <p style="color: #666; max-width: 90%;">Everything you need to make an informed hiring decision, available instantly on a secure, GDPR-compliant platform.</p>
@@ -200,7 +231,8 @@
             
             <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
                 <h4 style="margin: 0 0 5px 0;">Ready to start hiring?</h4>
-                <p style="margin: 0; color: #666; font-size: 14px;">Ask your NSL account manager for your secure Access Code today.</p>
+                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Ask your NSL account manager for your secure Access Code today.</p>
+                <a href="/?tab=partner" style="display: inline-block; background: var(--nsl-red); color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 4px 10px rgba(204, 31, 31, 0.3);">Login as Partner</a>
             </div>
         </div>
     </div>
