@@ -206,48 +206,42 @@
 
                         <!-- STUDENT FORM -->
                         <div id="tab-student" class="tab-content">
-                            <form action="login" method="POST">
+                            <form action="login" method="POST" onsubmit="return validateTurnstile(event)">
                                 <input type="hidden" name="_csrf"
                                     value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <div class="form-group text-left">
                                     <label class="form-label">ZUGANGSCODE</label>
                                     <input type="text" name="studentId" class="form-control" placeholder="Kandidaten-ID eingeben" required>
                                 </div>
-                                <% if (typeof turnstileSiteKey !== 'undefined' && turnstileSiteKey !== '1x00000000000000000000AA') { %>
-                                <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
-                                <% } %>
+                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
                                 <button type="submit" id="btn-student" class="btn-submit-brutal">LOGIN TALENTE</button>
                             </form>
                         </div>
 
                         <!-- PARTNER FORM -->
                         <div id="tab-partner" class="tab-content">
-                            <form action="partner/login" method="POST">
+                            <form action="partner/login" method="POST" onsubmit="return validateTurnstile(event)">
                                 <input type="hidden" name="_csrf"
                                     value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <div class="form-group text-left">
                                     <label class="form-label">ZUGANGSCODE</label>
                                     <input type="password" name="accessCode" class="form-control" placeholder="Partner ID eingeben" required>
                                 </div>
-                                <% if (typeof turnstileSiteKey !== 'undefined' && turnstileSiteKey !== '1x00000000000000000000AA') { %>
-                                <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
-                                <% } %>
+                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
                                 <button type="submit" id="btn-partner" class="btn-submit-brutal">LOGIN PARTNER</button>
                             </form>
                         </div>
 
                         <!-- ADMIN FORM -->
                         <div id="tab-admin" class="tab-content">
-                            <form action="admin/login" method="POST">
+                            <form action="admin/login" method="POST" onsubmit="return validateTurnstile(event)">
                                 <input type="hidden" name="_csrf"
                                     value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
                                 <div class="form-group text-left">
                                     <label class="form-label">PASSWORT</label>
                                     <input type="password" name="password" class="form-control" placeholder="Admin Passwort" required>
                                 </div>
-                                <% if (typeof turnstileSiteKey !== 'undefined' && turnstileSiteKey !== '1x00000000000000000000AA') { %>
-                                <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
-                                <% } %>
+                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
                                 <button type="submit" id="btn-admin-submit" class="btn-submit-brutal">LOGIN ADMIN</button>
                             </form>
                         </div>
@@ -260,6 +254,16 @@
     </div>
 
     <script>
+        function validateTurnstile(event) {
+            const token = new FormData(event.target).get('cf-turnstile-response');
+            if (!token) {
+                event.preventDefault();
+                alert('Vui lòng đợi hệ thống kiểm tra an ninh (CAPTCHA) hoàn tất trước khi Đăng nhập!');
+                return false;
+            }
+            return true;
+        }
+
         function switchTab(tabId) {
             // Remove active classes
             document.querySelectorAll('.nsl-tab-btn').forEach(b => b.classList.remove('active'));

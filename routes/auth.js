@@ -4,6 +4,24 @@ const bcrypt = require('bcrypt');
 const rateLimit = require('express-rate-limit');
 const sheetsService = require('../services/sheets');
 
+// Helper to verify Turnstile token
+async function verifyTurnstile(token) {
+    const secret = process.env.TURNSTILE_SECRET || '1x0000000000000000000000000000000AA';
+    if (!token) return false;
+    try {
+        const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`
+        });
+        const data = await response.json();
+        return data.success;
+    } catch (err) {
+        console.error('Turnstile verification error:', err);
+        return false;
+    }
+}
+
 // Rate Limiting for Login routes
 const loginLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -14,7 +32,7 @@ const loginLimiter = rateLimit({
 
 
 // ==================== Student Auth ====================
-router.get('/', (req, res) => res.render('login', { error: null, tab: req.query.tab || 'partner' }));
+router.get('/', (req, res) => res.render('login', { error: null, tab: req.query.tab || 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' }));
 router.get('/login', (req, res) => res.redirect('/'));
 
 // Student Login: Requires StudentID
@@ -24,7 +42,13 @@ router.post('/login', loginLimiter, async (req, res) => {
     const { studentId } = req.body;
     
     if (!studentId) {
-        return res.render('login', { error: 'Please enter Student ID.', tab: 'student' });
+        return res.render('login', { error: 'Please enter Student ID.', tab: 'student', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
+    }
+
+    const turnstileToken = req.body['cf-turnstile-response'];
+    const isHuman = await verifyTurnstile(turnstileToken);
+    if (!isHuman) {
+        return res.render('login', { error: 'CAPTCHA verification failed. Please try again.', tab: 'student', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 
     const student = await sheetsService.getStudentById(studentId);
@@ -33,7 +57,7 @@ router.post('/login', loginLimiter, async (req, res) => {
         req.session.studentId = student.StudentID;
         return res.redirect('/profile');
     } else {
-        return res.render('login', { error: 'Invalid Student ID.', tab: 'student' });
+        return res.render('login', { error: 'Invalid Student ID.', tab: 'student', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 });
 
@@ -50,7 +74,13 @@ router.post('/partner/login', loginLimiter, async (req, res) => {
 
     const { accessCode } = req.body;
     if (!accessCode) {
-        return res.render('login', { error: 'Please enter Access Code.', tab: 'partner' });
+        return res.render('login', { error: 'Please enter Access Code.', tab: 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
+    }
+
+    const turnstileToken = req.body['cf-turnstile-response'];
+    const isHuman = await verifyTurnstile(turnstileToken);
+    if (!isHuman) {
+        return res.render('login', { error: 'CAPTCHA verification failed. Please try again.', tab: 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
 
     const configs = await sheetsService.getPartnerAccessConfigs();
@@ -83,7 +113,7 @@ router.post('/partner/login', loginLimiter, async (req, res) => {
         return res.redirect('/partner/dashboard');
     }
 
-    res.render('login', { error: 'Invalid Access Code.', tab: 'partner' });
+    res.render('login', { error: 'Invalid Access Code.', tab: 'partner', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
 });
 
 router.get('/partner/logout', (req, res) => {
@@ -99,7 +129,13 @@ router.post('/admin/login', loginLimiter, async (req, res) => {
 
     const { password } = req.body;
     if (!password) {
-        return res.render('login', { error: 'Please enter password.', tab: 'admin' });
+        return res.render('login', { error: 'Please enter password.', tab: 'admin', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
+    }
+    
+    const turnstileToken = req.body['cf-turnstile-response'];
+    const isHuman = await verifyTurnstile(turnstileToken);
+    if (!isHuman) {
+        return res.render('login', { error: 'CAPTCHA verification failed. Please try again.', tab: 'admin', turnstileSiteKey: process.env.TURNSTILE_SITE_KEY || '1x00000000000000000000AA' });
     }
     
     const adminHash = process.env.ADMIN_PASSWORD_HASH;
