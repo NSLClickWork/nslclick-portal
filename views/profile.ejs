@@ -589,11 +589,11 @@
         </div>
     </div>
 
-    <div id="iframeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
-        <div style="position: relative; width: 100%; max-width: 900px; height: 85vh; background: #fff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <div style="background: var(--nsl-red, #cc1f1f); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="margin: 0; font-weight: 800; font-size: 18px; text-transform: uppercase;">Preview</h3>
-                <button onclick="closeModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; font-weight: bold; line-height: 1; padding: 0;">&times;</button>
+    <div id="iframeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;">
+        <div style="position: relative; width: 100%; max-width: 900px; height: 85vh; background: #fff; border: 4px solid var(--text-main, #1a1a1a); border-radius: 0; overflow: hidden; display: flex; flex-direction: column; box-shadow: 12px 12px 0px var(--text-main, #1a1a1a); transition: transform 0.2s;">
+            <div style="background: var(--nsl-gold, #f2a900); color: var(--text-main, #1a1a1a); padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--text-main, #1a1a1a);">
+                <h3 style="margin: 0; font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">PREVIEW</h3>
+                <button onclick="closeModal()" style="background: var(--nsl-red, #cc1f1f); border: 3px solid var(--text-main, #1a1a1a); color: white; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; font-weight: bold; border-radius: 50%; box-shadow: 3px 3px 0px var(--text-main, #1a1a1a); transition: all 0.2s; padding: 0;">&times;</button>
             </div>
             <div style="flex: 1; width: 100%; height: 100%; background: #f0f0f0; position: relative;">
                 <iframe id="modalIframe" style="width: 100%; height: 100%; border: none; position: absolute; top: 0; left: 0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -605,15 +605,21 @@
         function getEmbedUrl(url) {
             if (!url) return '';
             try {
-                if (url.includes('youtube.com/watch')) {
-                    const urlObj = new URL(url);
-                    const v = urlObj.searchParams.get('v');
-                    if (v) return `https://www.youtube.com/embed/${v}`;
+                if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                    let videoId = '';
+                    if (url.includes('youtube.com/watch')) {
+                        const urlObj = new URL(url);
+                        videoId = urlObj.searchParams.get('v');
+                    } else if (url.includes('youtu.be/')) {
+                        videoId = url.split('youtu.be/')[1].split(/[?&#]/)[0];
+                    } else if (url.includes('youtube.com/shorts/')) {
+                        videoId = url.split('youtube.com/shorts/')[1].split(/[?&#]/)[0];
+                    } else if (url.includes('youtube.com/embed/')) {
+                        return url;
+                    }
+                    if (videoId) return `https://www.youtube.com/embed/${videoId}`;
                 }
-                if (url.includes('youtu.be/')) {
-                    const id = url.split('youtu.be/')[1].split('?')[0];
-                    if (id) return `https://www.youtube.com/embed/${id}`;
-                }
+                
                 if (url.includes('drive.google.com/file/d/')) {
                     const parts = url.split('/');
                     const idIndex = parts.indexOf('d') + 1;
@@ -626,7 +632,6 @@
                      const id = urlObj.searchParams.get('id');
                      if (id) return `https://drive.google.com/file/d/${id}/preview`;
                 }
-                // For direct links or drive folders, just return as is
                 return url;
             } catch (e) {
                 return url;
