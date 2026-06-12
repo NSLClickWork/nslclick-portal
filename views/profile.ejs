@@ -837,6 +837,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const checkboxes = document.querySelectorAll('.gdpr-chk');
+            const textInputs = document.querySelectorAll('input[name="gdpr_fullname"], input[name="gdpr_dob"], input[name="gdpr_centercode"], input[name="gdpr_email"]');
             const submitBtn = document.getElementById('gdprSubmitBtn');
             
             if (checkboxes.length > 0 && submitBtn) {
@@ -846,7 +847,12 @@
                         if (!chk.checked) allChecked = false;
                     });
                     
-                    if (allChecked) {
+                    let allFilled = true;
+                    textInputs.forEach(input => {
+                        if (input.value.trim() === '') allFilled = false;
+                    });
+                    
+                    if (allChecked && allFilled) {
                         submitBtn.style.background = 'var(--text-main, #1a1a1a)';
                         submitBtn.style.color = '#fff';
                         submitBtn.style.borderColor = 'var(--text-main, #1a1a1a)';
@@ -862,6 +868,10 @@
                 }
                 
                 checkboxes.forEach(chk => chk.addEventListener('change', checkAll));
+                textInputs.forEach(input => input.addEventListener('input', checkAll));
+                
+                // Initial check in case some fields are pre-filled
+                checkAll();
             }
             
             // Prevent scrolling on body when modal is open
