@@ -213,7 +213,9 @@
                                     <label class="form-label">ZUGANGSCODE</label>
                                     <input type="text" name="studentId" class="form-control" placeholder="Kandidaten-ID eingeben" required>
                                 </div>
-                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+                                <% if (typeof turnstileSiteKey !== 'undefined' && turnstileSiteKey !== '1x00000000000000000000AA') { %>
+                                <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+                                <% } %>
                                 <button type="submit" id="btn-student" class="btn-submit-brutal">LOGIN TALENTE</button>
                             </form>
                         </div>
@@ -227,7 +229,9 @@
                                     <label class="form-label">ZUGANGSCODE</label>
                                     <input type="password" name="accessCode" class="form-control" placeholder="Partner ID eingeben" required>
                                 </div>
-                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+                                <% if (typeof turnstileSiteKey !== 'undefined' && turnstileSiteKey !== '1x00000000000000000000AA') { %>
+                                <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+                                <% } %>
                                 <button type="submit" id="btn-partner" class="btn-submit-brutal">LOGIN PARTNER</button>
                             </form>
                         </div>
@@ -241,7 +245,9 @@
                                     <label class="form-label">PASSWORT</label>
                                     <input type="password" name="password" class="form-control" placeholder="Admin Passwort" required>
                                 </div>
-                                <div class="cf-turnstile" data-sitekey="<%= typeof turnstileSiteKey !== 'undefined' ? turnstileSiteKey : '1x00000000000000000000AA' %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+                                <% if (typeof turnstileSiteKey !== 'undefined' && turnstileSiteKey !== '1x00000000000000000000AA') { %>
+                                <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" style="margin-bottom: 20px; display: flex; justify-content: center;"></div>
+                                <% } %>
                                 <button type="submit" id="btn-admin-submit" class="btn-submit-brutal">LOGIN ADMIN</button>
                             </form>
                         </div>
