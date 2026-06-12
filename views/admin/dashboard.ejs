@@ -490,7 +490,7 @@
         async function apiFetch(url, options = {}) {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             options.headers = options.headers || {};
-            options.headers['CSRF-Token'] = csrfToken;
+            options.headers['x-csrf-token'] = csrfToken;
             
             if (options.body && typeof options.body !== 'string' && !(options.body instanceof FormData)) {
                 options.body._csrf = csrfToken;
