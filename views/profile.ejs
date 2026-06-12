@@ -179,6 +179,7 @@
             flex-wrap: nowrap;
             gap: 20px;
             width: 100%;
+            container-type: inline-size;
         }
         .card-logo-box img {
             height: clamp(40px, 6vw, 80px);
@@ -186,14 +187,13 @@
             object-fit: contain;
         }
         .card-profession-title {
-            font-size: clamp(14px, 3.2vw, 36px);
+            font-size: clamp(12px, 4.5cqi, 36px);
             font-weight: 900;
             color: var(--nsl-red);
             text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
             text-align: right;
             flex-shrink: 1;
         }
@@ -512,6 +512,12 @@
             actualAvailability = '—';
         }
         
+        // Deutsch Level
+        let actualDeutsch = student.DeutschLevel;
+        if (!actualDeutsch || actualDeutsch.trim() === '' || actualDeutsch === '0' || actualDeutsch === '—' || actualDeutsch === 'Pending') {
+            actualDeutsch = 'B1';
+        }
+        
         let rawVideo = student['Introduction Video'] || student.YouTubeLink || student.DriveVideoLink || '';
         // It has a video if the field is not empty, not 'FALSE', and looks like a URL (longer than 5 chars)
         let hasVideo = rawVideo && rawVideo.trim().length > 5 && rawVideo.toUpperCase() !== 'FALSE';
@@ -581,7 +587,7 @@
                     
                     <div class="info-grid">
                         <div class="info-label"><%= __('birth_year') %></div><div class="info-sep">:</div><div class="info-value"><%= birthYear %></div>
-                        <div class="info-label"><%= __('deutsch_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(student.DeutschLevel) %></div>
+                        <div class="info-label"><%= __('deutsch_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualDeutsch) %></div>
                         <div class="info-label"><%= __('nsl_result') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualScore) %></div>
                         <div class="info-label"><%= __('integration_level') %></div><div class="info-sep">:</div><div class="info-value"><%= formatValue(actualLevel) %></div>
                         <div class="info-label"><%= __('availability') %></div><div class="info-sep">:</div><div class="info-value"><%= actualAvailability %></div>

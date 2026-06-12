@@ -157,22 +157,38 @@ async function getAllStudents() {
                             };
                         }
                     });
+                    
+                    global.debugAssessKeys = Object.keys(assessMap);
 
                     // Merge into students
                     students.forEach(student => {
                         if (student.StudentID) {
                             const normalizedSid = student.StudentID.trim().toLowerCase();
-                            if (assessMap[normalizedSid]) {
-                                student.NSLScore = assessMap[normalizedSid].NSLScore;
-                                student.NSLGrade = assessMap[normalizedSid].NSLGrade;
-                                if (assessMap[normalizedSid].DeutschLevel) {
-                                    student.DeutschLevel = assessMap[normalizedSid].DeutschLevel;
+                            let assessData = assessMap[normalizedSid];
+                            
+                            // Fallback: If exact match fails, try matching the prefix (Center_First_Last)
+                            if (!assessData) {
+                                const parts = normalizedSid.split('_');
+                                if (parts.length >= 3) {
+                                    const prefix = parts.slice(0, 3).join('_') + '_';
+                                    const fallbackKey = Object.keys(assessMap).find(k => k.startsWith(prefix));
+                                    if (fallbackKey) {
+                                        assessData = assessMap[fallbackKey];
+                                    }
                                 }
-                                if (assessMap[normalizedSid].Intake) {
-                                    student.Intake = assessMap[normalizedSid].Intake;
+                            }
+
+                            if (assessData) {
+                                student.NSLScore = assessData.NSLScore;
+                                student.NSLGrade = assessData.NSLGrade;
+                                if (assessData.DeutschLevel) {
+                                    student.DeutschLevel = assessData.DeutschLevel;
                                 }
-                                if (assessMap[normalizedSid].ProfessionCode) {
-                                    student.ProfessionCode = assessMap[normalizedSid].ProfessionCode;
+                                if (assessData.Intake) {
+                                    student.Intake = assessData.Intake;
+                                }
+                                if (assessData.ProfessionCode) {
+                                    student.ProfessionCode = assessData.ProfessionCode;
                                 }
                             }
                         }
