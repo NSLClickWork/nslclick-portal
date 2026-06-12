@@ -96,42 +96,14 @@
             top: -50%; right: -20%;
             width: 800px; height: 800px;
             background: radial-gradient(circle, rgba(242,169,0,0.1) 0%, rgba(255,255,255,0) 70%);
-            z-index: 0;
-            pointer-events: none;
-        }
-         .usp-box h3 { margin: 0 0 10px 0; font-size: 22px; color: var(--nsl-gold); }
+        .usp-box h3 { margin: 0 0 10px 0; font-size: 22px; color: var(--nsl-gold); }
         .usp-box p { margin: 0; font-size: 16px; line-height: 1.5; color: #ccc; }
-
-        .top-nav {
-            position: absolute;
-            top: 30px;
-            right: 40px;
-            z-index: 100;
-        }
-        .btn-login {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 2px solid white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-        .btn-login:hover {
-            background: white;
-            color: var(--nsl-dark);
-        }
     </style>
 </head>
 <body>
 
     <!-- PAGE 1: Introduction -->
     <div class="page grid-2">
-        <div class="top-nav">
-            <a href="/?tab=partner" class="btn-login">Login to Portal</a>
-        </div>
         <div class="col-left" style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);">
             <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 40px;">
                 <img src="/assets/design/NSL_logo_mid.png" alt="NSL Click & Work" style="height: 60px;">
@@ -231,8 +203,10 @@
             
             <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
                 <h4 style="margin: 0 0 5px 0;">Ready to start hiring?</h4>
-                <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">Ask your NSL account manager for your secure Access Code today.</p>
-                <a href="/?tab=partner" style="display: inline-block; background: var(--nsl-red); color: white; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 6px; box-shadow: 0 4px 10px rgba(204, 31, 31, 0.3);">Login as Partner</a>
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 14px;">Ask your NSL account manager for your secure Access Code today.</p>
+                <p style="margin: 0; font-size: 16px;">
+                    <strong>Login at:</strong> <a href="https://www.personalkampagne-portal.de/?tab=partner" style="color: var(--nsl-red); text-decoration: none; font-weight: bold;">www.personalkampagne-portal.de/?tab=partner</a>
+                </p>
             </div>
         </div>
     </div>
