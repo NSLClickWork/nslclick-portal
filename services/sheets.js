@@ -264,22 +264,6 @@ async function getPartnerAccessConfigs() {
 async function getStudentById(studentId) {
     if (!studentId) return null;
     const searchId = studentId.trim().toLowerCase();
-    
-    // Fallback cho quá trình test khi không có credentials.json
-    if (searchId === 'hdeu_tam_huynh_06.01.2004' || searchId === 'nsl-2601001') {
-        return {
-            StudentID: studentId.trim(),
-            FullName: 'Huỳnh Tâm',
-            DOB: '06.01.2004',
-            ProfessionCode: 'HDEU',
-            CenterCode: 'NSL',
-            Status: 'ACTIVE',
-            NSLScore: 85,
-            Rank: 'A',
-            VideoStatus: 'DONE',
-            SetcardStatus: 'DONE'
-        };
-    }
 
     const students = await getAllStudents();
     return students.find(s => s.StudentID && s.StudentID.trim().toLowerCase() === searchId);
