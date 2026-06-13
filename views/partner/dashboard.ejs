@@ -579,7 +579,10 @@
                 }
             });
             
-            cards.forEach(card => grid.appendChild(card));
+            filteredCards.forEach(card => grid.appendChild(card));
+            cards.forEach(card => {
+                if (!filteredCards.includes(card)) grid.appendChild(card);
+            });
             
             const totalItems = filteredCards.length;
             const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
