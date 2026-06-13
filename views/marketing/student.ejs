@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NSL Click & Work - Student Canvas</title>
+    <title>NSL Click & Work - Student Journey</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -23,116 +23,23 @@
         }
         .page {
             width: 210mm;
-            height: 297mm; /* A4 Portrait */
+            height: 297mm;
             background: white;
             margin: 20px auto;
             position: relative;
             box-sizing: border-box;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            page-break-after: always;
         }
         @media print {
             body { background: white; margin: 0; }
             .page { margin: 0; box-shadow: none; width: 210mm; height: 297mm; page-break-after: always; }
             @page { size: A4 portrait; margin: 0; }
-        }
-        
-        .header {
-            background: var(--nsl-dark);
-            color: white;
-            padding: 40px;
-            text-align: center;
-            border-bottom: 8px solid var(--nsl-red);
-        }
-        .header img.logo-nsl {
-            height: 60px;
-        }
-        .header img.logo-text {
-            height: 35px;
-        }
-        h1 { font-size: 38px; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; }
-        .subtitle { color: var(--nsl-gold); font-size: 20px; font-weight: 600; letter-spacing: 1px; }
-
-        .content {
-            padding: 40px;
-            position: relative;
+            .top-controls { display: none !important; }
         }
 
-        /* Journey Timeline */
-        .timeline {
-            position: relative;
-            max-width: 600px;
-            margin: 30px auto;
-        }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0; left: 30px;
-            width: 6px;
-            background: var(--nsl-light);
-            border-radius: 6px;
-        }
-
-        .step {
-            position: relative;
-            margin-bottom: 40px;
-            padding-left: 80px;
-        }
-        .step:last-child { margin-bottom: 0; }
-
-        .step-number {
-            position: absolute;
-            left: 10px; top: 0;
-            width: 46px; height: 46px;
-            background: var(--nsl-dark);
-            color: white;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 22px; font-weight: 900;
-            border: 4px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            z-index: 2;
-        }
-        
-        .step.active .step-number {
-            background: var(--nsl-red);
-        }
-
-        .step h3 {
-            margin: 0 0 5px 0;
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--nsl-dark);
-        }
-        .step p {
-            margin: 0;
-            font-size: 16px;
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: var(--nsl-light);
-            padding: 30px 40px;
-            text-align: center;
-            border-top: 4px solid var(--nsl-gold);
-        }
-
-        .usp-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 40px;
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px dashed #ccc;
-        }
-        .usp-item h4 { margin: 0 0 5px 0; color: var(--nsl-red); font-size: 18px; }
-        .usp-item p { margin: 0; font-size: 14px; color: #666; }
-
+        /* ===== TOP CONTROLS ===== */
         .top-controls {
             position: fixed;
             top: 20px;
@@ -144,6 +51,7 @@
             padding: 10px 15px;
             border-radius: 30px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
         }
         .lang-switch { display: flex; gap: 5px; }
         .lang-btn {
@@ -162,7 +70,309 @@
             display: flex; align-items: center; gap: 5px; transition: all 0.2s;
         }
         .print-btn:hover { background: #a11818; }
-        @media print { .top-controls { display: none !important; } }
+
+        /* ===== PAGE 1 LAYOUT ===== */
+        .hero-band {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 36px 44px 28px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-band::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 280px; height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(242,169,0,0.18) 0%, transparent 70%);
+        }
+        .hero-band::after {
+            content: '';
+            position: absolute;
+            bottom: -40px; left: 30%;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(204,31,31,0.12) 0%, transparent 70%);
+        }
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-tag {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            color: var(--nsl-gold);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .hero-h1 {
+            font-size: 44px;
+            font-weight: 900;
+            line-height: 1.05;
+            text-transform: uppercase;
+            margin: 0 0 14px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-sub {
+            font-size: 16px;
+            color: #bbb;
+            line-height: 1.6;
+            max-width: 85%;
+            margin: 0 0 24px 0;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-stat {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-bottom: 3px solid var(--nsl-gold);
+            border-radius: 10px;
+            padding: 14px 20px;
+            text-align: center;
+            flex: 1;
+        }
+        .hero-stat .num { font-size: 28px; font-weight: 900; color: var(--nsl-gold); line-height: 1; }
+        .hero-stat .lbl { font-size: 11px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+
+        /* ===== DIAGONAL DIVIDER ===== */
+        .diagonal {
+            width: 100%;
+            height: 40px;
+            background: white;
+            clip-path: polygon(0 100%, 100% 0, 100% 100%);
+            margin-top: -1px;
+        }
+
+        /* ===== RED ACCENT BAR ===== */
+        .accent-bar {
+            height: 6px;
+            background: linear-gradient(90deg, var(--nsl-red) 0%, var(--nsl-gold) 100%);
+        }
+
+        /* ===== TIMELINE SECTION ===== */
+        .timeline-section {
+            padding: 24px 44px 0;
+        }
+        .section-label {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2.5px;
+            color: var(--nsl-red);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .section-title {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--nsl-dark);
+            margin: 0 0 20px 0;
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 20px;
+        }
+        .step-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            border-radius: 10px;
+            background: var(--nsl-light);
+            border-left: 4px solid #ddd;
+            transition: all 0.2s;
+        }
+        .step-card.active { border-left-color: var(--nsl-red); background: #fff5f5; }
+        .step-card.done { border-left-color: var(--nsl-gold); background: #fffbf0; }
+        .step-badge {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: #ddd;
+            color: #666;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 900;
+            flex-shrink: 0;
+        }
+        .step-card.active .step-badge { background: var(--nsl-red); color: white; }
+        .step-card.done .step-badge { background: var(--nsl-gold); color: var(--nsl-dark); }
+        .step-card h4 { margin: 0 0 3px 0; font-size: 14px; font-weight: 800; color: var(--nsl-dark); }
+        .step-card p { margin: 0; font-size: 12px; color: #666; line-height: 1.4; }
+
+        /* ===== MOCKUP VISUAL ===== */
+        .mockup-strip {
+            background: linear-gradient(135deg, var(--nsl-red) 0%, #a11818 100%);
+            margin: 20px 0 0;
+            padding: 20px 44px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .mockup-strip::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -20px;
+            width: 200px; height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+        }
+        .mockup-img {
+            width: 180px;
+            border-radius: 10px;
+            border: 3px solid rgba(255,255,255,0.3);
+            box-shadow: 10px 15px 30px rgba(0,0,0,0.4);
+            transform: perspective(800px) rotateY(8deg) rotateX(-3deg);
+            flex-shrink: 0;
+        }
+        .mockup-text { color: white; flex: 1; position: relative; z-index: 1; }
+        .mockup-text h3 { font-size: 20px; font-weight: 900; margin: 0 0 8px 0; text-transform: uppercase; }
+        .mockup-text p { font-size: 13px; color: rgba(255,255,255,0.85); margin: 0 0 14px 0; line-height: 1.5; }
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+        }
+
+        /* ===== FOOTER BAND (PAGE 1) ===== */
+        .footer-band {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: var(--nsl-light);
+            padding: 16px 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 4px solid var(--nsl-gold);
+        }
+        .footer-band p { margin: 0; font-size: 13px; color: #555; }
+        .footer-band a { color: var(--nsl-red); font-weight: 800; text-decoration: none; }
+        .page-num { font-size: 12px; color: #aaa; font-weight: 600; }
+
+        /* ===== PAGE 2 ===== */
+        .p2-hero {
+            background: linear-gradient(135deg, var(--nsl-red) 0%, #a11818 100%);
+            padding: 30px 44px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .p2-hero::before {
+            content: '';
+            position: absolute;
+            top: -50px; right: -30px;
+            width: 220px; height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+        .p2-hero-tag { font-size: 11px; font-weight: 800; letter-spacing: 2.5px; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-bottom: 6px; }
+        .p2-hero h2 { font-size: 38px; font-weight: 900; line-height: 1.05; text-transform: uppercase; margin: 0 0 12px 0; position: relative; z-index: 1; }
+        .p2-hero p { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 90%; margin: 0; position: relative; z-index: 1; }
+
+        /* USP CARDS */
+        .usp-section {
+            padding: 24px 44px;
+        }
+        .usp-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 6px;
+        }
+        .usp-card {
+            border-radius: 12px;
+            padding: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+        .usp-card.dark { background: var(--nsl-dark); color: white; }
+        .usp-card.gold { background: var(--nsl-gold); color: var(--nsl-dark); }
+        .usp-card.light { background: var(--nsl-light); color: var(--nsl-dark); border: 2px solid #e8e8e8; }
+        .usp-card.red-outline { background: white; color: var(--nsl-dark); border: 2px solid var(--nsl-red); }
+        .usp-card .icon { font-size: 28px; margin-bottom: 10px; display: block; }
+        .usp-card h4 { font-size: 16px; font-weight: 900; margin: 0 0 6px 0; }
+        .usp-card p { font-size: 13px; margin: 0; line-height: 1.5; opacity: 0.85; }
+
+        /* SCORE VISUAL */
+        .score-section {
+            margin: 0 44px 20px;
+            background: var(--nsl-dark);
+            border-radius: 14px;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            color: white;
+        }
+        .score-circle {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: conic-gradient(var(--nsl-gold) 0deg, var(--nsl-gold) 245deg, rgba(255,255,255,0.1) 245deg);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border-radius: 50%;
+            background: var(--nsl-dark);
+        }
+        .score-inner { position: relative; z-index: 1; text-align: center; }
+        .score-inner .score-num { font-size: 26px; font-weight: 900; color: var(--nsl-gold); line-height: 1; }
+        .score-inner .score-lbl { font-size: 9px; font-weight: 700; color: #888; text-transform: uppercase; }
+        .score-text h4 { font-size: 17px; font-weight: 800; margin: 0 0 6px 0; color: white; }
+        .score-text p { font-size: 13px; color: #aaa; margin: 0; line-height: 1.5; }
+
+        /* CTA FOOTER (PAGE 2) */
+        .cta-footer {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            background: var(--nsl-dark);
+            padding: 22px 44px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .cta-left h3 { font-size: 18px; font-weight: 900; color: white; margin: 0 0 4px 0; text-transform: uppercase; }
+        .cta-left p { font-size: 12px; color: #888; margin: 0; }
+        .cta-btn {
+            background: var(--nsl-gold);
+            color: var(--nsl-dark);
+            padding: 12px 24px;
+            font-weight: 900;
+            font-size: 14px;
+            border-radius: 0;
+            text-decoration: none;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 3px solid var(--nsl-gold);
+            box-shadow: 6px 6px 0px rgba(255,255,255,0.15);
+            transform: rotate(-1deg);
+        }
     </style>
 </head>
 <body>
@@ -172,83 +382,174 @@
             <a href="?lang=en" class="lang-btn <%= lang === 'en' ? 'active' : '' %>">EN</a>
             <a href="?lang=de" class="lang-btn <%= lang === 'de' ? 'active' : '' %>">DE</a>
         </div>
-        <button onclick="window.location.href='/marketing/student/pdf?lang=<%= lang %>'" class="print-btn">
-            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <button onclick="window.print()" class="print-btn">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
             PDF / Print
         </button>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- PAGE 1: HERO + JOURNEY TIMELINE                              -->
+    <!-- ============================================================ -->
     <div class="page">
-        <div class="header">
-            <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px;">
-                <img src="/assets/design/NSL_logo_mid.png" alt="NSL Click & Work" class="logo-nsl">
-                <img src="/assets/design/Logo_Mid_PersonalKampagne.png" alt="PersonalKampagne" class="logo-text">
+        <!-- HERO BAND -->
+        <div class="hero-band">
+            <div class="logo-row">
+                <img src="/assets/design/NSL_logo_mid.png" alt="NSL" style="height: 48px;">
+                <img src="/assets/design/Logo_Mid_PersonalKampagne.png" alt="PersonalKampagne" style="height: 30px;">
             </div>
-            <h1>Your Journey to Germany</h1>
-            <div class="subtitle">TRANSPARENT. FAST. SECURE.</div>
-        </div>
-
-        <div class="content">
-            <p style="text-align: center; font-size: 18px; margin-bottom: 40px; color: #444;">
-                With the <strong>NSL Click & Work Portal</strong>, you have full control over your application process. Track your progress in real-time and know exactly what steps to take next.
-            </p>
-
-            <div class="timeline">
-                <div class="step active">
-                    <div class="step-number">1</div>
-                    <h3>Assessment Test</h3>
-                    <p>Complete the comprehensive assessment to evaluate your IQ, decision making, and skills. Get your NSL-Score.</p>
+            <div class="hero-tag">Your Career. Your Future.</div>
+            <h1 class="hero-h1">Your Journey<br>to Germany.</h1>
+            <p class="hero-sub">The NSL Click & Work Portal gives you complete visibility and control over your entire career migration process — from assessment to arrival.</p>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="num">21</div>
+                    <div class="lbl">EU Countries</div>
                 </div>
-                
-                <div class="step active">
-                    <div class="step-number" style="background: var(--nsl-gold); color: var(--nsl-dark);">2</div>
-                    <h3>Interview & Media</h3>
-                    <p>Record your introduction video and take your profile photo. We create a professional "Setcard" (PDF Resume) for you.</p>
+                <div class="hero-stat">
+                    <div class="num">400k+</div>
+                    <div class="lbl">Talent Network</div>
                 </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Profile Live</h3>
-                    <p>Your profile is activated on the portal. German employers and partners can now view your Setcard and Video.</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Employer Matching</h3>
-                    <p>Congratulations! An employer has selected your profile. You are now in direct consideration for a position.</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <h3>Contract & Integration</h3>
-                    <p>Sign your employment or training contract. Begin your language and integration courses.</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">6</div>
-                    <h3>Visa & Departure</h3>
-                    <p>Complete the visa process and book your flight. Welcome to Germany!</p>
-                </div>
-            </div>
-
-            <div class="usp-grid">
-                <div class="usp-item">
-                    <h4>📱 Always Updated</h4>
-                    <p>Log in with your ID anytime to see your current progress and NSL Score.</p>
-                </div>
-                <div class="usp-item">
-                    <h4>🔒 100% GDPR Secure</h4>
-                    <p>Your data is protected under strict European privacy laws. You are in control.</p>
+                <div class="hero-stat">
+                    <div class="num">100%</div>
+                    <div class="lbl">GDPR Secure</div>
                 </div>
             </div>
         </div>
 
-        <div class="footer">
-            <h3 style="margin: 0 0 5px 0; font-size: 20px;">Ready to start your journey?</h3>
-            <p style="margin: 0 0 10px 0; font-size: 15px; color: #666;">Ask your local center for details, or login below.</p>
-            <p style="margin: 0; font-size: 18px;">
-                <strong>Student Portal:</strong> <a href="https://www.personalkampagne-portal.de" style="color: var(--nsl-red); text-decoration: none; font-weight: bold;">www.personalkampagne-portal.de</a>
-            </p>
+        <div class="accent-bar"></div>
+
+        <!-- TIMELINE SECTION -->
+        <div class="timeline-section">
+            <div class="section-label">Step-by-Step Process</div>
+            <div class="section-title">6 Steps to Your Dream Job</div>
+
+            <div class="timeline-grid">
+                <div class="step-card active">
+                    <div class="step-badge">1</div>
+                    <div>
+                        <h4>Assessment Test</h4>
+                        <p>Complete our comprehensive IQ, decision-making & skills assessment. Get your NSL-Score.</p>
+                    </div>
+                </div>
+                <div class="step-card done">
+                    <div class="step-badge">2</div>
+                    <div>
+                        <h4>Interview & Media</h4>
+                        <p>Record your introduction video and profile photo. We build your professional Setcard.</p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">3</div>
+                    <div>
+                        <h4>Profile Live</h4>
+                        <p>Your profile goes live. Verified German employers can now discover and view your Setcard.</p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">4</div>
+                    <div>
+                        <h4>Employer Match</h4>
+                        <p>A German employer selects your profile. You enter direct consideration for a position.</p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">5</div>
+                    <div>
+                        <h4>Contract & Integration</h4>
+                        <p>Sign your employment contract. Begin language and cultural integration courses.</p>
+                    </div>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">6</div>
+                    <div>
+                        <h4>Visa & Departure</h4>
+                        <p>Complete visa processing, book your flight. Welcome to Germany! 🇩🇪</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETCARD MOCKUP STRIP -->
+        <div class="mockup-strip">
+            <img src="/images/marketing/setcard_modal.png" class="mockup-img" alt="Your Setcard">
+            <div class="mockup-text">
+                <h3>Your Professional Setcard</h3>
+                <p>We create a stunning, standardized digital resume (Setcard) from your photo, video, NSL-Score, and professional data — instantly visible to 1,000+ German employers on the portal.</p>
+                <span class="badge-pill">⭐ Auto-generated by NSL</span>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer-band">
+            <p>Student Portal: <a href="https://www.personalkampagne-portal.de">www.personalkampagne-portal.de</a></p>
+            <span class="page-num">1 / 2</span>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE 2: USP + NSL-SCORE + CTA                               -->
+    <!-- ============================================================ -->
+    <div class="page">
+        <!-- RED HERO BAND -->
+        <div class="p2-hero">
+            <div class="p2-hero-tag">Why NSL Click & Work</div>
+            <h2>Why Choose<br>the NSL Portal?</h2>
+            <p>We don't just connect you with a job — we manage your entire relocation journey, from documents and visa to cultural integration and long-term support.</p>
+        </div>
+
+        <!-- USP CARDS -->
+        <div class="usp-section">
+            <div class="section-label">Your Advantages</div>
+            <div class="usp-cards">
+                <div class="usp-card dark">
+                    <span class="icon">📱</span>
+                    <h4>Real-Time Tracking</h4>
+                    <p>Log in anytime with your student ID to see your current step, status, and NSL-Score live on the portal.</p>
+                </div>
+                <div class="usp-card gold">
+                    <span class="icon">🤖</span>
+                    <h4>AI-Powered Matching</h4>
+                    <p>Our Sharkie AI analyses your profile and skills to match you with the most relevant German employers automatically.</p>
+                </div>
+                <div class="usp-card red-outline">
+                    <span class="icon">🛡️</span>
+                    <h4>Full Visa & Relocation</h4>
+                    <p>NSL handles document translation, professional recognition, visa processing, and cultural integration from A to Z.</p>
+                </div>
+                <div class="usp-card light">
+                    <span class="icon">🎥</span>
+                    <h4>Video Introduction</h4>
+                    <p>A 60-second intro video lets German employers know you personally before any interview, boosting your selection chances.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- NSL-SCORE VISUAL -->
+        <div class="score-section">
+            <div class="score-circle">
+                <div class="score-inner">
+                    <div class="score-num">48+</div>
+                    <div class="score-lbl">Benchmark</div>
+                </div>
+            </div>
+            <div class="score-text">
+                <h4>The NSL-Score: Your Competitive Edge</h4>
+                <p>Every candidate receives a verified NSL-Score based on comprehensive IQ, decision-making, and soft skills assessments. A score of 48+ places you in the top percentile — the benchmark German employers trust and prefer.</p>
+            </div>
+        </div>
+
+        <!-- CTA FOOTER -->
+        <div class="cta-footer">
+            <div class="cta-left">
+                <h3>Ready to start your journey?</h3>
+                <p>Ask your local NSL center for details or login at the Student Portal.</p>
+                <p style="color: #f2a900; font-size: 13px; font-weight: 700; margin-top: 4px;">🌐 www.personalkampagne-portal.de</p>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; flex-shrink: 0;">
+                <img src="/assets/design/NSL_logo_mid.png" alt="NSL" style="height: 40px; opacity: 0.8;">
+                <span class="page-num" style="color: #555;">2 / 2</span>
+            </div>
         </div>
     </div>
 
