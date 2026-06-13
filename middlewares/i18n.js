@@ -120,7 +120,25 @@ const dictionary = {
             chat_placeholder: 'Nhập tin nhắn...',
             chat_send: 'Gửi',
             chat_error: 'Lỗi kết nối.',
-            sharkie_searching: 'Sharkie đang tìm kiếm ứng viên...'
+            sharkie_searching: 'Sharkie đang tìm kiếm ứng viên...',
+            admin_tab_rag: 'Dữ liệu RAG',
+            admin_rag_upload_title: 'Tải tài liệu lên Bộ nhớ AI (RAG)',
+            admin_rag_upload_desc: 'Tải lên file PDF hoặc TXT. AI sẽ học từ các tài liệu này để trả lời câu hỏi tốt hơn. Định dạng tên file: <strong>NSL-12345_Transcript.pdf</strong>.',
+            admin_rag_upload_btn: 'Tải lên & Đồng bộ',
+            admin_rag_manage_title: 'Quản lý dữ liệu AI (RAG)',
+            admin_rag_manage_desc: 'Nhập ID Ứng viên (VD: NSL-12345) để xem danh sách các file đã nạp vào bộ nhớ AI và xóa chúng.',
+            admin_rag_student_id_placeholder: 'Nhập Student ID...',
+            admin_rag_search_btn: 'Tìm kiếm',
+            admin_rag_file_list: 'Danh sách File đã nạp:',
+            admin_rag_col_time: 'Thời gian tải lên',
+            admin_rag_col_name: 'Tên File / Loại',
+            admin_rag_col_vectors: 'Số vector',
+            admin_rag_col_actions: 'Thao tác',
+            admin_rag_delete_all_btn: 'Xóa sạch trí nhớ AI của Ứng viên này',
+            admin_rag_no_files: 'Không tìm thấy file RAG nào cho ứng viên này.',
+            admin_rag_delete_btn: 'Xóa',
+            admin_rag_delete_confirm: 'Bạn có chắc chắn muốn xóa lượt add này không? AI sẽ mất đi trí nhớ về file này.',
+            admin_rag_delete_all_confirm: 'CẢNH BÁO: Xóa toàn bộ dữ liệu RAG của ứng viên {studentId} khỏi AI?'
         }
     },
     en: {
@@ -244,7 +262,25 @@ const dictionary = {
             chat_placeholder: 'Type your message...',
             chat_send: 'Send',
             chat_error: 'Connection error.',
-            sharkie_searching: 'Sharkie is searching for candidates...'
+            sharkie_searching: 'Sharkie is searching for candidates...',
+            admin_tab_rag: 'Knowledge Base',
+            admin_rag_upload_title: 'Upload Document to AI Knowledge Base (RAG)',
+            admin_rag_upload_desc: 'Upload PDF or TXT files. The AI will learn from these documents to answer queries better. Naming convention: <strong>NSL-12345_Transcript.pdf</strong>.',
+            admin_rag_upload_btn: 'Upload & Sync',
+            admin_rag_manage_title: 'Manage AI Data (RAG)',
+            admin_rag_manage_desc: 'Enter Student ID (e.g. NSL-12345) to view and delete files loaded into the AI memory.',
+            admin_rag_student_id_placeholder: 'Enter Student ID...',
+            admin_rag_search_btn: 'Search',
+            admin_rag_file_list: 'Loaded Files:',
+            admin_rag_col_time: 'Upload Time',
+            admin_rag_col_name: 'File Name / Type',
+            admin_rag_col_vectors: 'Vectors Count',
+            admin_rag_col_actions: 'Actions',
+            admin_rag_delete_all_btn: 'Clear AI Memory for this Candidate',
+            admin_rag_no_files: 'No RAG files found for this candidate.',
+            admin_rag_delete_btn: 'Delete',
+            admin_rag_delete_confirm: 'Are you sure you want to delete this file? The AI will lose memory of it.',
+            admin_rag_delete_all_confirm: 'WARNING: Delete all RAG data for candidate {studentId} from the AI?'
         }
     },
     de: {
@@ -368,7 +404,25 @@ const dictionary = {
             chat_placeholder: 'Ihre Nachricht...',
             chat_send: 'Senden',
             chat_error: 'Verbindungsfehler.',
-            sharkie_searching: 'Sharkie sucht nach Kandidaten...'
+            sharkie_searching: 'Sharkie sucht nach Kandidaten...',
+            admin_tab_rag: 'Wissensdatenbank',
+            admin_rag_upload_title: 'Dokument in die KI-Wissensdatenbank hochladen (RAG)',
+            admin_rag_upload_desc: 'PDF- oder TXT-Dateien hochladen. Die KI lernt aus diesen Dokumenten, um Anfragen besser zu beantworten. Namenskonvention: <strong>NSL-12345_Transcript.pdf</strong>.',
+            admin_rag_upload_btn: 'Hochladen & Synchronisieren',
+            admin_rag_manage_title: 'KI-Daten verwalten (RAG)',
+            admin_rag_manage_desc: 'Geben Sie die Studenten-ID ein (z. B. NSL-12345), um in den KI-Speicher geladene Dateien anzuzeigen und zu löschen.',
+            admin_rag_student_id_placeholder: 'Studenten-ID eingeben...',
+            admin_rag_search_btn: 'Suchen',
+            admin_rag_file_list: 'Geladene Dateien:',
+            admin_rag_col_time: 'Upload-Zeit',
+            admin_rag_col_name: 'Dateiname / Typ',
+            admin_rag_col_vectors: 'Anzahl Vektoren',
+            admin_rag_col_actions: 'Aktionen',
+            admin_rag_delete_all_btn: 'KI-Speicher für diesen Kandidaten löschen',
+            admin_rag_no_files: 'Keine RAG-Dateien für diesen Kandidaten gefunden.',
+            admin_rag_delete_btn: 'Löschen',
+            admin_rag_delete_confirm: 'Möchten Sie diese Datei wirklich löschen? Die KI wird die Erinnerung daran verlieren.',
+            admin_rag_delete_all_confirm: 'WARNUNG: Alle RAG-Daten für den Kandidaten {studentId} aus der KI löschen?'
         }
     }
 };

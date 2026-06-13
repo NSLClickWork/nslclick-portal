@@ -23,35 +23,64 @@ const run = async () => {
         
         await new Promise(r => setTimeout(r, 2000));
 
+        console.log('Faking DOM for realistic screenshots...');
+        const result = await page.evaluate(() => {
+            // Make ALL cards look realistic before taking screenshot
+            const allCards = document.querySelectorAll('tr, .candidate-card, .list-item');
+            const fakePhotos = [
+                'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120&h=120&fit=crop',
+                'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=120&h=120&fit=crop',
+                'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=120&h=120&fit=crop',
+                'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop',
+                'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&h=120&fit=crop'
+            ];
+            let idx = 0;
+            allCards.forEach(c => {
+                const nEl = c.querySelector('h3, strong, .name');
+                if (nEl) {
+                    const originalName = nEl.innerText || 'Candidate';
+                    const initial = originalName.charAt(0);
+                    nEl.innerHTML = initial + '*** ' + String.fromCharCode(65 + (idx % 26)) + '***';
+                }
+                const imgEl = c.querySelector('img.avatar, img[src*="drive"], img[src*="google"], img[src*="ui-avatars"]');
+                if (imgEl) {
+                    imgEl.src = fakePhotos[idx % fakePhotos.length];
+                    imgEl.style.filter = 'blur(4px)';
+                    imgEl.style.objectFit = 'cover';
+                }
+                idx++;
+            });
+
+            let btn = document.querySelector('.btn-nsl-brutal.primary');
+            if (btn) {
+                // Set score for the clicked one specifically
+                const card = btn.closest('div[style*="border"], tr, .card');
+                if (card) {
+                    const scoreEl = card.querySelector('.score, [style*="color: var(--nsl-dark)"]');
+                    if (scoreEl) scoreEl.innerHTML = 'NSL-Result: <strong>89</strong>';
+                }
+                
+                return { clicked: true, cardsFound: allCards.length };
+            }
+            return { clicked: false, cardsFound: allCards.length };
+        });
+
+        console.log('Cards modified: ' + result.cardsFound);
+        const clicked = result.clicked;
+
+        // Wait for Unsplash images to load
+        await new Promise(r => setTimeout(r, 4000));
+
         console.log('Taking dashboard screenshot...');
         await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'dashboard_full.png'), fullPage: false });
 
-        console.log('Opening Setcard modal...');
-        const clicked = await page.evaluate(() => {
-            const rows = document.querySelectorAll('tr, .candidate-card, .list-item');
-            let btn = document.querySelector('.btn-nsl-brutal.primary');
-            if (btn) {
-                // Fake the DOM to create an anonymous perfect candidate
-                const card = btn.closest('div[style*="border"], tr, .card');
-                if (card) {
-                    const nameEl = card.querySelector('h3, strong, .name');
-                    if (nameEl) nameEl.innerHTML = 'M*** P***';
-                    
-                    const scoreEl = card.querySelector('.score, [style*="color: var(--nsl-dark)"]');
-                    if (scoreEl) scoreEl.innerHTML = 'NSL-Result: <strong>89</strong>';
-
-                    const imgEl = card.querySelector('img.avatar, img[src*="drive"], img[src*="google"]');
-                    if (imgEl) {
-                        imgEl.src = 'https://ui-avatars.com/api/?name=MP&background=ccc&color=fff&size=120';
-                        imgEl.style.filter = 'blur(4px)';
-                    }
-                }
-                
-                btn.click();
-                return true;
-            }
-            return false;
-        });
+        if (clicked) {
+            console.log('Opening Setcard modal...');
+            await page.evaluate(() => {
+                let btn = document.querySelector('.btn-nsl-brutal.primary');
+                if (btn) btn.click();
+            });
+        }
 
         if (clicked) {
             await new Promise(r => setTimeout(r, 1500));

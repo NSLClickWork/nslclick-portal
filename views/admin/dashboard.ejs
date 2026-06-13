@@ -239,7 +239,7 @@
             <div class="tabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
                 <button class="btn btn-nsl-brutal" id="tabStudents" style="background: var(--text-main); color: #fff;" onclick="switchTab('students')"><%= __('admin_tab_students') %></button>
                 <button class="btn btn-nsl-brutal" id="tabPartners" onclick="switchTab('partners')"><%= __('admin_tab_partners') %></button>
-                <button class="btn btn-nsl-brutal" id="tabRag" onclick="switchTab('rag')">Knowledge Base</button>
+                <button class="btn btn-nsl-brutal" id="tabRag" onclick="switchTab('rag')"><%= __('admin_tab_rag') %></button>
             </div>
 
             <div style="display: flex; justify-content: space-between; alig n-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
@@ -338,12 +338,12 @@
             <!-- RAG VIEW -->
             <div id="ragView" style="display: none;">
                 <div style="background: var(--bg-gray); padding: 20px; border-radius: var(--radius-sm); border: 2px solid var(--text-main);">
-                    <h3 style="margin-bottom: 15px;">Upload Document to AI Knowledge Base (RAG)</h3>
-                    <p style="font-size: 14px; margin-bottom: 20px; color: #555;">Upload PDF or TXT files. The AI will learn from these documents to answer queries better. Naming convention: <strong>NSL-12345_Transcript.pdf</strong>.</p>
+                    <h3 style="margin-bottom: 15px;"><%= __('admin_rag_upload_title') %></h3>
+                    <p style="font-size: 14px; margin-bottom: 20px; color: #555;"><%- __('admin_rag_upload_desc') %></p>
                     
                     <form id="ragUploadForm" enctype="multipart/form-data" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
                         <input type="file" id="ragFile" name="document" accept=".pdf,.txt,.md" style="border: 2px solid var(--text-main); padding: 10px; background: white; border-radius: 4px;" required>
-                        <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="uploadRAGDocument()">Upload & Sync</button>
+                        <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="uploadRAGDocument()"><%= __('admin_rag_upload_btn') %></button>
                     </form>
                     
                     <div id="ragUploadStatus" style="margin-top: 15px; font-weight: bold; font-size: 14px; display: none;"></div>
@@ -351,23 +351,23 @@
 
                 <!-- MANAGE RAG KNOWLEDGE BASE -->
                 <div style="background: var(--nsl-bg-gray); padding: 20px; border-radius: var(--radius-sm); border: 2px solid var(--text-main); margin-bottom: 20px;">
-                    <h3 style="margin: 0 0 10px 0; font-size: 18px; text-transform: uppercase;">Quản lý dữ liệu AI (RAG)</h3>
-                    <p style="margin-bottom: 15px; font-size: 14px;">Nhập ID Ứng viên (VD: NSL-12345) để xem danh sách các file đã nạp vào bộ nhớ AI và xóa chúng.</p>
+                    <h3 style="margin: 0 0 10px 0; font-size: 18px; text-transform: uppercase;"><%= __('admin_rag_manage_title') %></h3>
+                    <p style="margin-bottom: 15px; font-size: 14px;"><%= __('admin_rag_manage_desc') %></p>
                     
                     <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
-                        <input type="text" id="ragManageStudentId" placeholder="Nhập Student ID..." class="form-control" style="max-width: 300px; padding: 10px; border: 2px solid var(--text-main);">
-                        <button type="button" class="btn btn-nsl-brutal" onclick="fetchRagDocuments()">Tìm kiếm</button>
+                        <input type="text" id="ragManageStudentId" placeholder="<%= __('admin_rag_student_id_placeholder') %>" class="form-control" style="max-width: 300px; padding: 10px; border: 2px solid var(--text-main);">
+                        <button type="button" class="btn btn-nsl-brutal" onclick="fetchRagDocuments()"><%= __('admin_rag_search_btn') %></button>
                     </div>
 
                     <div id="ragManageResults" style="display: none;">
-                        <h4 style="margin: 0 0 10px 0; font-size: 16px;">Danh sách File đã nạp:</h4>
+                        <h4 style="margin: 0 0 10px 0; font-size: 16px;"><%= __('admin_rag_file_list') %></h4>
                         <table class="nsl-table" style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
                             <thead>
                                 <tr style="background: #222; color: #fff;">
-                                    <th style="padding: 10px; text-align: left;">Thời gian tải lên</th>
-                                    <th style="padding: 10px; text-align: left;">Tên File / Loại</th>
-                                    <th style="padding: 10px; text-align: left;">Số vector</th>
-                                    <th style="padding: 10px; text-align: left;">Thao tác</th>
+                                    <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_time') %></th>
+                                    <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_name') %></th>
+                                    <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_vectors') %></th>
+                                    <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_actions') %></th>
                                 </tr>
                             </thead>
                             <tbody id="ragManageTableBody">
@@ -376,7 +376,7 @@
                         </table>
                         
                         <div style="text-align: right;">
-                            <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="deleteAllRagForStudent()">Xóa sạch trí nhớ AI của Ứng viên này</button>
+                            <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="deleteAllRagForStudent()"><%= __('admin_rag_delete_all_btn') %></button>
                         </div>
                     </div>
                 </div>
@@ -476,7 +476,7 @@
             const titles = {
                 'students': '<%= __('admin_tab_students') %>',
                 'partners': '<%= __('admin_tab_partners') %>',
-                'rag': 'Knowledge Base (RAG)'
+                'rag': '<%= __('admin_tab_rag') %>'
             };
             document.getElementById('pageTitle').innerText = titles[tab];
 
@@ -534,7 +534,7 @@
                     tbody.innerHTML = '';
                     
                     if (currentRagSessions.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 10px;">Không tìm thấy file RAG nào cho ứng viên này.</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 10px;"><%= __('admin_rag_no_files') %></td></tr>';
                     } else {
                         currentRagSessions.forEach((session, index) => {
                             const date = new Date(session.timestamp).toLocaleString();
@@ -544,7 +544,7 @@
                                     <td style="padding: 10px; font-weight: bold;">${escapeHtml(session.docType)}</td>
                                     <td style="padding: 10px;">${session.chunksCount} chunks</td>
                                     <td style="padding: 10px;">
-                                        <button class="btn btn-nsl-brutal" style="padding: 5px 10px; font-size: 12px; background: #666; color: white;" onclick="deleteRagDocument(${index})">Xóa</button>
+                                        <button class="btn btn-nsl-brutal" style="padding: 5px 10px; font-size: 12px; background: #666; color: white;" onclick="deleteRagDocument(${index})"><%= __('admin_rag_delete_btn') %></button>
                                     </td>
                                 </tr>
                             `;
@@ -560,7 +560,7 @@
         }
 
         async function deleteRagDocument(index) {
-            if (!confirm('Bạn có chắc chắn muốn xóa lượt add này không? AI sẽ mất đi trí nhớ về file này.')) return;
+            if (!confirm('<%= __('admin_rag_delete_confirm') %>')) return;
             
             const session = currentRagSessions[index];
             try {
@@ -584,7 +584,8 @@
         async function deleteAllRagForStudent() {
             const studentId = document.getElementById('ragManageStudentId').value.trim();
             if (!studentId) return;
-            if (!confirm(`CẢNH BÁO: Xóa toàn bộ dữ liệu RAG của ứng viên ${studentId} khỏi AI?`)) return;
+            const confirmMsg = '<%= __('admin_rag_delete_all_confirm') %>'.replace('{studentId}', studentId);
+            if (!confirm(confirmMsg)) return;
 
             try {
                 const res = await apiFetch('/admin/rag/delete', {

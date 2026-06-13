@@ -160,4 +160,12 @@ router.get('/admin/logout', (req, res) => {
     res.redirect('/');
 });
 
+router.get('/personalkampagne', (req, res) => {
+    const lang = req.query.lang || req.cookies.lang || 'de';
+    if (lang === 'en') {
+        return res.render('marketing/personalkampagne', { lang });
+    }
+    res.render('marketing/personalkampagne_de', { lang });
+});
+
 module.exports = router;
