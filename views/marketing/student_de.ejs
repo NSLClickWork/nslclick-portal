@@ -26,11 +26,12 @@
             height: 297mm;
             background: white;
             margin: 20px auto;
-            position: relative;
             box-sizing: border-box;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             page-break-after: always;
+            display: flex;
+            flex-direction: column;
         }
         @media print {
             body { background: white; margin: 0; }
@@ -150,10 +151,13 @@
         .accent-bar {
             height: 6px;
             background: linear-gradient(90deg, var(--nsl-red) 0%, var(--nsl-gold) 100%);
+            flex-shrink: 0;
         }
 
+        /* ===== TIMELINE SECTION ===== */
         .timeline-section {
             padding: 24px 44px 0;
+            flex: 1;
         }
         .section-label {
             font-size: 11px;
@@ -199,15 +203,17 @@
         .step-card h4 { margin: 0 0 3px 0; font-size: 14px; font-weight: 800; color: var(--nsl-dark); }
         .step-card p { margin: 0; font-size: 12px; color: #666; line-height: 1.4; }
 
+        /* ===== MOCKUP VISUAL ===== */
         .mockup-strip {
             background: linear-gradient(135deg, var(--nsl-red) 0%, #a11818 100%);
-            margin: 20px 0 0;
+            margin-top: auto;
             padding: 20px 44px;
             display: flex;
             align-items: center;
             gap: 24px;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
         .mockup-strip::before {
             content: '';
@@ -241,15 +247,15 @@
             border-radius: 20px;
         }
 
+        /* ===== FOOTER BAND (PAGE 1) ===== */
         .footer-band {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
             background: var(--nsl-light);
             padding: 16px 44px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-top: 4px solid var(--nsl-gold);
+            flex-shrink: 0;
         }
         .footer-band p { margin: 0; font-size: 13px; color: #555; }
         .footer-band a { color: var(--nsl-red); font-weight: 800; text-decoration: none; }
@@ -262,6 +268,7 @@
             color: white;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
         .p2-hero::before {
             content: '';
@@ -275,7 +282,7 @@
         .p2-hero h2 { font-size: 38px; font-weight: 900; line-height: 1.05; text-transform: uppercase; margin: 0 0 12px 0; position: relative; z-index: 1; }
         .p2-hero p { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.6; max-width: 90%; margin: 0; position: relative; z-index: 1; }
 
-        .usp-section { padding: 24px 44px; }
+        .usp-section { padding: 24px 44px; flex: 1; }
         .usp-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -296,8 +303,9 @@
         .usp-card h4 { font-size: 16px; font-weight: 900; margin: 0 0 6px 0; }
         .usp-card p { font-size: 13px; margin: 0; line-height: 1.5; opacity: 0.85; }
 
+        /* SCORE VISUAL */
         .score-section {
-            margin: 0 44px 20px;
+            margin: 0 44px;
             background: var(--nsl-dark);
             border-radius: 14px;
             padding: 20px 24px;
@@ -305,6 +313,7 @@
             align-items: center;
             gap: 24px;
             color: white;
+            flex-shrink: 0;
         }
         .score-circle {
             width: 90px; height: 90px;
@@ -327,14 +336,15 @@
         .score-text h4 { font-size: 17px; font-weight: 800; margin: 0 0 6px 0; color: white; }
         .score-text p { font-size: 13px; color: #aaa; margin: 0; line-height: 1.5; }
 
+        /* CTA FOOTER (PAGE 2) */
         .cta-footer {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
             background: var(--nsl-dark);
             padding: 22px 44px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            flex-shrink: 0;
+            margin-top: auto;
         }
         .cta-left h3 { font-size: 18px; font-weight: 900; color: white; margin: 0 0 4px 0; text-transform: uppercase; }
         .cta-left p { font-size: 12px; color: #888; margin: 0; }
