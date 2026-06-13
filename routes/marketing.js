@@ -17,4 +17,12 @@ router.get('/student', (req, res) => {
     res.render('marketing/student', { lang });
 });
 
+router.get('/personalkampagne', (req, res) => {
+    const lang = req.query.lang || req.cookies.lang || 'de';
+    if (lang === 'de') {
+        return res.render('marketing/personalkampagne_de', { lang });
+    }
+    res.render('marketing/personalkampagne', { lang });
+});
+
 module.exports = router;

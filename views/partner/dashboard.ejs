@@ -319,12 +319,17 @@
         <div style="margin-bottom: 25px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 15px;">
                 <h2 style="color: var(--text-main); font-weight: 900; text-transform: uppercase; border-left: 8px solid var(--nsl-red); padding-left: 15px; margin: 0;"><%= __('candidates_database') %></h2>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-nsl-brutal active" id="tabCandidates" onclick="switchPartnerTab('candidates')" style="background: var(--text-main); color: #fff; padding: 10px 15px;"><%= __('candidates_database') %></button>
+                    <button class="btn-nsl-brutal" id="tabRag" onclick="switchPartnerTab('rag')" style="padding: 10px 15px;"><%= __('admin_tab_rag') %></button>
+                </div>
                 <a href="<%= partnerBookingLink %>" target="_blank" class="btn-nsl-brutal" style="background: var(--nsl-gold); color: var(--text-main); text-decoration: none; display: flex; align-items: center; padding: 10px 15px;">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3-6 6"/><path d="m21 16-6-6"/><path d="M21 21v.01"/><path d="m8 10-5 5a2 2 0 0 0-.58 1.41V21h4.59a2 2 0 0 0 1.41-.59L14 15"/><path d="m5 13-2.5-2.5a1 1 0 1 1 3-3l1.5 1.5"/><path d="m9 17-2.5-2.5a1 1 0 1 1 3-3l1.5 1.5"/></svg>
                     <%= __('req_partner_onboarding') %>
                 </a>
             </div>
             
+            <div id="candidatesView">
             <div class="tabs" id="rankTabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
                 <button class="btn-nsl-brutal active" style="padding: 8px 15px; background: var(--text-main); color: #fff;" onclick="filterByRank('ALL', this)"><%= __('rank_all') %></button>
                 <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('A', this)"><%= __('rank_a') %></button>
@@ -458,9 +463,229 @@
                 <p>No candidates available for your selected criteria.</p>
             <% } %>
         </div>
+        </div>
         <div id="paginationContainer" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px; margin-bottom: 20px; flex-wrap: wrap;"></div>
+        </div><!-- End Candidates View -->
+
+        <!-- RAG VIEW (Knowledge Base) -->
+        <div id="ragView" style="display: none;">
+            <div style="background: var(--bg-gray); padding: 20px; border-radius: var(--radius-sm); border: 2px solid var(--text-main);">
+                <h3 style="margin-bottom: 15px;"><%= __('admin_rag_upload_title') %></h3>
+                <p style="font-size: 14px; margin-bottom: 20px; color: #555;"><%- __('admin_rag_upload_desc') %></p>
+                
+                <form id="ragUploadForm" enctype="multipart/form-data" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <input type="file" id="ragFile" name="document" accept=".pdf,.txt,.md" style="border: 2px solid var(--text-main); padding: 10px; background: white; border-radius: 4px;" required>
+                    <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="uploadRAGDocumentPartner()"><%= __('admin_rag_upload_btn') %></button>
+                </form>
+                
+                <div id="ragUploadStatus" style="margin-top: 15px; font-weight: bold; font-size: 14px; display: none;"></div>
+            </div>
+
+            <!-- MANAGE RAG KNOWLEDGE BASE -->
+            <div style="background: var(--nsl-bg-gray); padding: 20px; border-radius: var(--radius-sm); border: 2px solid var(--text-main); margin-bottom: 20px; margin-top: 20px;">
+                <h3 style="margin: 0 0 10px 0; font-size: 18px; text-transform: uppercase;"><%= __('admin_rag_manage_title') %></h3>
+                <p style="margin-bottom: 15px; font-size: 14px;"><%= __('admin_rag_manage_desc') %></p>
+                
+                <div style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px;">
+                    <input type="text" id="ragManageStudentId" placeholder="<%= __('admin_rag_student_id_placeholder') %>" class="form-control" style="max-width: 300px; padding: 10px; border: 2px solid var(--text-main);">
+                    <button type="button" class="btn btn-nsl-brutal" onclick="fetchRagDocumentsPartner()"><%= __('admin_rag_search_btn') %></button>
+                </div>
+
+                <div id="ragManageResults" style="display: none;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 16px;"><%= __('admin_rag_file_list') %></h4>
+                    <table class="nsl-table" style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                        <thead>
+                            <tr style="background: #222; color: #fff;">
+                                <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_time') %></th>
+                                <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_name') %></th>
+                                <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_vectors') %></th>
+                                <th style="padding: 10px; text-align: left;"><%= __('admin_rag_col_actions') %></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ragManageTableBody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                    
+                    <div style="text-align: right;">
+                        <button type="button" class="btn btn-nsl-brutal" style="background: var(--nsl-red); color: white;" onclick="deleteAllRagForStudentPartner()"><%= __('admin_rag_delete_all_btn') %></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <script>
+        function switchPartnerTab(tabId) {
+            document.getElementById('candidatesView').style.display = 'none';
+            document.getElementById('ragView').style.display = 'none';
+            
+            document.getElementById('tabCandidates').style.background = 'transparent';
+            document.getElementById('tabCandidates').style.color = 'var(--text-main)';
+            document.getElementById('tabRag').style.background = 'transparent';
+            document.getElementById('tabRag').style.color = 'var(--text-main)';
+            
+            if (tabId === 'candidates') {
+                document.getElementById('candidatesView').style.display = 'block';
+                document.getElementById('tabCandidates').style.background = 'var(--text-main)';
+                document.getElementById('tabCandidates').style.color = '#fff';
+            } else if (tabId === 'rag') {
+                document.getElementById('ragView').style.display = 'block';
+                document.getElementById('tabRag').style.background = 'var(--text-main)';
+                document.getElementById('tabRag').style.color = '#fff';
+            }
+        }
+
+        async function uploadRAGDocumentPartner() {
+            const fileInput = document.getElementById('ragFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('document', fileInput.files[0]);
+
+            const statusEl = document.getElementById('ragUploadStatus');
+            statusEl.style.display = 'block';
+            statusEl.style.color = 'var(--nsl-gold)';
+            statusEl.innerText = "Uploading and processing (this may take up to a minute)...";
+
+            try {
+                const response = await fetch('partner/rag/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    statusEl.style.color = 'green';
+                    statusEl.innerText = data.message;
+                    fileInput.value = ''; 
+                } else {
+                    statusEl.style.color = 'red';
+                    statusEl.innerText = "Error: " + data.error;
+                }
+            } catch (error) {
+                statusEl.style.color = 'red';
+                statusEl.innerText = "Connection Error: " + error.message;
+            }
+        }
+
+        async function fetchRagDocumentsPartner() {
+            const studentId = document.getElementById('ragManageStudentId').value.trim();
+            if (!studentId) {
+                alert("Please enter a Student ID (or Partner ID) prefix to search.");
+                return;
+            }
+
+            try {
+                const response = await fetch('partner/rag/list/' + encodeURIComponent(studentId));
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('ragManageResults').style.display = 'block';
+                    const tbody = document.getElementById('ragManageTableBody');
+                    tbody.innerHTML = '';
+
+                    if (data.sessions.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 15px;">No RAG data found for this ID.</td></tr>';
+                        return;
+                    }
+
+                    data.sessions.forEach(session => {
+                        const tr = document.createElement('tr');
+                        
+                        const timeTd = document.createElement('td');
+                        timeTd.style.padding = '10px';
+                        timeTd.style.borderBottom = '1px solid #ddd';
+                        timeTd.innerText = new Date(session.timestamp).toLocaleString();
+                        
+                        const nameTd = document.createElement('td');
+                        nameTd.style.padding = '10px';
+                        nameTd.style.borderBottom = '1px solid #ddd';
+                        nameTd.innerText = session.docType;
+
+                        const countTd = document.createElement('td');
+                        countTd.style.padding = '10px';
+                        countTd.style.borderBottom = '1px solid #ddd';
+                        countTd.innerText = session.chunkCount;
+
+                        const actionTd = document.createElement('td');
+                        actionTd.style.padding = '10px';
+                        actionTd.style.borderBottom = '1px solid #ddd';
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'btn-nsl-brutal';
+                        deleteBtn.style.padding = '5px 10px';
+                        deleteBtn.style.background = 'var(--nsl-red)';
+                        deleteBtn.style.color = '#fff';
+                        deleteBtn.innerText = 'Delete';
+                        deleteBtn.onclick = () => deleteRagDocumentPartner(studentId, session.vectorIds);
+                        
+                        actionTd.appendChild(deleteBtn);
+
+                        tr.appendChild(timeTd);
+                        tr.appendChild(nameTd);
+                        tr.appendChild(countTd);
+                        tr.appendChild(actionTd);
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    alert("Error fetching data: " + data.error);
+                }
+            } catch (error) {
+                alert("Connection Error: " + error.message);
+            }
+        }
+
+        async function deleteRagDocumentPartner(studentId, vectorIds) {
+            if (!confirm(`Are you sure you want to delete ${vectorIds.length} chunks of data?`)) return;
+
+            try {
+                const response = await fetch('partner/rag/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId, vectorIds })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    fetchRagDocumentsPartner(); 
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (error) {
+                alert("Connection Error: " + error.message);
+            }
+        }
+
+        async function deleteAllRagForStudentPartner() {
+            const studentId = document.getElementById('ragManageStudentId').value.trim();
+            if (!studentId) return;
+            
+            if (!confirm(`Are you sure you want to delete ALL knowledge base data for ID: ${studentId}?`)) return;
+
+            try {
+                const response = await fetch('partner/rag/delete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId, vectorIds: [] })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    fetchRagDocumentsPartner(); 
+                } else {
+                    alert("Error: " + data.error);
+                }
+            } catch (error) {
+                alert("Connection Error: " + error.message);
+            }
+        }
+
         let currentRankFilter = 'ALL';
         let currentPage = 1;
         let itemsPerPage = window.innerWidth <= 768 ? 10 : 21;
