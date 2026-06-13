@@ -328,8 +328,9 @@
                     <%= __('req_partner_onboarding') %>
                 </a>
             </div>
-            
-            <div id="candidatesView">
+        </div>
+
+        <div id="candidatesView">
             <div class="tabs" id="rankTabs" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
                 <button class="btn-nsl-brutal active" style="padding: 8px 15px; background: var(--text-main); color: #fff;" onclick="filterByRank('ALL', this)"><%= __('rank_all') %></button>
                 <button class="btn-nsl-brutal" style="padding: 8px 15px;" onclick="filterByRank('A', this)"><%= __('rank_a') %></button>
@@ -367,7 +368,6 @@
                 <% } %>
                 <input type="text" id="searchInput" class="form-control" placeholder="<%= __('search') %>..." style="flex-grow: 1; max-width: 300px; padding: 8px 15px; font-size: 14px;" onkeyup="currentPage=1; filterStudents()">
             </div>
-        </div>
         
         <div class="grid" id="studentsGrid">
             <% if (students && students.length > 0) { %>
@@ -462,7 +462,6 @@
             <% } else { %>
                 <p>No candidates available for your selected criteria.</p>
             <% } %>
-        </div>
         </div>
         <div id="paginationContainer" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px; margin-bottom: 20px; flex-wrap: wrap;"></div>
         </div><!-- End Candidates View -->
