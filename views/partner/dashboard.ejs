@@ -463,7 +463,7 @@
     <script>
         let currentRankFilter = 'ALL';
         let currentPage = 1;
-        let itemsPerPage = window.innerWidth <= 768 ? 10 : 20;
+        let itemsPerPage = window.innerWidth <= 768 ? 10 : 21;
         let fullInfoOnly = true;
 
         function toggleFullInfo(btn) {
@@ -485,7 +485,7 @@
         }
 
         window.addEventListener('resize', () => {
-            let newItemsPerPage = window.innerWidth <= 768 ? 10 : 20;
+            let newItemsPerPage = window.innerWidth <= 768 ? 10 : 21;
             if (newItemsPerPage !== itemsPerPage) {
                 itemsPerPage = newItemsPerPage;
                 currentPage = 1;
